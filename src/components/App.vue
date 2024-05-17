@@ -29,21 +29,25 @@ export default {
 };
 </script>
 <style>
-/* .slide-fade-enter-active {
-  transform: translateX(20px);
-  opacity: 0;
-} */
-
-.slide-fade-leave-active {
-  transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
+.slide-fade-enter-active {
+  /* transition: all .9s ease-in-out; */
+  animation: side-fade .9s ease-out; 
 }
+@keyframes side-fade {
+  from{
+    transform: translateX(-30px);
+    opacity: 0.5;
 
-/* .slide-fade-enter-from{
-  transform: translateX(100px);
-  opacity: 0;
+  } to {
+    transform: translateX(0px);
+    opacity: 1;
+
+  }
+}
+/* .slide-fade-leave-active {
+  transition: all .0s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 } */
-.slide-fade-leave-to {
-  transform: translateX(20px);
+ .slide-fade-leave-to{
   opacity: 0;
 }
 .form-control:focus {
