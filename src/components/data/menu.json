@@ -1,0 +1,32 @@
+[
+    {
+        "title": "Tổng quan",
+        "to": "/admin/home",
+        "icon": "bx bx-grid-alt",
+        "active": false
+    },
+    {
+        "title": "Thực phẩm",
+        "active": false,
+        "icon": "bx bx-food-menu",
+        "to": "/admin/food-menu",
+        "children": [
+            {
+                "title": "Thức ăn",
+                "active": false,
+                "to": "/admin/food-menu/food"
+            },
+            {
+                "title": "Đồ uống",
+                "active": false,
+                "to": "/admin/food-menu/drink"
+            },
+            {
+                "title": "Đặc sản",
+                "active": false,
+                "to": "/admin/food-menu/specialty"
+            }
+           
+        ]
+    }   
+]
