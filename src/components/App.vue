@@ -1,23 +1,8 @@
 <template>
   <div id="app">
-    <div  style=" width: 100%;">
+    <div style="width: 100%">
       <router-view></router-view>
     </div>
-    <!-- <nav-bar v-model="menu" @update="(v) => (menu = v)" />
-    <div
-      class="d-flex w-100 h-100"
-      style="margin-top: 50px; background-color: #eeeef4; min-height: 100vh"
-    >
-      <side-bar class="sidebar" v-model="menu" @update="(v) => (menu = v)" />
-      <div
-        class="content-container"
-        :style="{ width: menu ? 'calc(100% - 250px)' : 'calc(100% - 70px)' }"
-      >
-        <transition name="slide-fade">
-          <router-view />
-        </transition>
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -32,9 +17,13 @@ export default {
   data() {
     return {
       menu: true,
+      user: null,
     };
   },
-  created() {},
+  created() {
+    const user = localStorage.getItem("user");
+    this.user = user;
+  },
 };
 </script>
 <style>
@@ -153,8 +142,16 @@ li {
   border-radius: 50%;
   padding: 1px;
   background: conic-gradient(#0000 10%, #a709a7) content-box;
-  -webkit-mask: repeating-conic-gradient(#0000 0deg, #000 1deg 20deg, #0000 21deg 36deg),
-    radial-gradient(farthest-side, #0000 calc(100% - var(--b) - 1px), #000 calc(100% - var(--b)));
+  -webkit-mask: repeating-conic-gradient(
+      #0000 0deg,
+      #000 1deg 20deg,
+      #0000 21deg 36deg
+    ),
+    radial-gradient(
+      farthest-side,
+      #0000 calc(100% - var(--b) - 1px),
+      #000 calc(100% - var(--b))
+    );
   -webkit-mask-composite: destination-in;
   mask-composite: intersect;
   animation: l4 1s infinite steps(10);

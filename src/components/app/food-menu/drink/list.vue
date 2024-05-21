@@ -2,24 +2,21 @@
   <div class="my-4 row w-100 px-3" style="margin-left: 0">
     <div class="bg-white col-12 py-4" style="border-radius: 5px">
       <b-form-group>
-        <label for="">Tìm kiếm theo tên món ăn</label>
+        <label for="">Tìm kiếm theo tên đồ uống</label>
         <b-input
           class="col-lg-3 col-sm-6 col-12"
-          placeholder="Nhập tên món ăn"
-          @input="searchInput($event)"
+          v-model="text"
+          placeholder="Nhập tên đồ uống"
         ></b-input>
       </b-form-group>
     </div>
     <div class="bg-white col-12 px-3 my-4" style="border-radius: 5px">
       <div class="w-100 text-right py-3">
-        <button-custom value="admin.food-menu.food.create" />
+        <button-custom value="admin.food-menu.drink.create" />
       </div>
 
       <div v-if="!loading" class="scroll">
-        <table
-          class="table table-sm"
-          style="min-width: 690px"
-        >
+        <table class="table table-sm" style="min-width: 690px">
           <thead>
             <tr class="text-center">
               <th scope="col">#</th>
@@ -62,11 +59,11 @@
         </table>
         <div class="d-flex justify-content-end pr-3 pb-3 w-100">
           <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
-          aria-controls="my-table"
-        ></b-pagination>
+            v-model="currentPage"
+            :total-rows="rows"
+            :per-page="perPage"
+            aria-controls="my-table"
+          ></b-pagination>
         </div>
       </div>
       <div v-else class="text-center w-100 d-flex justify-content-center py-5">
@@ -104,18 +101,17 @@ export default {
   methods: {
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/food");
-      console.log(response);
+      const response = await axios.get("http://localhost:3300/drink");
       this.entries = response.data;
       this.loading = false;
     },
     async deleteItem(id) {
       await this.$swal({
-        title: "Xoá món ăn này?",
+        title: "Xoá đồ uống này?",
         icon: "warning",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(`http://localhost:3300/food/` + id);
+          let response = await axios.delete(`http://localhost:3300/drink/` + id);
           if (response.status == 200) {
             this.$swal({
               title: "Xóa thành công",
@@ -130,20 +126,10 @@ export default {
     },
     async editItem(id) {
       this.$router.push({
-        name: "admin.food-menu.food.update",
+        name: "admin.food-menu.drink.update",
         params: { id: id },
       });
     },
-  async  searchInput(value){
-      let arr = []
-      const response = await axios.get("http://localhost:3300/food");
-      response.data.forEach(element => {
-        if(element.name.includes(value)){
-          arr.push(element)
-        }    
-      });
-      this.entries = arr
-    }
   },
   created() {
     this.getList();

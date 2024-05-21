@@ -18,7 +18,7 @@
         <div class="border-bottom pl-2 pb-2 dropdown-item">
           <i class="bx bx-key"></i> Đổi mật khẩu
         </div>
-        <div class="pl-2 py-2 dropdown-item"><i class="bx bx-power-off"></i> Thoát</div>
+        <div class="pl-2 py-2 dropdown-item" @click="handleLogout"><i class="bx bx-power-off"></i> Thoát</div>
       </div>
     </div>
   </div>
@@ -52,10 +52,17 @@ export default {
     }
   },
   methods: {
-   
+    handleLogout() {
+      localStorage.removeItem('user');
+      this.$router.push({name:'register-login'}); 
+    }
   },
   created(){
     this.menu = this.value
+    const user = localStorage.getItem("user");
+    if (user) {
+      this.user = JSON.parse(user);
+    }
   }
 };
 </script>

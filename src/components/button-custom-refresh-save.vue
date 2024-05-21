@@ -4,7 +4,7 @@
       <b-button v-if="checkRefresh" class="bg-white text-secondary button-refresh font-size-18" @click="$emit('refresh')"><i class="bx bx-revision pr-1"></i> Đặt lại</b-button>
     </div>
     <div>
-      <b-button v-if="value" class="bg-white text-secondary button-save font-size-18" @click="$emit('save')"><i class="bx bx-save align-text-bottom pr-1"></i>Lưu lại</b-button>
+      <b-button :disabled="disabledButton" v-if="value" class="bg-white text-secondary button-save font-size-18" @click="$emit('save')"><i class="bx bx-save align-text-bottom pr-1"></i>Lưu lại</b-button>
       <b-button v-else class="bg-white text-secondary button-save font-size-18" @click="$emit('save')">Đăng nhập</b-button>
     </div>
   </div>
@@ -20,6 +20,10 @@ export default{
       value:{
         type:Boolean,
         default:true
+      },
+      disabledButton:{
+        type:Boolean,
+        default:false
       }
     }
 

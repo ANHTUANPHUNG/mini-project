@@ -1,7 +1,15 @@
 <template>
   <b-form-group>
-    <div style="font-weight: 900"> Mật khẩu</div>
-    <b-form-input type="password" v-model="entry.password" placeholder="Nhập mật khẩu" />
+    <div v-if="checkReset" style="font-weight: 900" class="text-center">
+      Nhập mật khẩu mới
+    </div>
+
+    <div v-else style="font-weight: 900">Mật khẩu</div>
+    <b-form-input
+      type="password"
+      v-model="entry.password"
+      placeholder="Nhập mật khẩu"
+    />
   </b-form-group>
 </template>
 <script>
@@ -9,6 +17,10 @@ export default {
   name: "password",
   props: {
     value: Object,
+    checkReset: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {

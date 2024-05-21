@@ -6,11 +6,13 @@
           class="cursor-pointer text-purple"
           @click="$router.push({ name: 'admin.food-menu.food.list' })"
         >
-          <i class="bx bx-left-arrow-alt font-size-20 align-text-bottom pr-2"></i>
-          <span>Thêm mới món ăn</span>
+          <i
+            class="bx bx-left-arrow-alt font-size-20 align-text-bottom pr-2"
+          ></i>
+          <span class="">Cập nhật món ăn</span>
         </div>
         <div>
-          <button-custom-refresh-save @refresh="refresh" @save="create" />
+          <button-custom-refresh-save @refresh="refresh" @save="update" />
         </div>
       </div>
       <div class="row py-3" v-if="!loading">
@@ -50,7 +52,7 @@ import FoodStatus from "./partials/food-status.vue";
 import axios from "axios";
 
 export default {
-  name: "create",
+  name: "update",
   components: {
     ButtonCustom,
     ButtonCustomRefreshSave,
@@ -62,12 +64,19 @@ export default {
   },
   data() {
     return {
-      entry: { name: "", image: null, price: 0, description: "", status: null },
+      entry: {},
       loading: false,
+      itemId: "",
     };
   },
   methods: {
-    async create() {
+    async getItemById() {
+      this.loading = true;
+      const res = await axios.get("http://localhost:3300/food/" + this.itemId);
+      this.entry = res.data;
+      this.loading = false;
+    },
+    async update() {
       if (!this.entry.name || this.entry.name.trim() === "") {
         await this.$swal({
           text: "Tên không được trống.",
@@ -87,14 +96,14 @@ export default {
         return;
       }
       if (isNaN(this.entry.price) || this.entry.price <= 0) {
-      await this.$swal({
-        text: "Giá tiền phải là số và lớn hơn 0.",
-        confirmButtonText: "Đồng ý",
-        confirmButtonColor: "purple",
-        icon: "error",
-      });
-      return;
-    }
+        await this.$swal({
+          text: "Giá tiền phải là số và lớn hơn 0.",
+          confirmButtonText: "Đồng ý",
+          confirmButtonColor: "purple",
+          icon: "error",
+        });
+        return;
+      }
       if (this.entry.status === null) {
         await this.$swal({
           text: "Trạng thái không được trống.",
@@ -113,20 +122,21 @@ export default {
         });
         return;
       }
-      console.log(this.entry.image);
-      
       await this.$swal({
-        title: "Thêm mới món ăn này?",
+        title: "Chỉnh sửa món ăn này?",
         icon: "warning",
         confirmButtonText: "Đồng ý",
         cancelButtonText: "Không đồng ý",
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.post("http://localhost:3300/food", this.entry);
+          const response = await axios.patch(
+            "http://localhost:3300/food/" + this.itemId,
+            this.entry
+          );
           if (response) {
             this.$swal({
-              title: "Tạo mới thành công",
+              title: "Chỉnh sửa thành công",
               icon: "success",
               confirmButtonColor: "purple",
             });
@@ -137,25 +147,22 @@ export default {
         },
       });
     },
-  async  refresh() {
+    async refresh() {
       await this.$swal({
-				title: 'Khôi phục dữ liệu ban đầu?',
+        title: "Khôi phục dữ liệu ban đầu?",
         confirmButtonColor: "purple",
         cancelButtonText: "Không đồng ý",
-				icon: 'warning',
-				showCancelButton: true,
+        icon: "warning",
+        showCancelButton: true,
         confirmButtonText: "Đồng ý",
 
-				preConfirm: async () => {
-					this.entry.name = "";
-        this.entry.image = null;
-        this.entry.price = 0;
-        this.entry.description = "";
-        this.entry.status = null;
-				},
-			})
-        
+        preConfirm: async () => this.getItemById(),
+      });
     },
+  },
+  created() {
+    this.itemId = this.$route.params.id;
+    this.getItemById();
   },
 };
 </script>

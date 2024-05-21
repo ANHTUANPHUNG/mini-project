@@ -2,17 +2,17 @@
   <div class="my-4 row w-100 px-3" style="margin-left: 0">
     <div class="bg-white col-12 py-4" style="border-radius: 5px">
       <b-form-group>
-        <label for="">Tìm kiếm theo tên đồ uống</label>
+        <label for="">Tìm kiếm theo tên món ăn</label>
         <b-input
           class="col-lg-3 col-sm-6 col-12"
-          v-model="text"
-          placeholder="Nhập tên đồ uống"
+          placeholder="Nhập tên món ăn"
+          @input="searchInput($event)"
         ></b-input>
       </b-form-group>
     </div>
     <div class="bg-white col-12 px-3 my-4" style="border-radius: 5px">
       <div class="w-100 text-right py-3">
-        <button-custom value="admin.food-menu.drink.create" />
+        <button-custom value="admin.food-menu.food.create" />
       </div>
 
       <div v-if="!loading" class="scroll">
@@ -29,19 +29,27 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="text-center" v-for="(entry, index) in entries" :key="entry.id">
-              <th class="align-middle">{{ index + 1 }}</th>
+            <tr
+              class="text-center"
+              v-for="(entry, index) in entries"
+              :key="entry.id"
+            >
+              <th class="align-middle">{{ entry.index || index + 1 }}</th>
               <td class="align-middle">{{ entry.name }}</td>
               <td class="align-middle">{{ entry.price }}</td>
               <td class="align-middle">{{ entry.description }}</td>
               <td class="align-middle">
-                <img style="width: 60px" :src="entry.image?.url" alt="" />
+                <img style="width: 60px; height: 60px;" :src="entry.image?.url" alt="" />
               </td>
               <td class="align-middle">
-                <div class="cursor-pointer" v-if="entry.status?.name == 'Đang bán'">
+                <div
+                  @click="updateStatus(entry)"
+                  class="cursor-pointer"
+                  v-if="entry.status?.name == 'Đang bán'"
+                >
                   <b-badge class="bg-true">{{ entry.status?.name }}</b-badge>
                 </div>
-                <div class="cursor-pointer" v-else>
+                <div @click="updateStatus(entry)" class="cursor-pointer" v-else>
                   <b-badge class="bg-false">{{ entry.status?.name }}</b-badge>
                 </div>
               </td>
@@ -57,7 +65,7 @@
             </tr>
           </tbody>
         </table>
-        <div class="d-flex justify-content-end pr-3 pb-3 w-100">
+        <div class="d-flex justify-content-end pr-3 py-3 w-100">
           <b-pagination
             v-model="currentPage"
             :total-rows="rows"
@@ -89,32 +97,83 @@ export default {
       text: "",
       entries: [],
       loading: false,
-      perPage: 1,
+      perPage: 5,
       currentPage: 1,
+      listData: 0,
+      rows:0
     };
   },
-  computed: {
-    rows() {
-      return this.entries.length;
+  watch: {
+    currentPage: {
+      handler() {
+        let data =[]
+        for (let index = this.perPage * (this.currentPage-1); index < this.perPage * this.currentPage; index++) {
+          if(this.listData[index]){
+            data.push(this.listData[index]);
+          }
+        }
+        this.entries=data
+      },
+      deep: true,
     },
   },
   methods: {
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3000/drink");
-      this.entries = response.data;
+      const response = await axios.get("http://localhost:3300/food");
+      let data =[]
+      for (let index = 0; index < this.perPage * this.currentPage; index++) {
+        data.push(response.data[index]);
+      }
+      this.entries=data
+      this.listData = response.data;
+
+      this.listData.map((element,index)=>{
+        element.index=index+1
+      })
+      this.rows = response.data.length
       this.loading = false;
     },
     async deleteItem(id) {
       await this.$swal({
-        title: "Xoá đồ uống này?",
+        title: "Xoá món ăn này?",
         icon: "warning",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(`http://localhost:3000/drink/` + id);
+          let response = await axios.delete(`http://localhost:3300/food/` + id);
           if (response.status == 200) {
             this.$swal({
               title: "Xóa thành công",
+              icon: "success",
+              timer: 1000,
+              showConfirmButton: false,
+            });
+            this.currentPage=1
+            this.getList();
+          }
+        },
+      });
+    },
+    async updateStatus(entry) {
+      console.log(entry);
+      let data;
+      if (entry.status.id == 2) {
+        data = { ...entry, status: { id: 1, name: "Đang bán" } };
+      } else {
+        data = { ...entry, status: { id: 2, name: "Ngừng bán" } };
+      }
+      await this.$swal({
+        title: "Cập nhật trạng thái ?",
+        icon: "warning",
+        showCancelButton: true,
+        preConfirm: async () => {
+          let response = await axios.patch(
+            `http://localhost:3300/food/` + entry.id,
+            data
+          );
+          if (response.status == 200) {
+            this.$swal({
+              title: "Cập nhật thành công",
               icon: "success",
               timer: 1000,
               showConfirmButton: false,
@@ -126,9 +185,31 @@ export default {
     },
     async editItem(id) {
       this.$router.push({
-        name: "admin.food-menu.drink.update",
+        name: "admin.food-menu.food.update",
         params: { id: id },
       });
+    },
+    async searchInput(value) {
+      let arr = [];
+      const response = await axios.get("http://localhost:3300/food");
+      response.data.forEach((element) => {
+        if (element.name.toLowerCase().includes(value.toLowerCase())) {
+          arr.push(element);
+        }
+      });
+      this.listData = arr;
+      this.listData.map((element,index)=>{
+        element.index=index+1
+      })
+      this.rows= this.listData.length
+      let data =[]
+        for (let index = this.perPage * (this.currentPage-1); index < this.perPage * this.currentPage; index++) {
+          if(this.listData[index]){
+            data.push(this.listData[index]);
+          }
+        }
+        this.entries=data
+
     },
   },
   created() {

@@ -236,9 +236,25 @@ export default {
         this.itemClick = value.title;
       }
     },
+    activeItem(){
+      this.listMenu.forEach((element) =>{
+        if(!element.children){
+          if(element.to == this.$route.path){
+           return element.active= true
+          }
+        } else{
+          element.children.forEach(ele =>{
+            if(ele.to == this.$route.path.slice(0, this.$route.path.lastIndexOf("/"))){
+              return ele.active= true, element.active=true, this.itemClick= element.title
+            }
+          })
+        }
+      })
+    }
   },
   created() {
     this.menu = this.value;
+    this.activeItem()
   },
 };
 </script>

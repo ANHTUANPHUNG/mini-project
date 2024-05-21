@@ -33,8 +33,8 @@ export default {
 	data() {
 		return {
 			entries: [
-				{ id: 'true', name: 'Đang bán' },
-				{ id: 'false', name: 'Ngừng bán' },
+				{ id: 1, name: 'Đang bán' },
+				{ id: 2, name: 'Ngừng bán' },
 			],
 			entry: {
 				status:null

@@ -7,33 +7,23 @@
       <i class="bx bx-left-arrow-alt font-size-16"></i>
       <div>Trở về</div>
     </div>
-    <div v-if="email" class="col-12">
+    <div v-if="!email" class="col-12">
       <email :checkReset="true" v-model="entry" @update="(v) => (entry = v)" />
     </div>
-    <div v-else-if="!email" class="col-12">
-      <password v-model="entry" @update="(v) => (entry = v)" />
-      <password v-model="entry" @update="(v) => (entry = v)" />
-
+    <div v-else class="col-12">
+      <password
+        :checkReset="true"
+        v-model="entry"
+        @update="(v) => (entry = v)"
+      />
+      <new-password v-model="entry" @update="(v) => (entry = v)" />
     </div>
-  
-    <!-- <div class="col-12">
-        <username v-model="entry" @update="(v) => (entry = v)" />
-      </div>
-      
-      <div class="col-12">
-        <dob v-model="entry" @update="(v) => (entry = v)" />
-      </div>
-      <div class="col-12">
-        <address-user v-model="entry" @update="(v) => (entry = v)" />
-      </div>
-      <div class="col-12">
-        <sex v-model="entry" @update="(v) => (entry = v)" />
-      </div> -->
     <div class="col-12">
-      <div class="d-flex justify-content-between px-5">
-        <b-button class="bg-white text-secondary button-save font-size-18" @click="resetPassword"
-          >Tìm kiếm</b-button
-        >
+      <div v-if="!email" class="d-flex justify-content-center">
+        <b-button class="button-save" @click="checkEmail">Tìm kiếm</b-button>
+      </div>
+      <div v-else class="d-flex justify-content-center">
+        <b-button class="button-save" @click="resetPassword">Cập nhật</b-button>
       </div>
     </div>
   </div>
@@ -42,6 +32,7 @@
 import ButtonCustomRefreshSave from "@/components/button-custom-refresh-save.vue";
 import Username from "./partials/username.vue";
 import Password from "./partials/password.vue";
+import NewPassword from "./partials/new-password.vue";
 import Dob from "./partials/dob.vue";
 import AddressUser from "./partials/address-user.vue";
 import Sex from "./partials/sex.vue";
@@ -60,13 +51,15 @@ export default {
     AddressUser,
     Sex,
     Email,
+    NewPassword,
   },
   data() {
     return {
       registerLogin: false,
-      email: true,
+      email: false,
       entries: [],
       entry: {},
+      idUser: "",
     };
   },
   methods: {
@@ -76,38 +69,68 @@ export default {
       this.entries = response.data;
       this.loading = false;
     },
-    async resetPassword() {
-      const email = this.entries.some((e) => e.email == this.entry.email);
+    async checkEmail() {
+      const email = this.entries.find((e) => e.email == this.entry.email);
       if (!email) {
+        this.email = false;
         await this.$swal({
-          text: "Email không đúng.",
+          text: "Email không tồn tại.",
           confirmButtonText: "Đồng ý",
           confirmButtonColor: "purple",
           icon: "error",
         });
         return;
       }
-      this.email = email
-     
-      //   await this.$swal({
-      //     title: "Tạo tài khoản?",
-      //     icon: "warning",
-      //     confirmButtonText: "Đồng ý",
-      //     cancelButtonText: "Không đồng ý",
-      //     confirmButtonColor: "purple",
-      //     showCancelButton: true,
-      //     preConfirm: async () => {
-      //       const response = await axios.post("http://localhost:3300/users", this.entry);
-      //       if (response) {
-      //         this.$swal({
-      //           title: "Tạo thành công",
-      //           icon: "success",
-      //           confirmButtonColor: "purple",
-      //         });
-      //         this.$emit("checkUpdate", "login");
-      //       }
-      //     },
-      //   });
+      await this.$swal({
+        text: "Nhập mật khẩu mới.",
+        confirmButtonText: "Đồng ý",
+        confirmButtonColor: "purple",
+        icon: "success",
+      });
+      this.idUser = email.id;
+      this.email = true;
+    },
+    async resetPassword() {
+      if (this.entry.password != this.entry.newPassword) {
+        await this.$swal({
+          text: "Mật khẩu không trùng khớp",
+          confirmButtonText: "Đồng ý",
+          confirmButtonColor: "purple",
+          icon: "error",
+        });
+        return;
+      }
+      if (!this.entry.password || this.entry.password.trim() === "") {
+        await this.$swal({
+          text: "Mật khẩu không được trống.",
+          confirmButtonText: "Đồng ý",
+          confirmButtonColor: "purple",
+          icon: "error",
+        });
+        return;
+      }
+      await this.$swal({
+        title: "Xác nhận cập nhật mật khẩu?",
+        icon: "warning",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
+        confirmButtonColor: "purple",
+        showCancelButton: true,
+        preConfirm: async () => {
+          const response = await axios.patch(
+            "http://localhost:3300/users/" + this.idUser,
+            {'password' : this.entry.password}
+          );
+          if (response) {
+            this.$swal({
+              title: "Cập nhật thành công",
+              icon: "success",
+              confirmButtonColor: "purple",
+            });
+            this.$emit("checkUpdate", "login");
+          }
+        },
+      });
     },
   },
   created() {
