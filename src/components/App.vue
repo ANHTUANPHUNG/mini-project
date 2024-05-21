@@ -1,14 +1,23 @@
 <template>
   <div id="app">
-    <nav-bar v-model="menu" @update="(v) => (menu = v)" />
-    <div class="d-flex w-100 h-100" style="margin-top: 50px;background-color: #eeeef4; min-height: 100vh;">
-      <side-bar v-model="menu" @update="(v) => (menu = v)" />
-      <div :style="{ width: menu ? 'calc(100% - 250px)' : 'calc(100% - 70px)' }">
+    <div  style=" width: 100%;">
+      <router-view></router-view>
+    </div>
+    <!-- <nav-bar v-model="menu" @update="(v) => (menu = v)" />
+    <div
+      class="d-flex w-100 h-100"
+      style="margin-top: 50px; background-color: #eeeef4; min-height: 100vh"
+    >
+      <side-bar class="sidebar" v-model="menu" @update="(v) => (menu = v)" />
+      <div
+        class="content-container"
+        :style="{ width: menu ? 'calc(100% - 250px)' : 'calc(100% - 70px)' }"
+      >
         <transition name="slide-fade">
           <router-view />
         </transition>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -31,28 +40,27 @@ export default {
 <style>
 .slide-fade-enter-active {
   /* transition: all .9s ease-in-out; */
-  animation: side-fade .9s ease-out; 
+  animation: side-fade 0.9s ease-out;
 }
 @keyframes side-fade {
-  from{
+  from {
     transform: translateX(-30px);
-    opacity: 0.5;
-
-  } to {
+    opacity: 0.1;
+  }
+  to {
     transform: translateX(0px);
     opacity: 1;
-
   }
 }
 /* .slide-fade-leave-active {
   transition: all .0s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 } */
- .slide-fade-leave-to{
+.slide-fade-leave-to {
   opacity: 0;
 }
 .form-control:focus {
-  box-shadow: 0 0 0 0.2rem #f3cbf3!important;
-  border-color:#f3cbf3!important
+  /* box-shadow: 0 0 0 0.2rem #f3cbf3!important; */
+  border-color: #f3cbf3 !important;
 }
 .text-white {
   color: white;
@@ -62,6 +70,9 @@ export default {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.font-size-14 {
+  font-size: 14px;
 }
 .font-size-16 {
   font-size: 16px;
@@ -134,6 +145,25 @@ li {
 .bg-light-ray {
   background-color: rgb(228, 219, 219);
 }
+.loader {
+  width: 25px;
+  height: 25px;
+  --b: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 1px;
+  background: conic-gradient(#0000 10%, #a709a7) content-box;
+  -webkit-mask: repeating-conic-gradient(#0000 0deg, #000 1deg 20deg, #0000 21deg 36deg),
+    radial-gradient(farthest-side, #0000 calc(100% - var(--b) - 1px), #000 calc(100% - var(--b)));
+  -webkit-mask-composite: destination-in;
+  mask-composite: intersect;
+  animation: l4 1s infinite steps(10);
+}
+@keyframes l4 {
+  to {
+    transform: rotate(1turn);
+  }
+}
 #app {
   font-family: "Times New Roman", Times, serif;
   /* -webkit-font-smoothing: antialiased;
@@ -154,4 +184,12 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 } */
+@media screen and (max-width: 992px) {
+  .content-container {
+    width: 100% !important;
+  }
+  /* .sidebar {
+    display: none; 
+  } */
+}
 </style>

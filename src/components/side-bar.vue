@@ -1,76 +1,124 @@
 <template>
-  <div class="side-bar-wrapper bg-white">
-    <div v-if="menu" class="menu-title">
-      <div
-        class="cursor-pointer"
-        v-for="item in listMenu"
-        :key="item.title"
-        @click="setActive(item)"
-      >
+  <div class="bg-white">
+    <div class="side-bar-wrapper">
+      <div v-if="menu" class="menu-title">
         <div
-          class="d-flex align-items-center menu-title-render"
-          :class="item.active ? 'bg-light-ray' : 'bg-write'"
-          @click="checkItem(item)"
+          class="cursor-pointer"
+          v-for="item in listMenu"
+          :key="item.title"
+          @click="setActive(item)"
+        >
+          <div
+            class="d-flex align-items-center menu-title-render"
+            :class="item.active ? 'bg-light-ray' : 'bg-write'"
+            @click="checkItem(item)"
+          >
+            <div
+              :class="item.active ? 'menu-icon-active bg-purple' : 'menu-icon-active bg-write'"
+            ></div>
+            <div
+              class="d-flex align-items-center ml-4 item-render"
+              :class="item.active ? 'text-purple' : 'text-secondary'"
+            >
+              <i :class="item.icon" class="font-size-20 mr-2"></i>
+              <span class="text-uppercase pr-5">{{ item.title }}</span>
+              <i
+                v-if="item.children && itemClick != item.title"
+                class="bx bx-chevron-down pl-2"
+              ></i>
+              <i v-if="item.children && itemClick == item.title" class="bx bx-chevron-up pl-2"></i>
+            </div>
+          </div>
+          <div v-if="item.children && itemClick == item.title">
+            <div v-for="i in item.children" :key="i.title" @click="setActiveChildren(item, i)">
+              <div
+                class="title pl-5 py-2"
+                :class="i.active ? 'text-purple' : 'text-secondary'"
+                style=""
+              >
+                {{ i.title }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="menu-icon" v-else>
+        <div
+          v-for="item in listMenu"
+          :key="item.title"
+          class="d-flex cursor-pointer menu-icon-render"
+          @mouseleave="itemMouse = ''"
+          @click="setActive(item)"
         >
           <div
             :class="item.active ? 'menu-icon-active bg-purple' : 'menu-icon-active bg-write'"
           ></div>
-          <div
-            class="d-flex align-items-center ml-4 item-render"
-            :class="item.active ? 'text-purple' : 'text-secondary'"
-          >
-            <i :class="item.icon" class="font-size-20 mr-2"></i>
-            <span class="text-uppercase pr-5">{{ item.title }}</span>
-            <i v-if="item.children && itemClick != item.title" class="bx bx-chevron-down pl-2"></i>
-            <i v-if="item.children && itemClick == item.title" class="bx bx-chevron-up pl-2"></i>
-          </div>
-        </div>
-        <div v-if="item.children && itemClick == item.title">
-          <div v-for="i in item.children" :key="i.title" @click="setActiveChildren(item, i)">
-            <div
-              class="title pl-5 py-2"
-              :class="i.active ? 'text-purple' : 'text-secondary'"
-              style=""
-            >
-              {{ i.title }}
+          <i
+            @mouseover="itemMouse = item"
+            :class="[
+              item.icon === itemMouse.icon ? 'text-purple ' + item.icon : item.icon,
+              item.active ? 'text-purple' : 'text-secondary',
+            ]"
+            class="font-size-24 icon"
+          ></i>
+          <div class="font-size-20 menu-icon-title" v-show="item.icon === itemMouse.icon">
+            <span class="text-purple">
+              {{ item.title }}
+            </span>
+            <div class="menu-icon-children-wrap">
+              <div
+                v-for="i in item?.children"
+                :key="i.title"
+                class="font-size-16 cursor-pointer pl-3 menu-icon-children"
+                @click="setActiveChildren(item, i)"
+              >
+                <span class="title" :class="i.active ? 'text-purple' : 'text-secondary'">
+                  {{ i.title }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="menu-icon" v-else>
-      <div
-        v-for="item in listMenu"
-        :key="item.title"
-        class="d-flex cursor-pointer menu-icon-render"
-        @mouseleave="itemMouse = ''"
-        @click="setActive(item)"
-      >
+    <div v-if="!menu" class="side-bar-wrap bg-white h-100 " style="position: relative">
+      <div  class="menu-res h-100  bg-white" style="position: absolute; width:226px">
         <div
-          :class="item.active ? 'menu-icon-active bg-purple' : 'menu-icon-active bg-write'"
-        ></div>
-        <i
-          @mouseover="itemMouse = item"
-          :class="[
-            item.icon === itemMouse.icon ? 'text-purple ' + item.icon : item.icon,
-            item.active ? 'text-purple' : 'text-secondary',
-          ]"
-          class="font-size-24 icon"
-        ></i>
-        <div class="font-size-20 menu-icon-title" v-show="item.icon === itemMouse.icon">
-          <span class="text-purple">
-            {{ item.title }}
-          </span>
-          <div class="menu-icon-children-wrap">
+          class="cursor-pointer"
+          v-for="item in listMenu"
+          :key="item.title"
+          @click="setActive(item)"
+        >
+          <div
+            class="d-flex align-items-center menu-title-render"
+            :class="item.active ? 'bg-light-ray' : 'bg-write'"
+            @click="checkItem(item)"
+          >
             <div
-              v-for="i in item?.children"
-              :key="i.title"
-              class="font-size-16 cursor-pointer pl-3 menu-icon-children"
-              @click="setActiveChildren(item, i)"
+              :class="item.active ? 'menu-icon-active bg-purple' : 'menu-icon-active bg-write'"
+            ></div>
+            <div
+              class="d-flex align-items-center ml-4 item-render"
+              :class="item.active ? 'text-purple' : 'text-secondary'"
             >
-              <span class="title" :class="i.active ? 'text-purple' : 'text-secondary'">
+              <i :class="item.icon" class="font-size-20 mr-2"></i>
+              <span class="text-uppercase pr-5">{{ item.title }}</span>
+              <i
+                v-if="item.children && itemClick != item.title"
+                class="bx bx-chevron-down pl-2"
+              ></i>
+              <i v-if="item.children && itemClick == item.title" class="bx bx-chevron-up pl-2"></i>
+            </div>
+          </div>
+          <div v-if="item.children && itemClick == item.title">
+            <div v-for="i in item.children" :key="i.title" @click="setActiveChildren(item, i)">
+              <div
+                class="title pl-5 py-2"
+                :class="i.active ? 'text-purple' : 'text-secondary'"
+                style=""
+              >
                 {{ i.title }}
-              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -79,12 +127,11 @@
   </div>
 </template>
 <script>
-import { eventBus } from "@/main";
 import menu from "./data/menu.json";
 export default {
   name: "side-bar",
-  props:{
-    value:Boolean
+  props: {
+    value: Boolean,
   },
   data() {
     return {
@@ -96,17 +143,17 @@ export default {
     };
   },
   watch: {
-    menu:{
-        handler(){
-            this.$emit('update', this.menu)
-        },
-        deep:true
-    },
-    value:{
-      handler(){
-        this.menu = this.value
+    menu: {
+      handler() {
+        this.$emit("update", this.menu);
       },
-      deep:true
+      deep: true,
+    },
+    value: {
+      handler() {
+        this.menu = this.value;
+      },
+      deep: true,
     },
     $route: {
       handler(newValue, oldValue) {
@@ -146,7 +193,6 @@ export default {
         if (this.$route.path != value.to) {
           this.$router.push({ path: value.to });
         }
-        eventBus.$emit("menu", this.menu);
         this.menu = true;
         this.itemHover = "";
         this.itemClick = "";
@@ -192,7 +238,7 @@ export default {
     },
   },
   created() {
-    this.menu= this.value
+    this.menu = this.value;
   },
 };
 </script>
@@ -262,5 +308,22 @@ export default {
 .side-bar-wrapper {
   z-index: 900;
   padding-top: 20px;
+}
+.side-bar-wrap {
+  display: none;
+}
+.menu-icon-title{
+  z-index: 900;
+}
+@media screen and (max-width: 992px) {
+  .side-bar-wrapper {
+    display: none;
+  }
+  .side-bar-wrap {
+    display: block;
+  }
+  .menu-res {
+    z-index: 900;
+  }
 }
 </style>

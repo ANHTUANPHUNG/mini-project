@@ -3,22 +3,37 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    name: 'admin.dashboard',
-    path: '/',
-    component: () => import('./../components/dashboard'),
-    redirect: {
+	{
+		name: 'register-login',
+		path: '/',
+		component: () => import('./../components/register-login'),
+		redirect: {
+			name: 'register-login.login',
+		},
+		children: [
+			{
+				name: 'register-login.login',
+				path: '/login',
+				component: () => import('./../components/register-login/login'),
+			},
+		]
+	},
+	{
+		name: 'admin.dashboard',
+		path: '/dashboard',
+		component: () => import('./../components/dashboard'),
+		redirect: {
 			name: 'admin.dashboard.home',
 		},
-    children: [
+		children: [
 			{
 				name: 'admin.dashboard.home',
 				path: '/admin/home',
 				component: () => import('./../components/dashboard/list'),
 			},
-    ]
-  },
-  {
+		]
+	},
+	{
 		name: 'admin.food-menu.drink',
 		path: '/admin/food-menu/drink',
 		component: () => import('./../components/food-menu/drink'),
@@ -43,7 +58,7 @@ const routes = [
 			},
 		],
 	},
-  {
+	{
 		name: 'admin.food-menu.food',
 		path: '/admin/food-menu/food',
 		component: () => import('./../components/food-menu/food'),
@@ -68,7 +83,7 @@ const routes = [
 			},
 		],
 	},
-  {
+	{
 		name: 'admin.food-menu.specialty',
 		path: '/admin/food-menu/specialty',
 		component: () => import('./../components/food-menu/specialty'),
@@ -93,17 +108,17 @@ const routes = [
 			},
 		],
 	},
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   component: () => import('../views/AboutView.vue')
-  // }
+	// {
+	//   path: '/about',
+	//   name: 'about',
+	//   component: () => import('../views/AboutView.vue')
+	// }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+	mode: 'history',
+	base: process.env.BASE_URL,
+	routes
 })
 
 export default router

@@ -33,4 +33,5 @@ export default {
 .button-custom:focus {
   box-shadow: 0 0 0 0.2rem #f3cbf3 !important;
 }
+
 </style>

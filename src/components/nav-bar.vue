@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between align-items-center px-3 w-100 nav-bar-wrapper">
     <div class="text-white d-flex align-items-center">
       <i class="bx bx-menu mr-3 font-size-26 cursor-pointer" @click="menu = !menu"></i>
-      <div class="font-size-20">Ẩm thực xứ Huế</div>
+      <div class="font-size-20 display-none">Ẩm thực xứ Huế</div>
     </div>
     <div
       class="cursor-pointer d-flex align-items-center"
@@ -10,7 +10,7 @@
       style="position: relative"
     >
       <img src="./../assets/logo.png" class="avatar bg-white" />
-      <span class="text-white font-size-18 px-2">Bà Tuyết</span>
+      <span class="text-white font-size-18 px-2 display-none">Bà Tuyết</span>
 
       <i class="bx bx-chevron-down font-size-20 text-white"></i>
       <div class="pt-1 cursor-pointer dropdown-list" v-if="dropdown">
@@ -90,5 +90,10 @@ img {
 }
 .dropdown-item:hover {
   background-color: rgb(248, 242, 242);
+}
+@media screen and (max-width : 576px) {
+  .display-none {
+    display: none;
+  }
 }
 </style>
