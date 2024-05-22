@@ -29,17 +29,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              class="text-center"
-              v-for="(entry, index) in entries"
-              :key="entry.id"
-            >
+            <tr class="text-center" v-for="(entry, index) in entries" :key="index">
               <th class="align-middle">{{ entry.index || index + 1 }}</th>
               <td class="align-middle">{{ entry.name }}</td>
-              <td class="align-middle">{{ entry.price }}</td>
+              <td class="align-middle">{{ formatNumberWithDotAndCurrency(entry.price) }}</td>
               <td class="align-middle">{{ entry.description }}</td>
               <td class="align-middle">
-                <img style="width: 60px; height: 60px;" :src="entry.image?.url" alt="" />
+                <img style="width: 60px; height: 60px" :src="entry.image?.url" alt="" />
               </td>
               <td class="align-middle">
                 <div
@@ -100,38 +96,49 @@ export default {
       perPage: 5,
       currentPage: 1,
       listData: 0,
-      rows:0
+      rows: 0,
     };
   },
   watch: {
     currentPage: {
       handler() {
-        let data =[]
-        for (let index = this.perPage * (this.currentPage-1); index < this.perPage * this.currentPage; index++) {
-          if(this.listData[index]){
+        let data = [];
+        for (
+          let index = this.perPage * (this.currentPage - 1);
+          index < this.perPage * this.currentPage;
+          index++
+        ) {
+          if (this.listData[index]) {
             data.push(this.listData[index]);
           }
         }
-        this.entries=data
+        this.entries = data;
       },
       deep: true,
     },
   },
   methods: {
+    formatNumberWithDotAndCurrency(number) {
+      let numStr = number.toString().replace(/^0+/, "");
+      let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      return formattedNum + " đ";
+    },
     async getList() {
       this.loading = true;
       const response = await axios.get("http://localhost:3300/food");
-      let data =[]
+      response.data.reverse()
+      let data = [];
       for (let index = 0; index < this.perPage * this.currentPage; index++) {
-        data.push(response.data[index]);
+        if (response.data[index]) {
+          data.push(response.data[index]);
+        }
       }
-      this.entries=data
+      this.entries = data;
       this.listData = response.data;
-
-      this.listData.map((element,index)=>{
-        element.index=index+1
-      })
-      this.rows = response.data.length
+      this.listData.map((element, index) => {
+        element.index = index + 1;
+      });
+      this.rows = response.data.length;
       this.loading = false;
     },
     async deleteItem(id) {
@@ -148,14 +155,13 @@ export default {
               timer: 1000,
               showConfirmButton: false,
             });
-            this.currentPage=1
+            this.currentPage = 1;
             this.getList();
           }
         },
       });
     },
     async updateStatus(entry) {
-      console.log(entry);
       let data;
       if (entry.status.id == 2) {
         data = { ...entry, status: { id: 1, name: "Đang bán" } };
@@ -163,14 +169,11 @@ export default {
         data = { ...entry, status: { id: 2, name: "Ngừng bán" } };
       }
       await this.$swal({
-        title: "Cập nhật trạng thái ?",
+        title: "Cập nhật trạng thái đồ uống ?",
         icon: "warning",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.patch(
-            `http://localhost:3300/food/` + entry.id,
-            data
-          );
+          let response = await axios.put(`http://localhost:3300/food/` + entry.id, data);
           if (response.status == 200) {
             this.$swal({
               title: "Cập nhật thành công",
@@ -198,18 +201,21 @@ export default {
         }
       });
       this.listData = arr;
-      this.listData.map((element,index)=>{
-        element.index=index+1
-      })
-      this.rows= this.listData.length
-      let data =[]
-        for (let index = this.perPage * (this.currentPage-1); index < this.perPage * this.currentPage; index++) {
-          if(this.listData[index]){
-            data.push(this.listData[index]);
-          }
+      this.listData.map((element, index) => {
+        element.index = index + 1;
+      });
+      this.rows = this.listData.length;
+      let data = [];
+      for (
+        let index = this.perPage * (this.currentPage - 1);
+        index < this.perPage * this.currentPage;
+        index++
+      ) {
+        if (this.listData[index]) {
+          data.push(this.listData[index]);
         }
-        this.entries=data
-
+      }
+      this.entries = data;
     },
   },
   created() {

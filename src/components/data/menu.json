@@ -12,12 +12,12 @@
         "to": "/admin/food-menu",
         "children": [
             {
-                "title": "Thức ăn",
+                "title": "Món ăn",
                 "active": false,
                 "to": "/admin/food-menu/food"
             },
             {
-                "title": "Đồ uống",
+                "title": "Nước uống",
                 "active": false,
                 "to": "/admin/food-menu/drink"
             },

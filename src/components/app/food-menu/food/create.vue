@@ -124,8 +124,7 @@ export default {
         });
         return;
       }
-      console.log(this.entry.image);
-
+      this.entry = {...this.entry, type:'food'}
       await this.$swal({
         title: "Thêm mới món ăn này?",
         icon: "warning",

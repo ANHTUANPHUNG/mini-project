@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="user?.role == 'admin'">
     <nav-bar v-model="menu" @update="(v) => (menu = v)" />
     <div
       class="d-flex w-100 h-100"
@@ -16,15 +16,20 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <error/>
+  </div>
 </template>
 <script>
 import NavBar from "../nav-bar.vue";
 import SideBar from "../side-bar.vue";
+import Error from "./../error.vue"
 export default {
   name: "index",
   components: {
     NavBar,
     SideBar,
+    Error
   },
   data() {
     return {
@@ -34,7 +39,7 @@ export default {
   },
   created() {
     const user = localStorage.getItem("user");
-    this.user = user;
+    this.user = JSON.parse(user)
   },
 };
 </script>

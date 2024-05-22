@@ -4,6 +4,42 @@ Vue.use(VueRouter)
 
 const routes = [
 	{
+		name: 'user',
+		path: '/',
+		component: () => import('./../components/user/index.vue'),
+		redirect: {
+			name: 'user.home',
+		},
+		children: [
+			{
+				name: 'user.home',
+				path: 'user/home',
+				component: () => import('./../components/user/list.vue'),
+			},
+			
+			{
+				name: 'user.specialty',
+				path: 'user/specialty',
+				component: () => import('./../components/user/list.vue'),
+			},
+			{
+				name: 'user.food',
+				path: 'user/food',
+				component: () => import('./../components/user/food-user.vue'),
+			},
+			{
+				name: 'user.drink',
+				path: 'user/drink',
+				component: () => import('./../components/user/drink-user.vue'),
+			},
+			{
+				name: 'user.contact',
+				path: 'user/contact',
+				component: () => import('./../components/user/specialty-user.vue'),
+			},
+		]
+	},
+	{
 		name: 'register-login',
 		path: '/',
 		component: () => import('./../components/register-login'),

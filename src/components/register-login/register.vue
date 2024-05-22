@@ -152,7 +152,8 @@ export default {
         });
         return;
       }
-      this.entry = {...this.entry, role:'client'}
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      this.entry = {...this.entry, role:'client', created: date}
       await this.$swal({
         title: "Tạo tài khoản?",
         icon: "warning",

@@ -69,6 +69,10 @@ export default {
         const user = JSON.stringify(checkAccount)
         localStorage.setItem('user', user)
         this.$router.push({name:"admin.dashboard"})
+      } else{
+        const user = JSON.stringify(checkAccount)
+        localStorage.setItem('user', user)
+        this.$router.push({name:"user.home"})
       }
     },
   },

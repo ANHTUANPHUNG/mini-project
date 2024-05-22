@@ -122,6 +122,7 @@ export default {
         });
         return;
       }
+      this.entry = {...this.entry, type:'food'}
       await this.$swal({
         title: "Chỉnh sửa món ăn này?",
         icon: "warning",
@@ -130,7 +131,7 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.patch(
+          const response = await axios.put(
             "http://localhost:3300/food/" + this.itemId,
             this.entry
           );
