@@ -40,7 +40,7 @@ export default {
 </script>
 <style scoped>
 .img-fluid {
-  max-width: 100%;
+  width: 100%;
   height: 20px !important;
 }
 </style>

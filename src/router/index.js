@@ -14,28 +14,27 @@ const routes = [
 			{
 				name: 'user.home',
 				path: 'user/home',
-				component: () => import('./../components/user/list.vue'),
-			},
-			
-			{
-				name: 'user.specialty',
-				path: 'user/specialty',
-				component: () => import('./../components/user/list.vue'),
+				component: () => import('./../components/user/partials/home.vue'),
 			},
 			{
 				name: 'user.food',
 				path: 'user/food',
-				component: () => import('./../components/user/food-user.vue'),
+				component: () => import('./../components/user/partials/food-user.vue'),
 			},
 			{
 				name: 'user.drink',
 				path: 'user/drink',
-				component: () => import('./../components/user/drink-user.vue'),
+				component: () => import('./../components/user/partials/drink-user.vue'),
 			},
 			{
-				name: 'user.contact',
-				path: 'user/contact',
-				component: () => import('./../components/user/specialty-user.vue'),
+				name: 'user.specialty',
+				path: 'user/specialty',
+				component: () => import('./../components/user/partials/specialty-user.vue'),
+			},
+			{
+				name: 'user.detail',
+				path: 'user/detail/:id/:type',
+				component: () => import('./../components/user/partials/detail-user.vue'),
 			},
 		]
 	},
