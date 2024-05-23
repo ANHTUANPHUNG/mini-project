@@ -1,9 +1,9 @@
 <template>
   <div v-if="!checkForm" class="row mb-3">
     <div class="col-12">
-      <span class="font-size-20" style="font-weight: 900; text-transform: uppercase">{{
-        title
-      }}</span>
+      <span class="font-size-20" style="font-weight: 900; text-transform: uppercase">
+        {{ title }}
+      </span>
     </div>
     <div class="col-12 mt-2" style="">
       <div
@@ -20,18 +20,17 @@
             v-for="(item, index) in displayItems"
             :key="index"
             @click="productDetail(item)"
-
           >
-            <div class="w-100" style="display: grid; position: relative">
-              <img style="width: 100%; height: 300px;" :src="item.image?.secure_url" alt="" />
-              <span style="font-weight: 800;" class="text-center pt-2 font-size-18">
+            <div class="w-100 image-container" style="display: grid; position: relative">
+              <img class="image" style="width: 100%; height: 300px;" :src="item.image?.secure_url" alt="" />
+              <span style="font-weight: 800;z-index: 20;" class="text-center pt-2 font-size-18 text-img">
                 {{ item.name }}
               </span>
               <div class="text-center pt-3">
-                <span class="">{{ formatNumberWithDotAndCurrency(item.price) }}</span>
+                <span style="font-weight: 600;z-index: 20;" class=" " >{{ formatNumberWithDotAndCurrency(item.price) }}</span>
               </div>
               <div style="position: absolute; bottom: 0; right: 10px">
-                <i class="bx bxs-cart-add font-size-26 " @click="addProduct(item)"></i>
+                <i class="bx bxs-cart-add font-size-26" @click.stop="addProduct(item)" ></i>
               </div>
             </div>
           </div>
@@ -42,7 +41,7 @@
       </div>
     </div>
   </div>
-  <div v-else>
+  <!-- <div v-else>
     <div class="col-12 " style="background-color: #cfc6a5; border-radius: 5px">
       <div
         style=" position: relative"
@@ -71,8 +70,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
+
 <script>
 import axios from "axios";
 
@@ -81,9 +81,9 @@ export default {
   props: {
     title: String,
     api: String,
-    checkForm:{
-      type:Boolean,
-      default:false
+    checkForm: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -92,24 +92,27 @@ export default {
       currentIndex: 0,
       window: {
         width: 0,
-        height: 0,
+        height: 0
       },
-      user:null
+      user: null
     };
   },
   computed: {
     displayItems() {
       const start = this.currentIndex;
-      let end = start + 2;
+      let end = 0;
       if (this.window.width >= 768) {
         end = start + 3;
       } else {
         end = start + 2;
       }
+      console.log(end);
+      console.log(start);
+      console.log(this.items.slice(0, Math.max(0, end - this.items.length)));
       return this.items
         .slice(start, end)
         .concat(this.items.slice(0, Math.max(0, end - this.items.length)));
-    },
+    }
   },
   destroyed() {
     window.removeEventListener("resize", this.handleResize);
@@ -127,7 +130,7 @@ export default {
     async getList() {
       const response = await axios.get("http://localhost:3300/" + this.api);
 
-      this.items = response.data.filter(({status}) => status.id == '1');
+      this.items = response.data.filter(({ status }) => status.id == 1);
     },
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.items.length;
@@ -135,34 +138,55 @@ export default {
     prev() {
       this.currentIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
     },
-    addProduct(value){
-      if(!this.user){
+    addProduct(value) {
+      if (!this.user) {
         this.$swal({
-              title: "Bạn chưa đăng nhập vào ứng dụng",
-              icon: "error",
-              timer: 1000,
-            });
-            return;
+          title: "Bạn chưa đăng nhập vào ứng dụng",
+          icon: "error",
+          timer: 1000
+        });
+        return;
       }
       console.log(value);
     },
-    productDetail(value){
-      this.$router.push({name:'user.detail', params:{id:value.id,type:value.type}})
+    productDetail(value) {
+      this.$router.push({ name: 'user.detail', params: { id: value.id, type: value.type } });
     }
   },
   created() {
     this.getList();
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
-    if(localStorage.getItem('user')){
-      this.user = JSON.parse(localStorage.getItem('user'))
+    if (localStorage.getItem('user')) {
+      this.user = JSON.parse(localStorage.getItem('user'));
     }
-  },
-
+  }
 };
 </script>
-<style scoped>
 
+<style scoped>
+#slider {
+  overflow: hidden;
+}
+
+.slide-leave-active,
+.slide-enter-active {
+  transition: 0.5s;
+}
+.slide-enter {
+  transform: translate(100%, 0);
+}
+.slide-leave-to {
+  transform: translate(-100%, 0);
+}
+.sliding-to-previous {
+    .slide-enter {
+      transform: translate(-100%, 0);
+    }
+    .slide-leave-to {
+      transform: translate(100%, 0);
+    }
+}
 .chevron-left,
 .chevron-right {
   position: absolute;
@@ -200,32 +224,33 @@ export default {
 }
 .item {
   width: 33.333333333333333%;
-  /* min-width: 100px; 
-  text-align: center;
-  flex: 0 0 auto; */
-  /* animation: item 1s ease-in-out; */
 }
-/* @keyframes item{
-    from{
-        right:-20px
-    }
-    to{
-        right: 0;
-    }
-} */
-/* .item-render:hover img{
-  animation: scaleImage 0.6s forwards;
+
+.image-container {
+  overflow: hidden;
+  will-change: transform;
+
+}   
+.image-container:hover .image {
+  animation: img 1s forwards;
+
+
 }
-@keyframes scaleImage {
+.image-container,
+.image-container:hover {
+  backface-visibility: visible;
+}
+
+@keyframes img{
   0%{
-    height: 100%;
+    transform: scale(1,1);
     opacity: 1;
   }
   100%{
-    height: 150%;
-    opacity: 0.5;
+    transform: scale(1.6,1.6);
+    opacity: 0.3;
   }
-} */
+}
 @media screen and (max-width: 768px) {
   .item {
     width: 50%;
