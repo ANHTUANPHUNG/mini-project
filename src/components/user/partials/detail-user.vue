@@ -7,8 +7,9 @@
       /
       <span style="font-weight: 600; text-transform: uppercase">Đồ ăn</span>
     </div>
-    <div class="row px-5">
-      <div class="col-sm-3 col-12">
+    <div class=" px-5">
+      <div class="row">
+        <div class="col-sm-3 col-12">
         <div><menu-item /></div>
         <div>
           <span style="font-weight: 900; text-transform: uppercase"
@@ -31,42 +32,43 @@
               <img
                 class="w-100"
                 style="max-height: 350px"
-                :src="entry?.image.secure_url"
+                :src="entry?.product.image.secure_url"
                 alt=""
               />
             </div>
             <div class="col-lg-6 col-12 py-3" style="">
               <div style="font-weight: 800; font-size: 40px">
-                {{ entry?.name }}
+                {{ entry?.product.name }}
               </div>
               <div style="font-size: 20px" class="mb-2">
                 Giá tiền:
                 <span class="text-danger" style="font-weight: 800">
-                  {{ entry?.price }}</span
+                  {{ entry?.product.price }}</span
                 >
               </div>
               <div class="my-2" style="font-size: 20px">
-                Thông tin món:<span> {{ entry?.description }}</span>
+                Thông tin món:<span> {{ entry?.product.description }}</span>
               </div>
               <div>
                 <div style="font-size: 20px" class="my-2">
                   Số lượng sản phẩm
                 </div>
                 <b-button-group class="my-2">
-                  <b-button @click="minus" variant="">-</b-button>
+                  <b-button :disabled="entry.quantity == 1"
+                            @click="entry.quantity--" variant="">-</b-button>
                   <b-input
                     style="width: 60px"
                     type="number"
-                    v-model="count"
+                    :value="entry?.quantity"
                   ></b-input>
-                  <b-button @click="add" variant="">+</b-button>
+                  <b-button @click="entry.quantity += 1" variant="">+</b-button>
                 </b-button-group>
                 <div class="my-2" style="font-size: 20px">
-                  Tổng tiền:<span> {{ totalProduct }}</span>
+                  Tổng tiền:<span> {{ entry?.product.price * entry?.quantity }}</span>
                 </div>
               </div>
               <div class="my-4">
-                <b-button class="w-100" variant="success"> Mua hàng</b-button>
+                <b-button class="w-100" variant="success" @click="addProduct"> Thêm vào giỏ hàng</b-button>
               </div>
             </div>
           </div>
@@ -99,6 +101,7 @@
           </div>
         </div>
       </div>
+      </div>
     </div>
   </div>
 </template>
@@ -122,9 +125,9 @@ export default {
     };
   },
   computed: {
-    totalProduct() {
-      return this.count * this.entry?.price;
-    },
+    // totalProduct() {
+    //   return this.count * this.entry?.price;
+    // },
   },
   watch:{
     $route:{
@@ -143,31 +146,31 @@ export default {
       );
       const data= res.data.filter((e) => e.status.id ==1);
       const index = data.findIndex(({ id }) => id == this.$route.params.id);
-      this.entry= data[index]
+      const productLocal = JSON.parse(localStorage.getItem('products'))
+      const newEntries = productLocal?.products.find(e => e.product.id ==data[index].id && e.product.name ==data[index].name)
+
+      if(newEntries){
+        this.entry = newEntries
+        console.log(newEntries);
+      } 
+      else{
+        this.entry= {product:data[index],quantity:1,totalProduct:data[index]?.price }
+      }
       this.entries = [
         data[(index + 1) % data.length],
         data[(index + 2) % data.length],
         data[(index + 3) % data.length],
       ];
-      console.log(this.entries);
       this.loading=false
     },
-
-    add() {
-      this.count++;
+    addProduct(){
+      const productLocal = JSON.parse(localStorage.getItem('products'))
+      const index = productLocal?.products.findIndex(e => e.product.id ==this.entry.product.id && e.product.name ==this.entry.product.name)
+      productLocal.products[index].quantity=this.entry.quantity
+      productLocal.products[index].totalProduct=this.entry.totalProduct
+      localStorage.setItem('products')
     },
-    minus() {
-      if (this.count <= 1) {
-        this.$swal({
-          text: "Số lượng không được bé hơn 1.",
-          showConfirmButton: false,
-          timer: 1000,
-          icon: "error",
-        });
-        return;
-      }
-      this.count--;
-    },
+    
   },
   created(){
     

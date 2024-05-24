@@ -122,6 +122,7 @@
           });
           return;
         }
+        this.entry = {...this.entry,price:Number(this.entry.price), type:'specialty'}
         await this.$swal({
           title: "Chỉnh sửa món đặc sản này?",
           icon: "warning",

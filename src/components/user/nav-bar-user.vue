@@ -34,13 +34,13 @@
           >
             Thức uống
           </li>
-          <li
+          <!-- <li
             :class="menu == 'user.contact' ? 'active' : ''"
             class="menu-item"
             @click="$router.push({ name: 'user.contact' })"
           >
             Liên hệ
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
@@ -51,8 +51,56 @@
     </div>
     <div class="d-flex" v-else>
       <div class="cart">
-        <i class="bx bxs-cart" style="position: relative">
-          <b-badge variant="danger" class="badge">1</b-badge>
+        <i
+          class="bx bxs-cart"
+          style="position: relative"
+          @mouseover="dropdownItem = true"
+          @mouseleave="dropdownItem = false"
+          @click="$router.push({ name: 'user.cart' })"
+        >
+          <b-badge v-if="quantity != 0" variant="danger" class="badge">{{ quantity }}</b-badge>
+          <div
+            v-if="dropdownItem && entries?.products.length"
+            class="bg-white"
+            style="
+              position: absolute;
+              border: 1px solid gainsboro;
+              padding: 10px;
+              right: 0;
+              min-width: 300px;
+            "
+          >
+            <div
+              class="d-flex justify-content-between border-bottom py-2"
+              v-for="item in entries.products"
+              :key="item.product.id"
+            >
+              <div class="d-flex">
+                <img
+                  style="width: 70px; height: 70px"
+                  :src="item.product.image?.secure_url"
+                  alt=""
+                />
+
+                <div class="pl-2">
+                  <div class="font-size-16 pb-3" style="color: black">{{ item.product.name }}</div>
+                  <div class="font-size-16 text-secondary">
+                    {{ item.quantity }} x {{ item.product.price }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="font-size-26 text-secondary">
+                <i class="bx bx-x-circle" @click.stop="removeItem(item)"></i>
+              </div>
+            </div>
+            <div class="border-bottom py-2 font-size-16 text-center">
+              Tạm tính: <span class="font-size-20">{{ entries.totalProducts }}</span>
+            </div>
+            <div>
+              <b-button class="w-100" variant="primary">Xem giỏ hàng</b-button>
+            </div>
+          </div>
         </i>
       </div>
       <div
@@ -61,7 +109,6 @@
         style="position: relative"
       >
         <span class="text-white font-size-18 px-2 display-none">Bà Tuyết</span>
-
         <i class="bx bx-chevron-down font-size-20 text-white"></i>
         <div class="pt-1 cursor-pointer dropdown-list" v-if="dropdown">
           <div class="pl-2 pb-2 dropdown-item"><i class="bx bx-user"></i> Thông tin</div>
@@ -77,6 +124,8 @@
   </div>
 </template>
 <script>
+import { eventBus } from "@/main";
+
 export default {
   name: "nav-bar-user",
   components: {},
@@ -85,6 +134,9 @@ export default {
       user: null,
       dropdown: false,
       menu: "",
+      quantity: 0,
+      entries: null,
+      dropdownItem: false,
     };
   },
   watch: {
@@ -94,17 +146,36 @@ export default {
       },
       deep: true,
     },
+    entries: {
+      handler() {
+        eventBus.$emit("entries-nav", this.entries);
+      },
+      deep: true,
+    },
   },
   methods: {
     handleLogout() {
       localStorage.removeItem("user");
+      localStorage.removeItem("products");
       this.$router.push({ name: "register-login" });
+    },
+    removeItem(item) {
+      const newEntries = this.entries.products.filter(e => e.product.id !=item.product.id && e.product.name !=item.product.name)
+      this.entries.totalQuantity -= item.quantity;
+      this.entries.totalProducts -= item.totalProduct;
+      this.entries.products= newEntries
+      this.quantity = this.entries.totalQuantity;
+      localStorage.setItem("products", JSON.stringify(this.entries));
     },
   },
   created() {
-    const user = localStorage.getItem("user");
-    this.user = JSON.parse(user);
+    this.user = JSON.parse(localStorage.getItem("user"));
+    this.quantity = JSON.parse(localStorage.getItem("products"))?.totalQuantity;
+    this.entries = JSON.parse(localStorage.getItem("products"));
     this.menu = this.$route.name;
+    eventBus.$on("entries", (value) => {
+      (this.entries = value), (this.quantity = value.totalQuantity);
+    });
   },
 };
 </script>
@@ -143,7 +214,7 @@ export default {
 }
 .badge {
   position: absolute;
-  width: 19px;
+  /* width: 19px; */
   font-size: small;
   border-radius: 10px;
   right: -6px;

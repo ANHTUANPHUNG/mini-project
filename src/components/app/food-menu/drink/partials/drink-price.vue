@@ -14,7 +14,7 @@ export default {
 	data() {
 		return {
 			entry: {
-				price: '',
+				price: 0,
 			},
 		}
 	},

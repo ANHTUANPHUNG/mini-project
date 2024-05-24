@@ -124,7 +124,7 @@ export default {
         });
         return;
       }
-      this.entry = {...this.entry, type:'food'}
+      this.entry = {...this.entry,price:Number(this.entry.price), type:'food'}
       await this.$swal({
         title: "Thêm mới món ăn này?",
         icon: "warning",

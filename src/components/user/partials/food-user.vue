@@ -4,8 +4,9 @@
       <span class="page-home" @click="$router.push({ name: 'user.home' })">Trang chủ</span> /
       <span style="font-weight: 600; text-transform: uppercase">Đồ ăn</span>
     </div>
-    <div class="row px-5">
-      <div class="col-sm-3 col-12">
+    <div class=" px-5">
+      <div class="row">
+        <div class="col-sm-3 col-12">
         <div><menu-item /></div>
         <div>
           <span style="font-weight: 900; text-transform: uppercase">Sản phẩm bán chạy</span>
@@ -18,8 +19,9 @@
       </div>
       <div class="col-lg-9 col-12">
         <div class="row">
-          <product-item :checkForm="true" title="Đặc sản" api="food" />
+          <product-item :checkForm="true" title="Đồ ăn" api="food" />
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -28,7 +30,7 @@
 import MenuItem from "./menu-item.vue";
 import ProductItem from "./product-item.vue";
 export default {
-  name: "list",
+  name: "food-user",
   components: {
     MenuItem,
     ProductItem,

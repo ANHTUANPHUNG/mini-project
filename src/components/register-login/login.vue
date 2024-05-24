@@ -1,6 +1,6 @@
 <template>
   <div style="position: relative">
-    <img class="w-100" src="./../../assets/Untitled.png" alt="" />
+    <img class="w-100 " style="max-height: 641px" src="./../../assets/Untitled.png" alt="" />
     <div class="form-login p-4" v-if="registerLogin == 'login'">
       <username v-model="entry" @update="(v) => (entry = v)"/>
       <password v-model="entry" @update="(v) => (entry = v)"/>

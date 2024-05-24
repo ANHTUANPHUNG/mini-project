@@ -122,6 +122,8 @@
           });
           return;
         }
+        this.entry = {...this.entry,price:Number(this.entry.price), type:'drink'}
+
         await this.$swal({
           title: "Chỉnh sửa đồ uống này?",
           icon: "warning",

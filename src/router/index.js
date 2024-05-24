@@ -36,6 +36,11 @@ const routes = [
 				path: 'user/detail/:id/:type',
 				component: () => import('./../components/user/partials/detail-user.vue'),
 			},
+			{
+				name: 'user.cart',
+				path: 'user/cart',
+				component: () => import('./../components/user/partials/cart-user.vue'),
+			},
 		]
 	},
 	{
