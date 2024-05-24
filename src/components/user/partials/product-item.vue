@@ -1,5 +1,14 @@
 <template>
-  <div v-if="!checkForm" class="row mb-3">
+  <div v-if="loading" class="text-center w-100 d-flex justify-content-center py-5">
+    <div  >
+        <div style="text-align: -webkit-center">
+          <div class="loader"></div>
+          <span>Đang tải dữ liệu</span>
+        </div>
+      </div>
+  </div>
+  <div v-else>
+    <div v-if="!checkForm" class="row mb-3">
     <div class="col-12">
       <span class="font-size-20" style="font-weight: 900; text-transform: uppercase">
         {{ title }}
@@ -56,7 +65,7 @@
       <div style="position: relative">
         <div class="row p-2 mb-4">
           <div
-            class="col-3 py-2 item-render"
+            class="col-lg-3 col-md-4 col-sm-4 col-6 py-2 item-render"
             style="cursor: pointer; border: 1px solid gainsboro"
             v-for="(item, index) in items"
             :key="index"
@@ -78,6 +87,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -104,6 +114,7 @@ export default {
       },
       user: null,
       entries: null,
+      loading:false
     };
   },
   computed: {
@@ -142,8 +153,11 @@ export default {
       return formattedNum + " đ";
     },
     async getList() {
+      this.loading = true
       const response = await axios.get("http://localhost:3300/" + this.api);
       this.items = response.data.filter(({ status }) => status.id == 1);
+      this.loading = false
+
     },
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.items.length;
@@ -160,7 +174,14 @@ export default {
         });
         return;
       }
-      const resLocal = JSON.parse(localStorage.getItem("products"));
+      this.$swal({
+        title: "Thêm sản phẩm vào giỏ hàng?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
+        preConfirm: () => {
+          const resLocal = JSON.parse(localStorage.getItem("products"));
       let data = {};
       if (!resLocal) {
         data.userId = this.user.id;
@@ -197,6 +218,9 @@ export default {
         }
       }
       this.entries = JSON.parse(localStorage.getItem("products"));
+        },
+      });
+      
     },
     productDetail(value) {
       this.$router.push({ name: "user.detail", params: { id: value.id, type: value.type } });

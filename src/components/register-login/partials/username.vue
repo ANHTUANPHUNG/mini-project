@@ -1,7 +1,11 @@
 <template>
   <b-form-group>
-    <div style="font-weight: 900"> Tên đăng nhập</div>
-    <b-form-input v-model="entry.username" placeholder="Nhập tên đăng nhập" />
+    <div style="font-weight: 900">Tên đăng nhập</div>
+    <b-form-input
+      @keyup.enter="checkEnter"
+      v-model="entry.username"
+      placeholder="Nhập tên đăng nhập"
+    />
   </b-form-group>
 </template>
 <script>
@@ -30,6 +34,11 @@ export default {
           username: this.entry.username,
         });
       },
+    },
+  },
+  methods: {
+    checkEnter(event) {
+      this.$emit("enter", event);
     },
   },
   created() {

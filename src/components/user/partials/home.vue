@@ -4,8 +4,8 @@
       <carousel />
     </div>
     <div class=" py-5 px-5">
-      <div class="row">
-        <div class="col-sm-3 col-12">
+      <div class="row reverse">
+        <div class="col-md-3 col-12 ">
         <div><menu-item /></div>
         <div>
           <span style="font-weight: 900; text-transform: uppercase">Sản phẩm bán chạy</span>
@@ -16,7 +16,7 @@
           </div>
         </div>
       </div>
-      <div class="col-lg-9 col-12">
+      <div class="col-md-9 col-12 ">
         <div class="row">
           <div class="col-12"><product-item title="Đặc sản" api="food" /></div>
           <div class="col-12"><product-item title="Đồ ăn" api="drink" /></div>
@@ -45,3 +45,10 @@ export default {
   },
 };
 </script>
+<style>
+@media (max-width: 768px) {
+  .reverse {
+    flex-direction: column-reverse;
+  }
+  
+}</style>

@@ -27,6 +27,9 @@ export default {
 };
 </script>
 <style>
+.swal2-shown .swal2-height-auto{
+  padding-right: 0px!important;
+}
 .slide-fade-enter-active {
   /* transition: all .9s ease-in-out; */
   animation: side-fade 0.9s ease-out;

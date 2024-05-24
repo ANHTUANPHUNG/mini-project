@@ -5,21 +5,21 @@
       <div
         :class="menu == 'user.specialty' ? 'active' : ''"
         class="border-bottom menu-item"
-        @click="$router.push({ name: 'user.specialty' })"
+        @click="checkName('user.specialty') "
       >
         Đặc sản
       </div>
       <div
         :class="menu == 'user.food' ? 'active' : ''"
         class="border-bottom menu-item"
-        @click="$router.push({ name: 'user.food' })"
+        @click="checkName('user.food') "
       >
         Đồ ăn
       </div>
       <div
         :class="menu == 'user.drink' ? 'active' : ''"
         class="border-bottom menu-item"
-        @click="$router.push({ name: 'user.drink' })"
+        @click="checkName('user.drink') "
       >
         Đồ uống
       </div>
@@ -40,6 +40,12 @@ export default {
         this.menu = this.$route.name;
       },
       deep: true,
+    },
+  },
+  methods:{
+    checkName(value){
+      if(this.$route.name == value) return
+      this.$router.push({name:value})
     },
   },
   created() {

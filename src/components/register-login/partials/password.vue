@@ -6,6 +6,7 @@
 
     <div v-else style="font-weight: 900">Mật khẩu</div>
     <b-form-input
+    @keyup.enter="checkEnter"
       type="password"
       v-model="entry.password"
       placeholder="Nhập mật khẩu"
@@ -43,6 +44,11 @@ export default {
         });
       },
     },
+  },
+  methods:{
+    checkEnter(event) {
+      this.$emit('enter',event)
+    }
   },
   created() {
     this.entry = this.value;

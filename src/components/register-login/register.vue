@@ -1,5 +1,5 @@
 <template>
-  <div  class="form-register p-4 row" style="max-width: 35%">
+  <div  class="form-register py-4 row  rounded" >
     <div class="col-12">
       <email v-model="entry" @update="(v) => (entry = v)" />
     </div>
@@ -182,10 +182,8 @@ export default {
 </script>
 <style scoped>
 .form-register {
-  position: absolute;
   background-color: white;
-  top: 70px;
-  left: 36%;
+
   opacity: 0.9;
   animation: register 1s ease-in-out;
 }

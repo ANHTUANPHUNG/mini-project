@@ -2,7 +2,8 @@
   <b-form-group>
     <div v-if="checkReset" style="font-weight: 900"  class="text-center"> Nhập email </div>
     <div v-else style="font-weight: 900"> Email</div>
-    <b-form-input v-model="entry.email" placeholder="Nhập email" />
+    <b-form-input v-model="entry.email"     @keyup.enter="checkEnter"
+ placeholder="Nhập email" />
   </b-form-group>
 </template>
 <script>
@@ -36,6 +37,11 @@ export default {
         });
       },
     },
+  },
+  methods:{
+    checkEnter(event) {
+      this.$emit('enter',event)
+    }
   },
   created() {
     this.entry = this.value;

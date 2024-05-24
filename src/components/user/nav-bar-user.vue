@@ -1,117 +1,186 @@
 <template>
-  <div class="d-flex justify-content-between py-2 align-items-center nav-bar-user-wrapper">
-    <div>
-      <img class="logo-img" src="./../../assets/logobunbohue06082016100021.jpg" alt="" />
+  <div
+    class="d-flex justify-content-between py-2 align-items-center nav-bar-user-wrapper"
+  >
+    <div v-if="!openLogo">
+      <img
+        class="logo-img"
+        src="./../../assets/logobunbohue06082016100021.jpg"
+        alt=""
+      />
     </div>
-    <div class="d-flex align-items-center">
-      <div class="text-white">
-        <ul>
-          <li
-            :class="menu == 'user.home' ? 'active' : ''"
-            class="menu-item"
-            @click="$router.push({ name: 'user.home' })"
-          >
-            Trang chủ
-          </li>
-          <li
-            :class="menu == 'user.specialty' ? 'active' : ''"
-            class="menu-item"
-            @click="$router.push({ name: 'user.specialty' })"
-          >
-            Đặc sản
-          </li>
-          <li
-            :class="menu == 'user.food' ? 'active' : ''"
-            class="menu-item"
-            @click="$router.push({ name: 'user.food' })"
-          >
-            Đồ ăn
-          </li>
-          <li
-            :class="menu == 'user.drink' ? 'active' : ''"
-            class="menu-item"
-            @click="$router.push({ name: 'user.drink' })"
-          >
-            Thức uống
-          </li>
-          <!-- <li
+    <div v-if="!openLogo" class="text-white">
+      <ul>
+        <li
+          :class="menu == 'user.home' ? 'active' : ''"
+          class="menu-item"
+          @click="checkName('user.home')"
+        >
+          Trang chủ
+        </li>
+        <li
+          :class="menu == 'user.specialty' ? 'active' : ''"
+          class="menu-item"
+          @click="checkName('user.specialty')"
+        >
+          Đặc sản
+        </li>
+        <li
+          :class="menu == 'user.food' ? 'active' : ''"
+          class="menu-item"
+          @click="checkName('user.food')"
+        >
+          Đồ ăn
+        </li>
+        <li
+          :class="menu == 'user.drink' ? 'active' : ''"
+          class="menu-item"
+          @click="checkName('user.drink')"
+        >
+          Thức uống
+        </li>
+        <!-- <li
             :class="menu == 'user.contact' ? 'active' : ''"
             class="menu-item"
             @click="$router.push({ name: 'user.contact' })"
           >
             Liên hệ
           </li> -->
-        </ul>
-      </div>
+      </ul>
+    </div>
+    <div v-else class="text-white" style="position: relative">
+      <i class="bx bx-menu" style="font-size: 30px" @click="menu = !menu"> </i>
+      <ul
+        v-if="menu"
+        class="dropdown-list"
+        style="
+          position: absolute;
+          top: 42px;
+          left: -5px;
+          background-color: white;
+        "
+      >
+        <li
+          class="dropdown-item"
+          :class="menu == 'user.home' ? 'active' : ''"
+          @click="checkName('user.home')"
+        >
+          Trang chủ
+        </li>
+        <li
+          class="dropdown-item"
+          :class="menu == 'user.specialty' ? 'active' : ''"
+          @click="checkName('user.specialty')"
+        >
+          Đặc sản
+        </li>
+        <li
+          class="dropdown-item"
+          :class="menu == 'user.food' ? 'active' : ''"
+          @click="checkName('user.food')"
+        >
+          Đồ ăn
+        </li>
+        <li
+          class="dropdown-item"
+          :class="menu == 'user.drink' ? 'active' : ''"
+          @click="checkName('user.drink')"
+        >
+          Thức uống
+        </li>
+        <!-- <li
+            :class="menu == 'user.contact' ? 'active' : ''"
+            class="menu-item"
+            @click="$router.push({ name: 'user.contact' })"
+          >
+            Liên hệ
+          </li> -->
+      </ul>
     </div>
     <div v-if="!user" class="">
-      <b-button variant="light" @click="$router.push({ name: 'register-login' })"
+      <b-button
+        variant="light"
+        @click="$router.push({ name: 'register-login' })"
         >Đăng nhập</b-button
       >
     </div>
     <div class="d-flex" v-else>
       <div class="cart">
-        <i
-          class="bx bxs-cart"
-          style="position: relative"
-          @mouseover="dropdownItem = true"
-          @mouseleave="dropdownItem = false"
-          @click="$router.push({ name: 'user.cart' })"
+        <i class="bx bxs-cart" style="position: relative" @click="dropItem">
+          <b-badge v-if="quantity != 0" variant="danger" class="badge">{{
+            quantity
+          }}</b-badge>
+        </i>
+        <div
+          v-if="dropdownItem && entries?.products.length"
+          class="bg-white"
+          style="
+            position: absolute;
+            border: 1px solid gainsboro;
+            padding: 10px;
+            right: 0;
+            min-width: 300px;
+          "
         >
-          <b-badge v-if="quantity != 0" variant="danger" class="badge">{{ quantity }}</b-badge>
           <div
-            v-if="dropdownItem && entries?.products.length"
-            class="bg-white"
-            style="
-              position: absolute;
-              border: 1px solid gainsboro;
-              padding: 10px;
-              right: 0;
-              min-width: 300px;
-            "
+            class="d-flex justify-content-between border-bottom py-2"
+            v-for="item in entries.products"
+            :key="item.product.id"
           >
-            <div
-              class="d-flex justify-content-between border-bottom py-2"
-              v-for="item in entries.products"
-              :key="item.product.id"
-            >
-              <div class="d-flex">
-                <img
-                  style="width: 70px; height: 70px"
-                  :src="item.product.image?.secure_url"
-                  alt=""
-                />
+            <div class="d-flex">
+              <img
+                style="width: 70px; height: 70px"
+                :src="item.product.image?.secure_url"
+                alt=""
+              />
 
-                <div class="pl-2">
-                  <div class="font-size-16 pb-3" style="color: black">{{ item.product.name }}</div>
-                  <div class="font-size-16 text-secondary">
-                    {{ item.quantity }} x {{ item.product.price }}
-                  </div>
+              <div class="pl-2">
+                <div class="font-size-16 pb-3" style="color: black">
+                  {{ item.product.name }}
+                </div>
+                <div class="font-size-16 text-secondary">
+                  {{ item.quantity }} x {{ item.product.price }}
                 </div>
               </div>
+            </div>
 
-              <div class="font-size-26 text-secondary">
-                <i class="bx bx-x-circle" @click.stop="removeItem(item)"></i>
-              </div>
-            </div>
-            <div class="border-bottom py-2 font-size-16 text-center">
-              Tạm tính: <span class="font-size-20">{{ entries.totalProducts }}</span>
-            </div>
-            <div>
-              <b-button class="w-100" variant="primary">Xem giỏ hàng</b-button>
+            <div class="font-size-26 text-secondary">
+              <i class="bx bx-x-circle" @click.stop="removeItem(item)"></i>
             </div>
           </div>
-        </i>
+          <div
+            class="border-bottom py-2 font-size-16 text-center"
+            style="color: orange"
+          >
+            Tạm tính:
+            <span class="font-size-20" style="">{{
+              entries.totalProducts
+            }}</span>
+          </div>
+          <div>
+            <b-button
+              class="w-100"
+              variant="primary"
+              @click="checkName('user.cart'), (dropdownItem = false)"
+              >Xem giỏ hàng</b-button
+            >
+          </div>
+        </div>
       </div>
       <div
         class="cursor-pointer d-flex align-items-center"
         @click="dropdown = !dropdown"
         style="position: relative"
       >
-        <span class="text-white font-size-18 px-2 display-none">Bà Tuyết</span>
-        <i class="bx bx-chevron-down font-size-20 text-white"></i>
+        <span class="text-white font-size-16 px-2">Tài khoản</span>
+        <i
+          v-if="!openLogo"
+          class="bx bx-chevron-down font-size-20 text-white"
+        ></i>
         <div class="pt-1 cursor-pointer dropdown-list" v-if="dropdown">
-          <div class="pl-2 pb-2 dropdown-item"><i class="bx bx-user"></i> Thông tin</div>
+          <div class="pl-2 pb-2 dropdown-item">
+            <i class="bx bx-user"></i> Thông tin
+          </div>
           <div class="border-bottom pl-2 pb-2 dropdown-item">
             <i class="bx bx-key"></i> Đổi mật khẩu
           </div>
@@ -121,6 +190,12 @@
         </div>
       </div>
     </div>
+
+    <b-button v-b-modal.modal-1>Launch demo modal</b-button>
+
+  <b-modal id="modal-1" title="BootstrapVue">
+    <p class="my-4">Hello from modal!</p>
+  </b-modal>
   </div>
 </template>
 <script>
@@ -137,6 +212,12 @@ export default {
       quantity: 0,
       entries: null,
       dropdownItem: false,
+      window: {
+        width: 0,
+        height: 0,
+      },
+      openLogo: true,
+      menu: false,
     };
   },
   watch: {
@@ -152,23 +233,82 @@ export default {
       },
       deep: true,
     },
+    window: {
+      handler() {
+        if (this.window.width >= 576) {
+          this.openLogo = false;
+        } else {
+          this.openLogo = true;
+        }
+      },
+      deep: true,
+    },
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.handleResize);
   },
   methods: {
+    checkName(value) {
+      if (this.$route.name == value) return;
+      this.$router.push({ name: value });
+    },
+    handleResize() {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight;
+    },
     handleLogout() {
-      localStorage.removeItem("user");
-      localStorage.removeItem("products");
-      this.$router.push({ name: "register-login" });
+      this.$swal({
+        title: "Thoát khỏi ứng dụng?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
+        preConfirm: () => {
+          localStorage.removeItem("user");
+          localStorage.removeItem("products");
+          this.$router.push({ name: "register-login" });
+        },
+      });
     },
     removeItem(item) {
-      const newEntries = this.entries.products.filter(e => e.product.id !=item.product.id && e.product.name !=item.product.name)
-      this.entries.totalQuantity -= item.quantity;
-      this.entries.totalProducts -= item.totalProduct;
-      this.entries.products= newEntries
-      this.quantity = this.entries.totalQuantity;
-      localStorage.setItem("products", JSON.stringify(this.entries));
+      this.$swal({
+        title: "Xoá khỏi giỏ hàng?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
+        preConfirm: () => {
+          const newEntries = this.entries.products.filter(
+            (e) =>
+              e.product.id != item.product.id &&
+              e.product.name != item.product.name
+          );
+          this.entries.totalQuantity -= item.quantity;
+          this.entries.totalProducts -= item.totalProduct;
+          this.entries.products = newEntries;
+          this.quantity = this.entries.totalQuantity;
+          localStorage.setItem("products", JSON.stringify(this.entries));
+          this.dropdownItem = false;
+        },
+      });
+    },
+    dropItem() {
+      if (!this.entries || this.entries.products.length == 0) {
+        this.$swal({
+          title: "Hiện chưa có sản phẩm",
+          icon: "warning",
+          timer: 1000,
+          showCancelButton: false,
+        });
+        return;
+      }
+
+      this.dropdownItem = !this.dropdownItem;
     },
   },
   created() {
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize();
     this.user = JSON.parse(localStorage.getItem("user"));
     this.quantity = JSON.parse(localStorage.getItem("products"))?.totalQuantity;
     this.entries = JSON.parse(localStorage.getItem("products"));
@@ -206,11 +346,11 @@ export default {
   width: 51px;
   color: white;
   cursor: pointer;
+  position: relative;
 }
 .bxs-cart:hover {
   color: orange;
   font-size: 38px;
-  position: relative;
 }
 .badge {
   position: absolute;
@@ -279,10 +419,24 @@ export default {
     padding: 0 5px;
     font-size: 16px;
   }
+  .bxs-cart {
+    color: orange;
+    font-size: 30px;
+  }
+  .bxs-cart:hover {
+    color: orange;
+    font-size: 34px;
+  }
 }
 @media screen and (max-width: 767px) {
   .nav-bar-user-wrapper {
     height: 70px;
+  }
+}
+@media screen and (max-width: 576px) {
+  .nav-bar-user-wrapper {
+    padding: 10px 5px;
+    height: 50px;
   }
 }
 </style>

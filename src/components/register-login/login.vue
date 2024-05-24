@@ -1,25 +1,56 @@
 <template>
-  <div style="position: relative">
-    <img class="w-100 " style="max-height: 641px" src="./../../assets/Untitled.png" alt="" />
-    <div class="form-login p-4" v-if="registerLogin == 'login'">
-      <username v-model="entry" @update="(v) => (entry = v)"/>
-      <password v-model="entry" @update="(v) => (entry = v)"/>
-      <div  class="text-right pb-3 font-size-14 text-purple  " >
-       <span class="reset-password cursor-pointer" @click="registerLogin = 'resetPassword'">Quên mật khẩu</span> 
+  <div v-if="loading" style="position: relative; height: 100vh;">
+    <img
+      class="w-100"
+      style="height: 100%"
+      src="./../../assets/Untitled.png"
+      alt=""
+    />
+    <div class="form-container">
+      <div class="form-login p-4 rounded" v-if="registerLogin == 'login'">
+        <username
+          v-model="entry"
+          @update="(v) => (entry = v)"
+          @enter="checkEnter"
+        />
+        <password
+          v-model="entry"
+          @update="(v) => (entry = v)"
+          @enter="checkEnter"
+        />
+        <div class="text-right pb-3 font-size-14 text-purple">
+          <span
+            class="reset-password cursor-pointer"
+            @click="registerLogin = 'resetPassword'"
+            >Quên mật khẩu</span
+          >
+        </div>
+        <div class="d-flex justify-content-center">
+          <button-custom-refresh-save
+            :checkRefresh="false"
+            :value="false"
+            @save="login"
+          />
+        </div>
+        <div class="text-center pt-2 font-size-14">
+          Chưa có tài khoản?
+          <span class="text-register" @click="registerLogin = 'register'"
+            >Tạo tài khoản</span
+          >
+        </div>
       </div>
-      <div class="d-flex justify-content-center">
-        <button-custom-refresh-save :checkRefresh="false" :value="false" @save="login" />
+      <div v-else-if="registerLogin == 'register'" class="register">
+        <register
+          :value="registerLogin"
+          @checkUpdate="(v) => (registerLogin = v)"
+        />
       </div>
-      <div class="text-center pt-2 font-size-14">
-        Chưa có tài khoản?
-        <span class="text-register" @click="registerLogin = 'register'">Tạo tài khoản</span>
+      <div v-else class="reset">
+        <reset-password
+          :value="registerLogin"
+          @checkUpdate="(v) => (registerLogin = v)"
+        />
       </div>
-    </div>
-    <div v-else-if="registerLogin== 'register'" style="max-width: 35%">
-      <register :value="registerLogin" @checkUpdate="v=> registerLogin=v" />
-    </div>
-    <div v-else style="max-width: 35%">
-      <reset-password :value="registerLogin" @checkUpdate="v=> registerLogin=v" />
     </div>
   </div>
 </template>
@@ -31,7 +62,7 @@ import Dob from "./partials/dob.vue";
 import AddressUser from "./partials/address-user.vue";
 import Sex from "./partials/sex.vue";
 import Register from "./register.vue";
-import ResetPassword from './reset-password.vue';
+import ResetPassword from "./reset-password.vue";
 import axios from "axios";
 export default {
   name: "login",
@@ -43,20 +74,24 @@ export default {
     AddressUser,
     Sex,
     Register,
-    ResetPassword
+    ResetPassword,
   },
   data() {
     return {
-      registerLogin: 'login',
-      entry:{}
+      registerLogin: "login",
+      entry: {},
+      check: null,
+      loading: false,
     };
   },
   methods: {
     async login() {
       const response = await axios.get("http://localhost:3300/users");
-      const checkAccount = response.data.find((e) => (e.username == this.entry.username &&  e.password == this.entry.password));
-      // const password = response.data.find((e) => e.password == this.entry.password);
-      if (!checkAccount ) {
+      const checkAccount = response.data.find(
+        (e) =>
+          e.username == this.entry.username && e.password == this.entry.password
+      );
+      if (!checkAccount) {
         await this.$swal({
           text: "Tài khoản hoặc mật khẩu không đúng.",
           confirmButtonText: "Đồng ý",
@@ -65,34 +100,50 @@ export default {
         });
         return;
       }
-      if(checkAccount.role == 'admin'){
-        const user = JSON.stringify(checkAccount)
-        localStorage.setItem('user', user)
-        this.$router.push({name:"admin.dashboard"})
-      } else{
-        const user = JSON.stringify(checkAccount)
-        localStorage.setItem('user', user)
-        this.$router.push({name:"user.home"})
+      if (checkAccount.role == "admin") {
+        const user = JSON.stringify(checkAccount);
+        localStorage.setItem("user", user);
+        this.$router.push({ name: "admin.dashboard" });
+      } else {
+        const user = JSON.stringify(checkAccount);
+        localStorage.setItem("user", user);
+        this.$router.push({ name: "user.home" });
+      }
+    },
+    checkEnter(event) {
+      if (event.keyCode === 13) {
+        this.login();
       }
     },
   },
-  created(){
-    const user = localStorage.getItem('user')
-    if(user){
-      this.$router.push({name:"admin.dashboard"})
+  async created() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.role == "admin") {
+      await this.$router.push({ name: "admin.dashboard" });
+    } else if (user?.role == "client") {
+      await this.$router.push({ name: "user.home" });
     }
-  }
+    this.loading = true;
+  },
 };
 </script>
 <style scoped>
-.form-login {
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.form-login {
   background-color: white;
-  top: 140px;
-  left: 41%;
-  opacity: 0.9;
   animation: login 1s ease-in-out;
 }
+
 @keyframes login {
   from {
     transform: translateY(-100px);
@@ -115,5 +166,23 @@ export default {
 }
 .text-register:hover {
   color: #a709a7;
+}
+@media screen and (min-width: 992px) {
+  .register {
+    width: 50%;
+  }
+  .reset{
+    width: 30%;
+
+  }
+}
+@media screen and (min-width: 576px) and (max-width: 991px){
+  .register {
+    width: 70%;
+  }
+  .reset{
+    width: 50%;
+
+  }
 }
 </style>

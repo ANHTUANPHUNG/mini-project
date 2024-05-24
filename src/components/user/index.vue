@@ -1,7 +1,7 @@
 <template>
-    <div v-if="user?.role !='admin'"
+    <div  v-if="user?.role !='admin'"
       style="
-        background-image: url('https://res.cloudinary.com/dw4xpd646/image/upload/v1716350153/jnowfqcrvcqzrzh4w1hp.jpg');
+        background-image: url('https://res.cloudinary.com/dw4xpd646/image/upload/v1716350153/jnowfqcrvcqzrzh4w1hp.jpg'); 
       "
     >
       <nav-bar-user />
@@ -49,6 +49,11 @@
   @media screen and (max-width: 767px) {
     .user-wrapper {
       margin-top: 70px;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    .user-wrapper {
+      margin-top: 50px;
     }
   }
   .page-home{

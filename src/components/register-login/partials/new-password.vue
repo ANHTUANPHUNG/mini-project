@@ -1,7 +1,8 @@
 <template>
   <b-form-group>
     <div class="text-center" style="font-weight: 900"> Xác nhận mật khẩu mới</div>
-    <b-form-input type="password" v-model="entry.newPassword" placeholder="Nhập lại mật khẩu mới" />
+    <b-form-input type="password"     @keyup.enter="checkEnter"
+ v-model="entry.newPassword" placeholder="Nhập lại mật khẩu mới" />
   </b-form-group>
 </template>
 <script>
@@ -32,7 +33,11 @@ export default {
       },
     },
   },
-  created() {
+  methods:{
+    checkEnter(event) {
+      this.$emit('enter',event)
+    }
+  },  created() {
     this.entry = this.value;
   },
 };

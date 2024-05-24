@@ -1,6 +1,6 @@
 <template>
   <div style="">
-    <div class="" style="padding: 40px 80px">
+    <div class="cart-user-wrapper">
       <div class="row">
         <div
           class="col-lg-12 col-12"
@@ -11,10 +11,14 @@
             min-height: 300px;
           "
         >
-          <div class="w-100 h-100" style="background-color: white; border-radius: 10px">
+          <div
+            class="w-100 h-100"
+            style="background-color: white; border-radius: 10px"
+          >
             <div class="row mx-3">
-              <div class="col-8">
-                <table class="table table-sm">
+              <div class=" col-12">
+                <div class="table-wrapper">
+                  <table class="table table-sm">
                   <thead>
                     <tr class="text-center">
                       <th scope="col">Sản phẩm</th>
@@ -54,7 +58,9 @@
                             type="number"
                             :value="item.quantity"
                           ></b-input>
-                          <b-button @click="item.quantity += 1" variant="">+</b-button>
+                          <b-button @click="item.quantity += 1" variant=""
+                            >+</b-button
+                          >
                         </b-button-group>
                       </td>
                       <td class="text-center">
@@ -63,38 +69,35 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="pl-5 border-top py-3">
-                  <b-button variant="outline-success"
-                    ><div class="d-flex align-items-center"  @click="$router.push({ name: 'user.home' })">
-                      <i class="bx bxs-left-arrow-alt"></i>Tiếp tục xem sản phẩm
-                    </div></b-button
+                </div>
+                
+                <div class="border-top py-3">
+                  <div
+                    class="text-right border-bottom pb-2"
                   >
+                    <span>Tổng: </span>
+                    <span>{{ totalProducts }}</span>
+                  </div>
+                  <div class="d-flex justify-content-between py-3">
+                    <b-button variant="outline-success">
+                      <div
+                        class="d-flex align-items-center"
+                        @click="$router.push({ name: 'user.home' })"
+                      >
+                        <i class="bx bxs-left-arrow-alt"></i>Tiếp tục xem sản
+                        phẩm
+                      </div>
+                    </b-button>
+                    <b-button
+                      :disabled="!entries.products.length"
+                      variant="outline-primary"
+                    >
+                      Thanh toán
+                    </b-button>
+                  </div>
                 </div>
               </div>
-              <div class="col-4">
-                <table class="table table-sm">
-                  <thead>
-                    <tr class="text-center">
-                      <th scope="col">Cộng giỏ hàng</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex justify-content-between">
-                          <span>Tổng</span>
-                          <span>{{ totalProducts }}</span>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="border-top pt-3">
-                  <b-button :disabled="!entries.products.length" style="height: 50px; width: 100%" variant="outline-primary">
-                    Thanh toán
-                  </b-button>
-                </div>
-              </div>
+            
             </div>
           </div>
         </div>
@@ -129,7 +132,8 @@ export default {
       handler() {
         let total = 0;
         this.entries.products.forEach((e, index) => {
-          this.entries.products[index].totalProduct = e.quantity * e.product.price;
+          this.entries.products[index].totalProduct =
+            e.quantity * e.product.price;
           total += e.quantity * e.product.price;
         });
         this.totalProducts = total;
@@ -148,7 +152,9 @@ export default {
         showCancelButton: true,
         preConfirm: () => {
           const newEntries = this.entries.products.filter(
-            (e) => e.product.id != value.product.id && e.product.name != value.product.name
+            (e) =>
+              e.product.id != value.product.id &&
+              e.product.name != value.product.name
           );
           this.entries.totalQuantity -= value.quantity;
           this.entries.totalProducts -= value.totalProduct;
@@ -161,16 +167,35 @@ export default {
   },
   created() {
     this.entries = JSON.parse(localStorage.getItem("products"));
-    this.totalProducts = JSON.parse(localStorage.getItem("products")).totalProducts;
+    this.totalProducts = JSON.parse(
+      localStorage.getItem("products")
+    ).totalProducts;
     eventBus.$on(
       "entries-nav",
-      (value) => ((this.entries = value), (this.totalProducts = value.totalProducts))
+      (value) => (
+        (this.entries = value), (this.totalProducts = value.totalProducts)
+      )
     );
   },
 };
 </script>
 <style scoped>
+.table-wrapper {
+  overflow-x: auto;
+}
+.table {
+  min-width: 600px; 
+}
+
 .table td {
   vertical-align: middle;
+}
+.cart-user-wrapper {
+  padding: 40px 80px;
+}
+@media screen and (max-width: 768px) {
+  .cart-user-wrapper {
+    padding: 20px 30px;
+  }
 }
 </style>

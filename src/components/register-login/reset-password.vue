@@ -1,5 +1,5 @@
 <template>
-  <div class="form-reset-password p-4 row">
+  <div class="form-reset-password p-4 row rounded">
     <div
       class="d-flex align-items-center text-login"
       @click="() => this.$emit('checkUpdate', 'login')"
@@ -8,15 +8,25 @@
       <div>Trở về</div>
     </div>
     <div v-if="!email" class="col-12">
-      <email :checkReset="true" v-model="entry" @update="(v) => (entry = v)" />
+      <email
+        :checkReset="true"
+        v-model="entry"
+        @enter="checkEnter"
+        @update="(v) => (entry = v)"
+      />
     </div>
     <div v-else class="col-12">
       <password
         :checkReset="true"
         v-model="entry"
         @update="(v) => (entry = v)"
+        @enter="checkEnter"
       />
-      <new-password v-model="entry" @update="(v) => (entry = v)" />
+      <new-password
+        v-model="entry"
+        @enter="checkEnter"
+        @update="(v) => (entry = v)"
+      />
     </div>
     <div class="col-12">
       <div v-if="!email" class="d-flex justify-content-center">
@@ -91,15 +101,6 @@ export default {
       this.email = true;
     },
     async resetPassword() {
-      if (this.entry.password != this.entry.newPassword) {
-        await this.$swal({
-          text: "Mật khẩu không trùng khớp",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
-        });
-        return;
-      }
       if (!this.entry.password || this.entry.password.trim() === "") {
         await this.$swal({
           text: "Mật khẩu không được trống.",
@@ -109,6 +110,16 @@ export default {
         });
         return;
       }
+      if (this.entry.password != this.entry.newPassword) {
+        await this.$swal({
+          text: "Mật khẩu không trùng khớp",
+          confirmButtonText: "Đồng ý",
+          confirmButtonColor: "purple",
+          icon: "error",
+        });
+        return;
+      }
+      
       await this.$swal({
         title: "Xác nhận cập nhật mật khẩu?",
         icon: "warning",
@@ -119,7 +130,7 @@ export default {
         preConfirm: async () => {
           const response = await axios.patch(
             "http://localhost:3300/users/" + this.idUser,
-            {'password' : this.entry.password}
+            { password: this.entry.password }
           );
           if (response) {
             this.$swal({
@@ -132,7 +143,19 @@ export default {
         },
       });
     },
+    checkEnter(event) {
+      if (Object.keys(this.entry) == "email") {
+        if (event.keyCode === 13) {
+          this.checkEmail();
+        }
+      } else{
+        if (event.keyCode === 13) {
+          this.resetPassword();
+        }
+      }
+    },
   },
+
   created() {
     this.getList();
   },
@@ -140,10 +163,8 @@ export default {
 </script>
 <style scoped>
 .form-reset-password {
-  position: absolute;
   background-color: white;
-  top: 70px;
-  left: 36%;
+ 
   opacity: 0.9;
   animation: register 1s ease-in-out;
 }
