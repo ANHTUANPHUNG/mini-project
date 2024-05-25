@@ -8,7 +8,7 @@
       <div>Trở về</div>
     </div>
     <div v-if="!email" class="col-12">
-      <email
+      <email-user
         :checkReset="true"
         v-model="entry"
         @enter="checkEnter"
@@ -16,17 +16,13 @@
       />
     </div>
     <div v-else class="col-12">
-      <password
+      <password-user
         :checkReset="true"
         v-model="entry"
         @update="(v) => (entry = v)"
         @enter="checkEnter"
       />
-      <new-password
-        v-model="entry"
-        @enter="checkEnter"
-        @update="(v) => (entry = v)"
-      />
+      <new-password v-model="entry" @enter="checkEnter" @update="(v) => (entry = v)" />
     </div>
     <div class="col-12">
       <div v-if="!email" class="d-flex justify-content-center">
@@ -40,13 +36,9 @@
 </template>
 <script>
 import ButtonCustomRefreshSave from "@/components/button-custom-refresh-save.vue";
-import Username from "./partials/username.vue";
-import Password from "./partials/password.vue";
+import PasswordUser from "./partials/password-user.vue";
 import NewPassword from "./partials/new-password.vue";
-import Dob from "./partials/dob.vue";
-import AddressUser from "./partials/address-user.vue";
-import Sex from "./partials/sex.vue";
-import Email from "./partials/email.vue";
+import EmailUser from "./partials/email-user.vue";
 import axios from "axios";
 export default {
   name: "reset-password",
@@ -55,12 +47,8 @@ export default {
   },
   components: {
     ButtonCustomRefreshSave,
-    Username,
-    Password,
-    Dob,
-    AddressUser,
-    Sex,
-    Email,
+    PasswordUser,
+    EmailUser,
     NewPassword,
   },
   data() {
@@ -119,7 +107,8 @@ export default {
         });
         return;
       }
-      
+      const user = this.entries.find((e) => e.email == this.entry.email);
+
       await this.$swal({
         title: "Xác nhận cập nhật mật khẩu?",
         icon: "warning",
@@ -128,10 +117,10 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.patch(
-            "http://localhost:3300/users/" + this.idUser,
-            { password: this.entry.password }
-          );
+          const response = await axios.put("http://localhost:3300/users/" + this.idUser, {
+            ...user,
+            password: this.entry.password,
+          });
           if (response) {
             this.$swal({
               title: "Cập nhật thành công",
@@ -148,7 +137,7 @@ export default {
         if (event.keyCode === 13) {
           this.checkEmail();
         }
-      } else{
+      } else {
         if (event.keyCode === 13) {
           this.resetPassword();
         }
@@ -164,7 +153,7 @@ export default {
 <style scoped>
 .form-reset-password {
   background-color: white;
- 
+
   opacity: 0.9;
   animation: register 1s ease-in-out;
 }

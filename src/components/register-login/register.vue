@@ -1,22 +1,26 @@
 <template>
   <div  class="form-register py-4 row  rounded" >
-    <div class="col-12">
-      <email v-model="entry" @update="(v) => (entry = v)" />
+    <div class="col-6">
+      <username-user v-model="entry" @update="(v) => (entry = v)" />
     </div>
-    <div class="col-12">
-      <username v-model="entry" @update="(v) => (entry = v)" />
+    <div class="col-6">
+      <password-user v-model="entry" @update="(v) => (entry = v)" />
     </div>
-    <div class="col-12">
-      <password v-model="entry" @update="(v) => (entry = v)" />
+    <div class="col-6">
+      <email-user v-model="entry" @update="(v) => (entry = v)" />
     </div>
-    <div class="col-12">
-      <dob v-model="entry" @update="(v) => (entry = v)" />
+    
+    <div class="col-6">
+      <phone-user v-model="entry" @update="(v) => (entry = v)" />
     </div>
-    <div class="col-12">
+    <div class="col-6">
+      <dob-user v-model="entry" @update="(v) => (entry = v)" />
+    </div>
+    <div class="col-6">
       <address-user v-model="entry" @update="(v) => (entry = v)" />
     </div>
     <div class="col-12">
-      <sex v-model="entry" @update="(v) => (entry = v)" />
+      <sex-user v-model="entry" @update="(v) => (entry = v)" />
     </div>
     <div class="col-12">
       <div class="d-flex justify-content-between px-5">
@@ -32,12 +36,13 @@
 </template>
 <script>
 import ButtonCustomRefreshSave from "@/components/button-custom-refresh-save.vue";
-import Username from "./partials/username.vue";
-import Password from "./partials/password.vue";
-import Dob from "./partials/dob.vue";
+import UsernameUser from "./partials/username-user.vue";
+import PasswordUser from "./partials/password-user.vue";
+import DobUser from "./partials/dob-user.vue";
 import AddressUser from "./partials/address-user.vue";
-import Sex from "./partials/sex.vue";
-import Email from "./partials/email.vue";
+import SexUser from "./partials/sex-user.vue";
+import EmailUser from "./partials/email-user.vue";
+import PhoneUser from "./partials/phone-user.vue";
 import axios from "axios";
 export default {
   name: "register",
@@ -46,12 +51,12 @@ export default {
   },
   components: {
     ButtonCustomRefreshSave,
-    Username,
-    Password,
-    Dob,
+    UsernameUser,
+    PasswordUser,
+    DobUser,
     AddressUser,
-    Sex,
-    Email,
+    SexUser,
+    EmailUser,PhoneUser
   },
   data() {
     return {
@@ -152,7 +157,7 @@ export default {
         });
         return;
       }
-      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
       this.entry = {...this.entry, role:'client', created: date}
       await this.$swal({
         title: "Tạo tài khoản?",

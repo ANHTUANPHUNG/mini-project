@@ -192,4 +192,7 @@ nav a.router-link-exact-active {
     display: none; 
   } */
 }
+.modal-backdrop{
+  background-color: transparent!important;
+}
 </style>

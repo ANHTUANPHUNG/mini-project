@@ -11,7 +11,7 @@
       <div class="row">
         <div class="col-md-3 menu-disabled">
           <div><menu-item /></div>
-          <div>
+          <!-- <div>
             <span style="font-weight: 900; text-transform: uppercase"
               >Sản phẩm bán chạy</span
             >
@@ -23,7 +23,7 @@
               <div class="border-bottom menu-item">Đồ ăn</div>
               <div class="border-bottom menu-item">Thức uống</div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="col-md-9 col-12">
           <div class="row">

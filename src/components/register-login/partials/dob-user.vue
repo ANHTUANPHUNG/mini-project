@@ -1,12 +1,12 @@
 <template>
   <b-form-group>
-    <div style="font-weight: 900"> Ngày sinh</div>
+    <div style="font-weight: 900">Ngày sinh</div>
     <b-form-input v-model="entry.dob" type="date" placeholder="Nhập ngày sinh" />
   </b-form-group>
 </template>
 <script>
 export default {
-  name: "dob",
+  name: "dob-user",
   props: {
     value: Object,
   },

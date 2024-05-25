@@ -154,11 +154,10 @@
         await this.$swal({
           title: "Khôi phục dữ liệu ban đầu?",
           confirmButtonColor: "purple",
-          cancelButtonText: "Không đồng ý",
           icon: "warning",
           showCancelButton: true,
+          cancelButtonText: "Không đồng ý",
           confirmButtonText: "Đồng ý",
-  
           preConfirm: async () => {
             this.entry.name = "";
             this.entry.image = null;

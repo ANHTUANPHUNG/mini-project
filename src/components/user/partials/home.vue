@@ -7,14 +7,14 @@
       <div class="row reverse">
         <div class="col-md-3 col-12 ">
         <div><menu-item /></div>
-        <div>
+        <!-- <div>
           <span style="font-weight: 900; text-transform: uppercase">Sản phẩm bán chạy</span>
           <div class="mt-3" style="border-radius: 9px; background-color: #cfc6a5">
             <div class="border-bottom menu-item">Đặc sản</div>
             <div class="border-bottom menu-item">Đồ ăn</div>
             <div class="border-bottom menu-item">Thức uống</div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="col-md-9 col-12 ">
         <div class="row">
@@ -32,7 +32,7 @@ import MenuItem from "./menu-item.vue";
 import Carousel from "./carousel.vue";
 import ProductItem from "./product-item.vue";
 export default {
-  name: "list",
+  name: "home",
   components: {
     Carousel,
     MenuItem,

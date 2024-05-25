@@ -89,8 +89,9 @@
                       </div>
                     </b-button>
                     <b-button
-                      :disabled="!entries.products.length"
+                      :disabled="!entries.products?.length"
                       variant="outline-primary"
+                      @click="modalPayment =!modalPayment"
                     >
                       Thanh toán
                     </b-button>
@@ -103,19 +104,30 @@
         </div>
       </div>
     </div>
+    <modal-payment
+      @update="(v) => (modalPayment = v)"
+      :value="modalPayment"
+      :user="user"
+    />
+    
   </div>
+  
 </template>
 <script>
 import { eventBus } from "@/main";
-
-import axios from "axios";
 import MenuItem from "./menu-item.vue";
 import ProductItem from "./product-item.vue";
+import RequestDescription from './request-description.vue';
+import AddressUser from './address-user.vue';
+import ModalPayment from './modal-payment.vue'
 export default {
   name: "list",
   components: {
     MenuItem,
     ProductItem,
+    RequestDescription,
+    AddressUser,
+    ModalPayment
   },
   data() {
     return {
@@ -125,6 +137,7 @@ export default {
       entries: [],
       loading: false,
       totalProducts: 0,
+      modalPayment:false,
     };
   },
   watch: {
@@ -140,6 +153,12 @@ export default {
         this.entries.totalProducts = this.totalProducts;
         localStorage.setItem("products", JSON.stringify(this.entries));
         eventBus.$emit("entries", this.entries);
+      },
+      deep: true,
+    },
+    modalPayment: {
+      handler() {
+        eventBus.$emit("checkModal", [this.modalPayment ]);
       },
       deep: true,
     },

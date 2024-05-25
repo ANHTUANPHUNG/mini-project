@@ -1,38 +1,42 @@
 <template>
   <b-form-group>
-    <div class="text-center" style="font-weight: 900">Xác nhận mật khẩu mới</div>
+    <div>Mật khẩu<span class="text-danger">*</span></div>
     <b-form-input
-      type="password"
       @keyup.enter="checkEnter"
-      v-model="entry.newPassword"
-      placeholder="Nhập lại mật khẩu mới"
+      type="password"
+      v-model="entry.password"
+      placeholder="Nhập mật khẩu"
     />
   </b-form-group>
 </template>
 <script>
 export default {
-  name: "new-password",
+  name: "password",
   props: {
     value: Object,
+    checkReset: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       entry: {
-        newPassword: "",
+        password: "",
       },
     };
   },
   watch: {
-    "value.newPassword": {
+    "value.password": {
       handler() {
-        this.entry.newPassword = this.value.newPassword;
+        this.entry.password = this.value.password;
       },
     },
-    "entry.newPassword": {
+    "entry.password": {
       handler() {
         this.$emit("update", {
           ...this.value,
-          newPassword: this.entry.newPassword,
+          password: this.entry.password,
         });
       },
     },

@@ -1,12 +1,10 @@
 <template>
   <b-form-group>
-    <div v-if="checkReset" style="font-weight: 900" class="text-center">
-      Nhập mật khẩu mới
-    </div>
+    <div v-if="checkReset" style="font-weight: 900" class="text-center">Nhập mật khẩu mới</div>
 
     <div v-else style="font-weight: 900">Mật khẩu</div>
     <b-form-input
-    @keyup.enter="checkEnter"
+      @keyup.enter="checkEnter"
       type="password"
       v-model="entry.password"
       placeholder="Nhập mật khẩu"
@@ -15,7 +13,7 @@
 </template>
 <script>
 export default {
-  name: "password",
+  name: "password-user",
   props: {
     value: Object,
     checkReset: {
@@ -45,10 +43,10 @@ export default {
       },
     },
   },
-  methods:{
+  methods: {
     checkEnter(event) {
-      this.$emit('enter',event)
-    }
+      this.$emit("enter", event);
+    },
   },
   created() {
     this.entry = this.value;

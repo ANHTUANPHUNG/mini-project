@@ -41,6 +41,11 @@ const routes = [
 				path: 'user/cart',
 				component: () => import('./../components/user/partials/cart-user.vue'),
 			},
+			{
+				name: 'user.order',
+				path: 'user/order',
+				component: () => import('../components/user/partials/order-user.vue'),
+			},
 		]
 	},
 	{

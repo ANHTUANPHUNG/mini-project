@@ -3,20 +3,16 @@
     <div class="w-100">
       <div class="row w-100">
         <div class="col-sm-6 col-12" style="display: grid">
-          <span style="font-weight: 800; font-size: 26px; color: #000"
-            >Nhà hàng Bà Tuyết</span
-          >
+          <span style="font-weight: 800; font-size: 26px; color: #000">Nhà hàng Bà Tuyết</span>
           <span></span>
         </div>
         <div class="col-sm-6 col-12 text-white" style="display: grid">
-          <span style="font-weight: 800; font-size: 26px; color: #000"
-            >Thông tin liên hệ</span
-          >
+          <span style="font-weight: 800; font-size: 26px; color: #000">Thông tin liên hệ</span>
           <span style="font-size: 20px">Nhà hàng Bà Tuyết</span>
-          <span>Địa chỉ: {{ entry?.address }}</span>
-          <span>Email</span>
-          <span>Điện thoại</span>
-          <span>Hotline</span>
+          <span >Địa chỉ: {{ entry?.address }}</span>
+          <span >Email: {{ entry?.email }}</span>
+          <span >Điện thoại: {{ entry?.phone }}</span>
+          <span >Hotline: {{ entry?.phone }}</span>
         </div>
       </div>
     </div>

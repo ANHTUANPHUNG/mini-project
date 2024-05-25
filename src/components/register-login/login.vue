@@ -8,12 +8,12 @@
     />
     <div class="form-container">
       <div class="form-login p-4 rounded" v-if="registerLogin == 'login'">
-        <username
+        <username-user
           v-model="entry"
           @update="(v) => (entry = v)"
           @enter="checkEnter"
         />
-        <password
+        <password-user
           v-model="entry"
           @update="(v) => (entry = v)"
           @enter="checkEnter"
@@ -56,11 +56,8 @@
 </template>
 <script>
 import ButtonCustomRefreshSave from "@/components/button-custom-refresh-save.vue";
-import Username from "./partials/username.vue";
-import Password from "./partials/password.vue";
-import Dob from "./partials/dob.vue";
-import AddressUser from "./partials/address-user.vue";
-import Sex from "./partials/sex.vue";
+import UsernameUser from "./partials/username-user.vue";
+import PasswordUser from "./partials/password-user.vue";
 import Register from "./register.vue";
 import ResetPassword from "./reset-password.vue";
 import axios from "axios";
@@ -68,13 +65,9 @@ export default {
   name: "login",
   components: {
     ButtonCustomRefreshSave,
-    Username,
-    Password,
-    Dob,
-    AddressUser,
-    Sex,
-    Register,
-    ResetPassword,
+    UsernameUser,
+    PasswordUser,
+    ResetPassword,Register
   },
   data() {
     return {
