@@ -64,7 +64,7 @@
                       >-</b-button
                     >
                     <b-input
-                      style="width: 60px"
+                      style="width: 40px"
                       type="number"
                       :value="entry?.quantity"
                     ></b-input>

@@ -38,7 +38,10 @@ export default {
   data() {
     return {
       entry: false,
-      information: {},
+      information: {
+        address:'',
+        description:''
+      },
     };
   },
   watch: {

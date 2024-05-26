@@ -73,6 +73,8 @@ export default {
         username: "",
         password: "",
         dob: "",
+        email:"",
+        phone:""
       },
       entries: [],
     };
@@ -90,6 +92,14 @@ export default {
       );
       if (errorUsername) {
         this.$toast.error("Tên đăng nhập đã tồn tại.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
+      const regexPhone = /^(\+84|0)[3|5|7|8|9]{1}\d{8}$/
+      if(!regexPhone.test(this.entry.phone)){
+        this.$toast.error("Số điện thoại không hợp lệ hoặc đang trống.", {
           position: "top-right",
           timeout: 3000,
         });

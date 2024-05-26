@@ -75,10 +75,18 @@ export default {
       entry: { name: "", image: null, price: 0, description: "", status: null },
       loading: false,
       disabledButton: false,
+      data: [],
     };
   },
   methods: {
     async create() {
+      if(this.data.find(({name}) => name == this.entry.name)){
+        this.$toast.error("Tên mặt hàng đã tồn tại.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
       if (!this.entry.name || this.entry.name.trim() === "") {
         this.$toast.error("Tên không được trống.", {
           position: "top-right",
@@ -143,6 +151,16 @@ export default {
         },
       });
     },
+    async getList() {
+      const promise1 = axios.get("http://localhost:3300/specialty");
+      const promise2 = axios.get("http://localhost:3300/food");
+      const promise3 = axios.get("http://localhost:3300/drink");
+      let dataApi = []
+      Promise.all([promise1, promise2, promise3]).then(function (values) {
+        values.forEach(({ data }) => data.forEach((i) => dataApi.push(i)));
+      });
+      this.data=dataApi
+    },
     async refresh() {
       await this.$swal({
         title: "Khôi phục dữ liệu ban đầu?",
@@ -160,6 +178,9 @@ export default {
         },
       });
     },
+  },
+  created() {
+    this.getList();
   },
 };
 </script>

@@ -38,22 +38,22 @@
             {
                 "title": "Chờ xác nhận",
                 "active": false,
-                "to": "/admin/order/order-waiting"
+                "to": "/admin/order/waiting"
             },
             {
                 "title": "Đã xác nhận",
                 "active": false,
-                "to": "/admin/order/order-confirm"
+                "to": "/admin/order/confirm"
             },
             {
                 "title": "Đang giao",
                 "active": false,
-                "to": "/admin/order/order-in-progress"
+                "to": "/admin/order/in-progress"
             },
             {
-                "title": "Đã giao",
+                "title": "Hoàn thành",
                 "active": false,
-                "to": "/admin/order/order-done"
+                "to": "/admin/order/done"
             }
            
         ]

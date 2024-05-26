@@ -200,7 +200,6 @@ export default {
       }
     },
     setActiveChildren(value, children) {
-      console.log(value,children);
       if (value.children) {
         this.listMenu.forEach((item) => {
           item.active = false;

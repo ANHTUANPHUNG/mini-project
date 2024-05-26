@@ -67,9 +67,23 @@ export default {
       entry: {},
       loading: false,
       itemId: "",
+      data:[]
     };
   },
   methods: {
+    async getList() {
+      const promise1 = axios.get("http://localhost:3300/specialty");
+      const promise2 = axios.get("http://localhost:3300/food");
+      const promise3 = axios.get("http://localhost:3300/drink");
+      let dataApi = [];
+      const response = await Promise.all([promise1, promise2, promise3]);
+      if (response) {
+        response.forEach(({ data }) => data.forEach((e) => dataApi.push(e)));
+      }
+      const newDataPi = dataApi.filter((e) => e.name != this.entry.name);
+      console.log(newDataPi);
+      this.data = newDataPi;
+    },
     async getItemById() {
       this.loading = true;
       const res = await axios.get("http://localhost:3300/drink/" + this.itemId);
@@ -77,6 +91,13 @@ export default {
       this.loading = false;
     },
     async update() {
+      if (this.data.find(({ name }) => name == this.entry.name)) {
+        this.$toast.error("Tên mặt hàng đã tồn tại.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
       if (!this.entry.name || this.entry.name.trim() === "") {
         this.$toast.error("Tên không được trống.", {
           position: "top-right",
@@ -153,9 +174,10 @@ export default {
       });
     },
   },
-  created() {
+async  created() {
     this.itemId = this.$route.params.id;
-    this.getItemById();
+   await this.getItemById();
+   await this.getList()
   },
 };
 </script>

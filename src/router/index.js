@@ -77,12 +77,73 @@ const routes = [
 			},
 			
 			{
-				name: 'admin.order.order.waiting',
-				path: 'order/order-waiting',
+				name: 'admin.order',
+				path: 'order',
 				component: () => import('./../components/app/dashboard/order/index'),
-				redirect: { name: 'admin.order.waiting.list' },
+				redirect: { name: 'admin.order.waiting' },
 				children: [
-				  { name: 'admin.order.waiting.list', path: 'list', component: () => import('./../components/app/dashboard/order/order-waiting') },
+				  	{ 
+					name: 'admin.order.waiting', 
+					path: 'waiting', 
+					component: () => import('./../components/app/dashboard/order') ,
+					redirect: { name: 'admin.order.waiting.list' },
+					children: [
+					  		{ 
+							name: 'admin.order.waiting.list', 
+							path: 'list', 
+							component: () => import('./../components/app/dashboard/order/order-waiting'),
+							},
+					  		{ 
+							name: 'admin.order.waiting.create', 
+							path: 'create', 
+							component: () => import('./../components/app/dashboard/order/order-create'),
+							},
+					  		{ 
+							name: 'admin.order.waiting.update', 
+							path: 'update/:id', 
+							component: () => import('./../components/app/dashboard/order/order-update'),
+							},
+						]
+					},
+				  	{ 
+					name: 'admin.order.confirm', 
+					path: 'confirm', 
+					component: () => import('./../components/app/dashboard/order') ,
+					redirect: { name: 'admin.order.confirm.list' },
+					children: [
+					  		{ 
+							name: 'admin.order.confirm.list', 
+							path: 'list', 
+							component: () => import('./../components/app/dashboard/order/order-confirm') 
+							},
+						]
+					},
+				  	{ 
+					name: 'admin.order.in-progress', 
+					path: 'in-progress', 
+					component: () => import('./../components/app/dashboard/order') ,
+					redirect: { name: 'admin.order.in-progress.list' },
+					children: [
+					  		{ 
+							name: 'admin.order.in-progress.list', 
+							path: 'list', 
+							component: () => import('./../components/app/dashboard/order/order-in-progress') 
+							},
+						]
+					},
+				  	{ 
+					name: 'admin.order.done', 
+					path: 'done', 
+					component: () => import('./../components/app/dashboard/order') ,
+					redirect: { name: 'admin.order.done.list' },
+					children: [
+					  		{ 
+							name: 'admin.order.done.list', 
+							path: 'list', 
+							component: () => import('./../components/app/dashboard/order/order-done') 
+							},
+						]
+					},
 				]
 			  },
 		
@@ -138,7 +199,7 @@ const routes = [
 			},
 			{
 				name: 'admin.food-menu.specialty',
-				path: '/food-menu/specialty',
+				path: 'food-menu/specialty',
 				component: () => import('./../components/app/dashboard/food-menu/specialty'),
 				redirect: {
 					name: 'admin.food-menu.specialty.list',

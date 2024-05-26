@@ -1,15 +1,13 @@
 <template>
   <div class="my-4 row w-100 px-3" style="margin-left: 0">
     <div class="bg-white col-12 px-3 my-4" style="border-radius: 5px">
-      <div class="w-100 text-right py-3">
-        <button-custom value="admin.order.waiting.create" />
-      </div>
 
-      <div v-if="!loading" class="scroll py-4">
-        <table class="table table-sm" style="min-width: 790px">
+      <div v-if="!loading" class="scroll" style="margin: 50px 0;">
+        <table class="table table-sm" style="min-width: 800px">
           <thead>
             <tr class="text-center">
-              <th scope="col">Thời gian đặt món</th>
+              <th scope="col" >Thời gian đặt món</th>
+              <th scope="col"  >Thời gian xác nhận món</th>
               <th scope="col">Số điện thoại</th>
               <th scope="col">Địa chỉ</th>
               <th scope="col">Tên các món</th>
@@ -25,7 +23,8 @@
               v-for="(entry, index) in entries"
               :key="index"
             >
-              <td class="align-middle">{{ entry?.created }}</td>
+              <td class="align-middle" >{{ entry?.created }}</td>
+              <td class="align-middle" >{{ entry?.createdWaiting }}</td>
               <td class="align-middle">{{ entry?.phone }}</td>
               <td class="align-middle">{{ entry?.address }}</td>
               <td style="max-width: 300px">
@@ -48,16 +47,14 @@
                 {{ formatNumberWithDotAndCurrency(entry.totalProducts) }}
               </td>
               <td class="align-middle">
-                <div @click="updateStatus(entry)" class="cursor-pointer">
-                  <b-badge style="line-height: 35px; padding: 0 7px">{{
-                    entry.status
-                  }}</b-badge>
+                <div
+                  @click="updateStatus(entry)"
+                  class="cursor-pointer"
+                >
+                  <b-badge class="bg-primary" style="line-height: 35px; padding: 0 7px;">{{ entry.status }}</b-badge>
                 </div>
-              </td>
-              <td class="align-middle">
-                <span v-if="entry.userId ==null" @click="editItem(entry.id)" class="cursor-pointer"
-                  ><i class="bx bx-edit pr-3 font-size-20 text-purple"></i
-                ></span>
+                </td>
+                <td class="align-middle">
                 <span
                   @click="deleteItem(entry.id)"
                   class="cursor-pointer"
@@ -90,7 +87,7 @@ import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
 
 export default {
-  name: "list",
+  name: "order-confirm",
   components: {
     ButtonCustom,
   },
@@ -135,20 +132,12 @@ export default {
       const c = timePart.split(":");
       return new Date(b[0], b[1] - 1, b[2], c[0], c[1], c[2]);
     },
-    async editItem(id) {
-      this.$router.push({
-        name: "admin.order.waiting.update",
-        params: { id: id },
-      });
-    },
     async getList() {
       this.loading = true;
       const response = await axios.get("http://localhost:3300/bills");
-      const lists = response.data
-        .filter((e) => e.status == "Chờ xác nhận")
-        .sort(
-          (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
-        );
+      const lists = response.data.filter(e=> e.status == 'Đã xác nhận').sort(
+        (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
+      );
 
       let data = [];
       for (let index = 0; index < this.perPage * this.currentPage; index++) {
@@ -166,7 +155,7 @@ export default {
     },
     async deleteItem(id) {
       await this.$swal({
-        title: "Huỷ đơn hàng ?",
+        title: "Huỷ đơn hàng đã xác nhận?",
         icon: "warning",
         confirmButtonText: "Đồng ý",
         cancelButtonText: "Không đồng ý",
@@ -204,10 +193,10 @@ export default {
         preConfirm: async () => {
           let response = await axios.patch(
             `http://localhost:3300/bills/` + entry.id,
-            { status: "Đã xác nhận", createdWaiting: date }
+            {status:'Đang giao', createdConfirm:date}
           );
           if (response.status == 200) {
-            this.$toast.success("Cập nhật thành công: Đơn hàng đã xác nhận.", {
+            this.$toast.success("Cập nhật thành công: Đơn hàng bắt đầu giao.", {
               position: "top-right",
               timeout: 3000,
             });
@@ -223,11 +212,12 @@ export default {
 };
 </script>
 <style scoped>
+
 .bg-false {
   background-color: #d30b1b !important;
   padding: 6px 9px;
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1100px) {
   .scroll {
     overflow-x: auto;
   }
