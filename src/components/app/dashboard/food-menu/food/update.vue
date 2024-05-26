@@ -78,47 +78,36 @@ export default {
     },
     async update() {
       if (!this.entry.name || this.entry.name.trim() === "") {
-        await this.$swal({
-          text: "Tên không được trống.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Tên không được trống.", {
+          position: "top-right",
+          timeout: 3000,
         });
-        return;
       }
       if (!this.entry.description || this.entry.description.trim() === "") {
-        await this.$swal({
-          text: "Thông tin không được trống.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Thông tin không được trống.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
       if (isNaN(this.entry.price) || this.entry.price <= 0) {
-        await this.$swal({
-          text: "Giá tiền phải là số và lớn hơn 0.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Giá tiền phải là số và lớn hơn 0.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
       if (this.entry.status === null) {
-        await this.$swal({
-          text: "Trạng thái không được trống.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Trạng thái không được trống.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
       if (this.entry.image === null) {
-        await this.$swal({
-          text: "Ảnh không được trống.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Ảnh không được trống.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
@@ -136,10 +125,9 @@ export default {
             this.entry
           );
           if (response) {
-            this.$swal({
-              title: "Chỉnh sửa thành công",
-              icon: "success",
-              confirmButtonColor: "purple",
+            this.$toast.success("Chỉnh sửa thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.$router.push({
               name: "admin.food-menu.food.list",

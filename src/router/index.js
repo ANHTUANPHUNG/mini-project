@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
-
 const routes = [
 	{
 		name: 'user',
@@ -50,7 +49,7 @@ const routes = [
 	},
 	{
 		name: 'register-login',
-		path: '/',
+		path: '/register-login',
 		component: () => import('./../components/register-login'),
 		redirect: {
 			name: 'register-login.login',
@@ -58,14 +57,14 @@ const routes = [
 		children: [
 			{
 				name: 'register-login.login',
-				path: '/register-login',
+				path: '',
 				component: () => import('./../components/register-login/login'),
 			},
 		]
 	},
 	{
 		name: 'admin.dashboard',
-		path: '/dashboard',
+		path: '/admin',
 		component: () => import('./../components/app/index'),
 		redirect: {
 			name: 'admin.dashboard.home',
@@ -73,13 +72,24 @@ const routes = [
 		children: [
 			{
 				name: 'admin.dashboard.home',
-				path: '/admin/home',
+				path: 'home',
 				component: () => import('./../components/app/dashboard/list'),
 			},
+			
+			{
+				name: 'admin.order.order.waiting',
+				path: 'order/order-waiting',
+				component: () => import('./../components/app/dashboard/order/index'),
+				redirect: { name: 'admin.order.waiting.list' },
+				children: [
+				  { name: 'admin.order.waiting.list', path: 'list', component: () => import('./../components/app/dashboard/order/order-waiting') },
+				]
+			  },
+		
 			{
 				name: 'admin.food-menu.drink',
-				path: '/admin/food-menu/drink',
-				component: () => import('./../components/app/food-menu/drink'),
+				path: 'food-menu/drink',
+				component: () => import('./../components/app/dashboard/food-menu/drink'),
 				redirect: {
 					name: 'admin.food-menu.drink.list',
 				},
@@ -87,24 +97,24 @@ const routes = [
 					{
 						path: 'list',
 						name: 'admin.food-menu.drink.list',
-						component: () => import('./../components/app/food-menu/drink/list'),
+						component: () => import('./../components/app/dashboard/food-menu/drink/list'),
 					},
 					{
 						path: 'create',
 						name: 'admin.food-menu.drink.create',
-						component: () => import('./../components/app/food-menu/drink/create'),
+						component: () => import('./../components/app/dashboard/food-menu/drink/create'),
 					},
 					{
 						path: 'update/:id',
 						name: 'admin.food-menu.drink.update',
-						component: () => import('./../components/app/food-menu/drink/update'),
+						component: () => import('./../components/app/dashboard/food-menu/drink/update'),
 					},
 				],
 			},
 			{
 				name: 'admin.food-menu.food',
-				path: '/admin/food-menu/food',
-				component: () => import('./../components/app/food-menu/food'),
+				path: 'food-menu/food',
+				component: () => import('./../components/app/dashboard/food-menu/food'),
 				redirect: {
 					name: 'admin.food-menu.food.list',
 				},
@@ -112,24 +122,24 @@ const routes = [
 					{
 						path: 'list',
 						name: 'admin.food-menu.food.list',
-						component: () => import('./../components/app/food-menu/food/list'),
+						component: () => import('./../components/app/dashboard/food-menu/food/list'),
 					},
 					{
 						path: 'create',
 						name: 'admin.food-menu.food.create',
-						component: () => import('./../components/app/food-menu/food/create'),
+						component: () => import('./../components/app/dashboard/food-menu/food/create'),
 					},
 					{
 						path: 'update/:id',
 						name: 'admin.food-menu.food.update',
-						component: () => import('./../components/app/food-menu/food/update'),
+						component: () => import('./../components/app/dashboard/food-menu/food/update'),
 					},
 				],
 			},
 			{
 				name: 'admin.food-menu.specialty',
-				path: '/admin/food-menu/specialty',
-				component: () => import('./../components/app/food-menu/specialty'),
+				path: '/food-menu/specialty',
+				component: () => import('./../components/app/dashboard/food-menu/specialty'),
 				redirect: {
 					name: 'admin.food-menu.specialty.list',
 				},
@@ -137,17 +147,17 @@ const routes = [
 					{
 						path: 'list',
 						name: 'admin.food-menu.specialty.list',
-						component: () => import('./../components/app/food-menu/specialty/list'),
+						component: () => import('./../components/app/dashboard/food-menu/specialty/list'),
 					},
 					{
 						path: 'create',
 						name: 'admin.food-menu.specialty.create',
-						component: () => import('./../components/app/food-menu/specialty/create'),
+						component: () => import('./../components/app/dashboard/food-menu/specialty/create'),
 					},
 					{
 						path: 'update/:id',
 						name: 'admin.food-menu.specialty.update',
-						component: () => import('./../components/app/food-menu/specialty/update'),
+						component: () => import('./../components/app/dashboard/food-menu/specialty/update'),
 					},
 				],
 			},

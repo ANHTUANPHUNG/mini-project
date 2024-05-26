@@ -8,16 +8,22 @@ import VueApexCharts from "vue-apexcharts";
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueSweetalert2 from 'vue-sweetalert2';
-
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 // If you don't need the styles, do not connect
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 // import apexCharts from "vue-apexcharts";
 export const eventBus = new Vue()
+
 Vue.use(Bootstrap)
 Vue.use(VueAxios, axios)
 Vue.use(VueSweetalert2);
-
+Vue.use(Toast, {
+  transition: "Vue-Toastification__bounce",
+  maxToasts: 20,
+  newestOnTop: true
+});
 Vue.use(BootstrapVue)
 Vue.component("apexchart", VueApexCharts);
 

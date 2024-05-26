@@ -1,5 +1,5 @@
 <template>
-  <div  style="width: 100%; padding: 20px 40px;height: 55vh">
+  <div  style="width: 100%; padding: 20px 40px;min-height: 55vh;">
     <div class="w-100" style="background-color: #cfc6a5; padding: 10px">
       <div v-if="!loading" class="scroll bg-white px-2 rounded">
         <table  class="table table-sm" style="min-width: 800px">
@@ -140,11 +140,9 @@ export default {
         preConfirm: async () => {
           let response = await axios.delete(`http://localhost:3300/bills/` + id);
           if (response.status == 200) {
-            this.$swal({
-              title: "Xóa thành công",
-              icon: "success",
-              timer: 1000,
-              showConfirmButton: false,
+            this.$toast.success("Xóa thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.currentPage = 1;
             this.getList();
@@ -166,13 +164,6 @@ export default {
 .bg-false {
   background-color: #d30b1b !important;
   padding: 6px 9px;
-}
-.swal2-icon .swal2-icon-content {
-  font-size: 2.75em !important;
-}
-.swal2-icon.swal2-warning.swal2-icon-show {
-  width: 50px !important;
-  height: 50px !important;
 }
 @media screen and (max-width: 900px) {
   .scroll {

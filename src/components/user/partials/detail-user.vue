@@ -193,11 +193,10 @@ export default {
     addProduct() {
       let user;
       if (!localStorage.getItem("user")) {
-        this.$swal({
-          title: "Bạn chưa đăng nhập vào ứng dụng",
-          icon: "error",
-          timer: 1000,
-        });
+        this.$toast.warning("Bạn chưa đăng nhập vào ứng dụng.", {
+              position: "top-right",
+              timeout: 3000,
+            });
         return
       } else {
         user = JSON.parse(localStorage.getItem("user"));
@@ -212,12 +211,10 @@ export default {
         productLocal &&
         productLocal?.products[index]?.quantity == this.entry.quantity
       ) {
-        this.$swal({
-          title: "Số lượng sản phẩm đã có sẵn trong giỏ hàng",
-          icon: "warning",
-          showCancelButton: false,
-          timer: 1000,
-        });
+        this.$toast.warning("Số lượng sản phẩm đã có sẵn trong giỏ hàng.", {
+              position: "top-right",
+              timeout: 3000,
+            });
         return;
       }
       this.$swal({
@@ -238,6 +235,7 @@ export default {
                 totalProducts: 0,
                 totalQuantity: 0,
                 userId: user.id,
+                userPhone: user.phone,
               };
             } else {
               productLocal?.products.push(this.entry);

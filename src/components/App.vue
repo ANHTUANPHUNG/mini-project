@@ -195,4 +195,7 @@ nav a.router-link-exact-active {
 .modal-backdrop{
   background-color: transparent!important;
 }
+.Vue-Toastification__container{
+  z-index: 1000000!important;
+}
 </style>

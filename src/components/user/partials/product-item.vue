@@ -1,93 +1,127 @@
 <template>
-  <div v-if="loading" class="text-center w-100 d-flex justify-content-center py-5">
-    <div  >
-        <div style="text-align: -webkit-center">
-          <div class="loader"></div>
-          <span>Đang tải dữ liệu</span>
-        </div>
+  <div
+    v-if="loading"
+    class="text-center w-100 d-flex justify-content-center py-5"
+  >
+    <div>
+      <div style="text-align: -webkit-center">
+        <div class="loader"></div>
+        <span>Đang tải dữ liệu</span>
       </div>
+    </div>
   </div>
   <div v-else>
     <div v-if="!checkForm" class="row mb-3">
-    <div class="col-12">
-      <span class="font-size-20" style="font-weight: 900; text-transform: uppercase">
-        {{ title }}
-      </span>
-    </div>
-    <div class="col-12 mt-2" style="">
-      <div
-        class="carousel-container"
-        style="background-color: #cfc6a5; position: relative; border-radius: 5px"
-      >
-        <div class="chevron-left cursor-pointer">
-          <i @click="prev" class="bx bx-chevron-left font-size-24 text-white"></i>
-        </div>
-        <div class="carousel">
-          <div
-            class="item m-2 pb-2"
-            style="background-color: rgb(255 171 229); cursor: pointer"
-            v-for="(item, index) in displayItems"
-            :key="index"
-            @click="productDetail(item)"
-          >
-            <div class="w-100 image-container" style="display: grid; position: relative">
-              <img
-                class="image"
-                style="width: 100%; height: 300px"
-                :src="item.image?.secure_url"
-                alt=""
-              />
-              <span
-                style="font-weight: 800; z-index: 20"
-                class="text-center pt-2 font-size-18 text-img"
+      <div class="col-12">
+        <span
+          class="font-size-20"
+          style="font-weight: 900; text-transform: uppercase"
+        >
+          {{ title }}
+        </span>
+      </div>
+      <div class="col-12 mt-2" style="">
+        <div
+          class="carousel-container"
+          style="
+            background-color: #cfc6a5;
+            position: relative;
+            border-radius: 5px;
+          "
+        >
+          <div class="chevron-left cursor-pointer">
+            <i
+              @click="prev"
+              class="bx bx-chevron-left font-size-24 text-white"
+            ></i>
+          </div>
+          <div class="carousel">
+            <div
+              class="item m-2 pb-2"
+              style="background-color: rgb(255 171 229); cursor: pointer"
+              v-for="(item, index) in displayItems"
+              :key="index"
+              @click="productDetail(item)"
+            >
+              <div
+                class="w-100 image-container"
+                style="display: grid; position: relative"
               >
-                {{ item.name }}
-              </span>
-              <div class="text-center pt-3">
-                <span style="font-weight: 600; z-index: 20" class=" ">{{
-                  formatNumberWithDotAndCurrency(item.price)
-                }}</span>
-              </div>
-              <div style="position: absolute; bottom: 0; right: 10px">
-                <i class="bx bxs-cart-add font-size-26" @click.stop="addProduct(item)"></i>
+                <img
+                  class="image"
+                  style="width: 100%; height: 300px"
+                  :src="item.image?.secure_url"
+                  alt=""
+                />
+                <span
+                  style="font-weight: 800; z-index: 20"
+                  class="text-center pt-2 font-size-18 text-img"
+                >
+                  {{ item.name }}
+                </span>
+                <div class="text-center pt-3">
+                  <span style="font-weight: 600; z-index: 20" class=" ">{{
+                    formatNumberWithDotAndCurrency(item.price)
+                  }}</span>
+                </div>
+                <div style="position: absolute; bottom: 0; right: 10px">
+                  <i
+                    class="bx bxs-cart-add font-size-26"
+                    @click.stop="addProduct(item)"
+                  ></i>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="chevron-right cursor-pointer">
-          <i @click="next" class="bx bx-chevron-right font-size-24 text-white"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div v-else>
-    <div class="col-12" style="background-color: #cfc6a5; border-radius: 5px">
-      <div style="position: relative">
-        <div class="row p-2 mb-4">
-          <div
-            class="col-lg-3 col-md-4 col-sm-4 col-6 py-2 item-render"
-            style="cursor: pointer; border: 1px solid gainsboro"
-            v-for="(item, index) in items"
-            :key="index"
-            @click="productDetail(item)"
-          >
-            <div class="w-100" style="display: grid; position: relative">
-              <img style="width: 100%; height: 200px" :src="item.image?.secure_url" alt="" />
-              <span style="font-weight: 800" class="text-center pt-2 font-size-18">
-                {{ item.name }}
-              </span>
-              <div class="text-center pt-3">
-                <span class="">{{ formatNumberWithDotAndCurrency(item.price) }}</span>
-              </div>
-              <div style="position: absolute; bottom: 0; right: 10px">
-                <i class="bx bxs-cart-add font-size-26" @click.stop="addProduct(item)"></i>
-              </div>
-            </div>
+          <div class="chevron-right cursor-pointer">
+            <i
+              @click="next"
+              class="bx bx-chevron-right font-size-24 text-white"
+            ></i>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    <div v-else>
+      <div class="col-12" style="background-color: #cfc6a5; border-radius: 5px">
+        <div style="position: relative">
+          <div class="row p-2 mb-4">
+            <div
+              class="col-lg-3 col-md-4 col-sm-4 col-6 py-2 item-render"
+              style="cursor: pointer; border: 1px solid gainsboro"
+              v-for="(item, index) in items"
+              :key="index"
+              @click="productDetail(item)"
+            >
+              <div class="w-100" style="display: grid; position: relative">
+                <img
+                  style="width: 100%; height: 200px"
+                  :src="item.image?.secure_url"
+                  alt=""
+                />
+                <span
+                  style="font-weight: 800"
+                  class="text-center pt-2 font-size-18"
+                >
+                  {{ item.name }}
+                </span>
+                <div class="text-center pt-3">
+                  <span class="">{{
+                    formatNumberWithDotAndCurrency(item.price)
+                  }}</span>
+                </div>
+                <div style="position: absolute; bottom: 0; right: 10px">
+                  <i
+                    class="bx bxs-cart-add font-size-26"
+                    @click.stop="addProduct(item)"
+                  ></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -114,7 +148,7 @@ export default {
       },
       user: null,
       entries: null,
-      loading:false
+      loading: false,
     };
   },
   computed: {
@@ -153,24 +187,23 @@ export default {
       return formattedNum + " đ";
     },
     async getList() {
-      this.loading = true
+      this.loading = true;
       const response = await axios.get("http://localhost:3300/" + this.api);
       this.items = response.data.filter(({ status }) => status.id == 1);
-      this.loading = false
-
+      this.loading = false;
     },
     next() {
       this.currentIndex = (this.currentIndex + 1) % this.items.length;
     },
     prev() {
-      this.currentIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
+      this.currentIndex =
+        (this.currentIndex - 1 + this.items.length) % this.items.length;
     },
     async addProduct(value) {
       if (!this.user) {
-        this.$swal({
-          title: "Bạn chưa đăng nhập vào ứng dụng",
-          icon: "error",
-          timer: 1000,
+        this.$toast.error("Bạn chưa đăng nhập vào ứng dụng", {
+          position: "top-right",
+          timeout: 4000,
         });
         return;
       }
@@ -182,48 +215,53 @@ export default {
         cancelButtonText: "Không đồng ý",
         preConfirm: () => {
           const resLocal = JSON.parse(localStorage.getItem("products"));
-      let data = {};
-      if (!resLocal) {
-        data.userId = this.user.id;
-        data.products = [{ product: value, quantity: 1, totalProduct: value.price }];
-        data.totalProducts = value.price;
-        data.totalQuantity = 1;
-        const products = JSON.stringify(data);
-        localStorage.setItem("products", products);
-      } else {
-        const checkProduct = resLocal.products.find(
-          (e) => e.product.id == value.id && e.product.name == value.name
-        );
-        if (!checkProduct) {
-          let data = {
-            ...resLocal,
-            products: [
-              ...resLocal.products,
+          let data = {};
+          if (!resLocal) {
+            data.userId = this.user.id;
+            data.phone = this.user.phone;
+            data.products = [
               { product: value, quantity: 1, totalProduct: value.price },
-            ],
-            totalProducts: resLocal.totalProducts + value.price,
-            totalQuantity: resLocal.totalQuantity + 1,
-          };
-          localStorage.setItem("products", JSON.stringify(data));
-        } else {
-          const checkIndexProduct = resLocal.products.findIndex(
-            (e) => e.product.id == value.id && e.product.name == value.name
-          );
-          let quantity = resLocal.products[checkIndexProduct].quantity + 1;
-          resLocal.products[checkIndexProduct].quantity = quantity;
-          resLocal.products[checkIndexProduct].totalProduct += value.price;
-          resLocal.totalProducts = resLocal.totalProducts + value.price;
-          resLocal.totalQuantity = resLocal.totalQuantity + 1;
-          localStorage.setItem("products", JSON.stringify(resLocal));
-        }
-      }
-      this.entries = JSON.parse(localStorage.getItem("products"));
+            ];
+            data.totalProducts = value.price;
+            data.totalQuantity = 1;
+            const products = JSON.stringify(data);
+            localStorage.setItem("products", products);
+          } else {
+            const checkProduct = resLocal.products.find(
+              (e) => e.product.id == value.id && e.product.name == value.name
+            );
+            if (!checkProduct) {
+              let data = {
+                ...resLocal,
+                products: [
+                  ...resLocal.products,
+                  { product: value, quantity: 1, totalProduct: value.price },
+                ],
+                totalProducts: resLocal.totalProducts + value.price,
+                totalQuantity: resLocal.totalQuantity + 1,
+              };
+              localStorage.setItem("products", JSON.stringify(data));
+            } else {
+              const checkIndexProduct = resLocal.products.findIndex(
+                (e) => e.product.id == value.id && e.product.name == value.name
+              );
+              let quantity = resLocal.products[checkIndexProduct].quantity + 1;
+              resLocal.products[checkIndexProduct].quantity = quantity;
+              resLocal.products[checkIndexProduct].totalProduct += value.price;
+              resLocal.totalProducts = resLocal.totalProducts + value.price;
+              resLocal.totalQuantity = resLocal.totalQuantity + 1;
+              localStorage.setItem("products", JSON.stringify(resLocal));
+            }
+          }
+          this.entries = JSON.parse(localStorage.getItem("products"));
         },
       });
-      
     },
     productDetail(value) {
-      this.$router.push({ name: "user.detail", params: { id: value.id, type: value.type } });
+      this.$router.push({
+        name: "user.detail",
+        params: { id: value.id, type: value.type },
+      });
     },
   },
   created() {

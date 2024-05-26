@@ -28,7 +28,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in entries.products" :key="item.product.id">
+                    <tr v-for="item in entries?.products" :key="item.product.id">
                       <td>
                         <div class="d-flex align-items-center">
                           <i
@@ -144,7 +144,7 @@ export default {
     entries: {
       handler() {
         let total = 0;
-        this.entries.products.forEach((e, index) => {
+        this.entries?.products.forEach((e, index) => {
           this.entries.products[index].totalProduct =
             e.quantity * e.product.price;
           total += e.quantity * e.product.price;
@@ -168,9 +168,11 @@ export default {
       this.$swal({
         title: "Xoá món hàng này?",
         icon: "warning",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: () => {
-          const newEntries = this.entries.products.filter(
+          const newEntries = this.entries?.products.filter(
             (e) =>
               e.product.id != value.product.id &&
               e.product.name != value.product.name

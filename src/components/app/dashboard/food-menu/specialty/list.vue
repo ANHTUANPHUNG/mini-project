@@ -2,17 +2,17 @@
   <div class="my-4 row w-100 px-3" style="margin-left: 0">
     <div class="bg-white col-12 py-4" style="border-radius: 5px">
       <b-form-group>
-        <label for="">Tìm kiếm theo tên món ăn</label>
+        <label for="">Tìm kiếm theo tên món đặc sản</label>
         <b-input
           class="col-lg-3 col-sm-6 col-12"
-          placeholder="Nhập tên món ăn"
+          placeholder="Nhập tên món đặc sản"
           @input="searchInput($event)"
         ></b-input>
       </b-form-group>
     </div>
     <div class="bg-white col-12 px-3 my-4" style="border-radius: 5px">
       <div class="w-100 text-right py-3">
-        <button-custom value="admin.food-menu.food.create" />
+        <button-custom value="admin.food-menu.specialty.create" />
       </div>
 
       <div v-if="!loading" class="scroll">
@@ -125,7 +125,7 @@ export default {
     },
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/food");
+      const response = await axios.get("http://localhost:3300/specialty");
       response.data.reverse()
       let data = [];
       for (let index = 0; index < this.perPage * this.currentPage; index++) {
@@ -143,17 +143,17 @@ export default {
     },
     async deleteItem(id) {
       await this.$swal({
-        title: "Xoá món ăn này?",
+        title: "Xoá món đặc sản này?",
         icon: "warning",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(`http://localhost:3300/food/` + id);
+          let response = await axios.delete(`http://localhost:3300/specialty/` + id);
           if (response.status == 200) {
-            this.$swal({
-              title: "Xóa thành công",
-              icon: "success",
-              timer: 1000,
-              showConfirmButton: false,
+            this.$toast.success("Xóa thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.currentPage = 1;
             this.getList();
@@ -169,17 +169,17 @@ export default {
         data = { ...entry, status: { id: 2, name: "Ngừng bán" } };
       }
       await this.$swal({
-        title: "Cập nhật trạng thái đồ uống ?",
+        title: "Cập nhật trạng thái đặc sản ?",
         icon: "warning",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.put(`http://localhost:3300/food/` + entry.id, data);
+          let response = await axios.put(`http://localhost:3300/specialty/` + entry.id, data);
           if (response.status == 200) {
-            this.$swal({
-              title: "Cập nhật thành công",
-              icon: "success",
-              timer: 1000,
-              showConfirmButton: false,
+            this.$toast.success("Cập nhật thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.getList();
           }
@@ -188,13 +188,13 @@ export default {
     },
     async editItem(id) {
       this.$router.push({
-        name: "admin.food-menu.food.update",
+        name: "admin.food-menu.specialty.update",
         params: { id: id },
       });
     },
     async searchInput(value) {
       let arr = [];
-      const response = await axios.get("http://localhost:3300/food");
+      const response = await axios.get("http://localhost:3300/specialty");
       response.data.forEach((element) => {
         if (element.name.toLowerCase().includes(value.toLowerCase())) {
           arr.push(element);
@@ -232,13 +232,7 @@ export default {
   background-color: #d30b1b !important;
   padding: 6px 9px;
 }
-.swal2-icon .swal2-icon-content {
-  font-size: 2.75em !important;
-}
-.swal2-icon.swal2-warning.swal2-icon-show {
-  width: 50px !important;
-  height: 50px !important;
-}
+
 @media screen and (max-width: 900px) {
   .scroll {
     overflow-x: auto;

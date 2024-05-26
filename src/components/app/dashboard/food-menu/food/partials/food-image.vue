@@ -18,7 +18,7 @@
             <img :src="entry.image?.secure_url" class="col-12" />
           </div>
           <div v-else class="row">
-            <img  src="./../../../../../assets/default.png" class="col-12"  alt="" />
+            <img  src="./../../../../../../assets/default.png" class="col-12"  alt="" />
 
           </div>
         </label>

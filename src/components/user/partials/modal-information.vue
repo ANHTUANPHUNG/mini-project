@@ -3,19 +3,19 @@
     <div class="text-center font-size-20  pb-3" style="font-weight: 600">Thông tin tài khoản</div>
     <div class=" border p-2">
       <div class="d-flex">
-        <span style="min-width: 150px">Tên đăng nhập:</span> <span>{{ user.username }}</span>
+        <span style="min-width: 150px">Tên đăng nhập:</span> <span>{{ user?.username }}</span>
       </div>
       <div class="d-flex">
-        <span style="min-width: 150px">Email:</span> <span>{{ user.email }}</span>
+        <span style="min-width: 150px">Email:</span> <span>{{ user?.email }}</span>
       </div>
       <div class="d-flex">
-        <span style="min-width: 150px">Ngày sinh:</span> <span>{{ user.dob }}</span>
+        <span style="min-width: 150px">Ngày sinh:</span> <span>{{ user?.dob }}</span>
       </div>
       <div class="d-flex">
-        <span style="min-width: 150px">Địa chỉ:</span> <span>{{ user.address }}</span>
+        <span style="min-width: 150px">Địa chỉ:</span> <span>{{ user?.address }}</span>
       </div>
       <div class="d-flex">
-        <span style="min-width: 150px">Thời gian tạo:</span> <span>{{ user.username }}</span>
+        <span style="min-width: 150px">Thời gian tạo:</span> <span>{{ user?.username }}</span>
       </div>
     </div>
     <div class="d-flex justify-content-end  pt-3">

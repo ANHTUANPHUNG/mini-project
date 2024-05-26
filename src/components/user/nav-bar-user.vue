@@ -289,12 +289,10 @@ export default {
     },
     dropItem() {
       if (!this.entries || this.entries.products.length == 0) {
-        this.$swal({
-          title: "Hiện chưa có sản phẩm",
-          icon: "warning",
-          timer: 1000,
-          showConfirmButton: false,
-        });
+        this.$toast.warning("Hiện chưa có sản phẩm.", {
+              position: "top-right",
+              timeout: 3000,
+            });
         return;
       }
 

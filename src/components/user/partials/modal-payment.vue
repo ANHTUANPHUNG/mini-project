@@ -5,7 +5,10 @@
       <address-user v-model="information" @update="(v) => (information = v)" />
     </div>
     <div>
-      <request-description v-model="information" @update="(v) => (information = v)" />
+      <request-description
+        v-model="information"
+        @update="(v) => (information = v)"
+      />
     </div>
     <div class="d-flex justify-content-end">
       <div class="pr-3">
@@ -53,24 +56,28 @@ export default {
   methods: {
     async createBill() {
       if (!this.information.address || this.information.address.trim() === "") {
-        await this.$swal({
-          text: "Địa chỉ không được trống.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.warning("Địa chỉ không được trống.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
       let data = JSON.parse(localStorage.getItem("products"));
       const today = new Date();
-      let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      let date =
+        `${today.getFullYear()}-` +
+        `${today.getMonth() + 1}-` +
+        `${today.getDate()} ` +
+        `${today.getHours()}:` +
+        `${today.getMinutes()}:` +
+        `${today.getSeconds()}`;
 
       data = {
         ...data,
         address: this.information.address,
         "request-description": this.information.description,
-        "status": "Chờ xác nhận",
-        created: date
+        status: "Chờ xác nhận",
+        created: date,
       };
       await this.$swal({
         title: "Xác nhận đơn hàng?",
@@ -80,22 +87,22 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          this.entry=false
-          const response = await axios.post("http://localhost:3300/bills", data);
+          this.entry = false;
+          const response = await axios.post(
+            "http://localhost:3300/bills",
+            data
+          );
           if (response) {
-
-            this.$swal({
-              title: "Tạo đơn thành công",
-              icon: "success",
-              timer: 1000,
-              showConfirmButton: false,
+            this.$toast.success("Tạo đơn thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
-            localStorage.removeItem('products')
+            localStorage.removeItem("products");
             eventBus.$emit("entries", []);
 
             this.$router.push({
-                name: "user.home",
-              });
+              name: "user.order",
+            });
           }
         },
       });

@@ -21,7 +21,8 @@
     "vue-axios": "^3.5.2",
     "vue-multiselect": "^2.1.6",
     "vue-router": "^3.5.1",
-    "vue-sweetalert2": "^5.0.10"
+    "vue-sweetalert2": "^5.0.10",
+    "vue-toastification": "^1.7.14"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

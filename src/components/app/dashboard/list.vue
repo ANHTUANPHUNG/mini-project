@@ -35,7 +35,6 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
-
 export default {
   name: "list",
   components: {

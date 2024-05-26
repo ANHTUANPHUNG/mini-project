@@ -22,7 +22,11 @@
         @update="(v) => (entry = v)"
         @enter="checkEnter"
       />
-      <new-password v-model="entry" @enter="checkEnter" @update="(v) => (entry = v)" />
+      <new-password
+        v-model="entry"
+        @enter="checkEnter"
+        @update="(v) => (entry = v)"
+      />
     </div>
     <div class="col-12">
       <div v-if="!email" class="d-flex justify-content-center">
@@ -71,39 +75,31 @@ export default {
       const email = this.entries.find((e) => e.email == this.entry.email);
       if (!email) {
         this.email = false;
-        await this.$swal({
-          text: "Email không tồn tại.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Email đã tồn tại.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
-      await this.$swal({
-        text: "Nhập mật khẩu mới.",
-        confirmButtonText: "Đồng ý",
-        confirmButtonColor: "purple",
-        icon: "success",
+      this.$toast.success("Nhập mật khẩu mới.", {
+        position: "top-right",
+        timeout: 3000,
       });
       this.idUser = email.id;
       this.email = true;
     },
     async resetPassword() {
       if (!this.entry.password || this.entry.password.trim() === "") {
-        await this.$swal({
-          text: "Mật khẩu không được trống.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Mật khẩu không được trống.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
       if (this.entry.password != this.entry.newPassword) {
-        await this.$swal({
-          text: "Mật khẩu không trùng khớp",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Mật khẩu không trùng khớp.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
@@ -117,15 +113,16 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.put("http://localhost:3300/users/" + this.idUser, {
-            ...user,
-            password: this.entry.password,
-          });
+          const response = await axios.patch(
+            "http://localhost:3300/users/" + this.idUser,
+            {
+              password: this.entry.password,
+            }
+          );
           if (response) {
-            this.$swal({
-              title: "Cập nhật thành công",
-              icon: "success",
-              confirmButtonColor: "purple",
+            this.$toast.success("Cập nhật thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.$emit("checkUpdate", "login");
           }

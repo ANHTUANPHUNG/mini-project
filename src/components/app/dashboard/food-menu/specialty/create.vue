@@ -4,12 +4,12 @@
         <div class="d-flex justify-content-between p-3 border-bottom">
           <div
             class="cursor-pointer text-purple"
-            @click="$router.push({ name: 'admin.food-menu.drink.list' })"
+            @click="$router.push({ name: 'admin.food-menu.specialty.list' })"
           >
             <i
               class="bx bx-left-arrow-alt font-size-20 align-text-bottom pr-2"
             ></i>
-            <span>Thêm mới loại nước</span>
+            <span>Thêm mới món đặc sản</span>
           </div>
           <div>
             <button-custom-refresh-save
@@ -21,19 +21,19 @@
         </div>
         <div class="row py-3" v-if="!loading">
           <div class="col-lg-12" style="padding: 0 32px">
-            <drink-name v-model="entry" @update="(v) => (entry = v)" />
+            <specialty-name v-model="entry" @update="(v) => (entry = v)" />
           </div>
           <div class="col-lg-12" style="padding: 0 32px">
-            <drink-description v-model="entry" @update="(v) => (entry = v)" />
+            <specialty-description v-model="entry" @update="(v) => (entry = v)" />
           </div>
           <div class="col-lg-12" style="padding: 0 32px">
-            <drink-price v-model="entry" @update="(v) => (entry = v)" />
+            <specialty-price v-model="entry" @update="(v) => (entry = v)" />
           </div>
           <div class="col-lg-12" style="padding: 0 32px">
-            <drink-status v-model="entry" @update="(v) => (entry = v)" />
+            <specialty-status v-model="entry" @update="(v) => (entry = v)" />
           </div>
           <div class="col-lg-6" style="padding: 0 32px">
-            <drink-image
+            <specialty-image
               v-model="entry"
               @update="(v) => (entry = v)"
               @updateImage="(v) => (disabledButton = v)"
@@ -52,11 +52,11 @@
   <script>
   import ButtonCustom from "@/components/button-custom.vue";
   import ButtonCustomRefreshSave from "@/components/button-custom-refresh-save.vue";
-  import DrinkImage from "./partials/drink-image.vue";
-  import DrinkDescription from "./partials/drink-description.vue";
-  import DrinkName from "./partials/drink-name.vue";
-  import DrinkPrice from "./partials/drink-price.vue";
-  import DrinkStatus from "./partials/drink-status.vue";
+  import SpecialtyImage from "./partials/specialty-image.vue";
+  import SpecialtyDescription from "./partials/specialty-description.vue";
+  import SpecialtyName from "./partials/specialty-name.vue";
+  import SpecialtyPrice from "./partials/specialty-price.vue";
+  import SpecialtyStatus from "./partials/specialty-status.vue";
   import axios from "axios";
   
   export default {
@@ -64,11 +64,11 @@
     components: {
       ButtonCustom,
       ButtonCustomRefreshSave,
-      DrinkImage,
-      DrinkDescription,
-      DrinkName,
-      DrinkPrice,
-      DrinkStatus,
+      SpecialtyImage,
+      SpecialtyDescription,
+      SpecialtyName,
+      SpecialtyPrice,
+      SpecialtyStatus,
     },
     data() {
       return {
@@ -80,53 +80,43 @@
     methods: {
       async create() {
         if (!this.entry.name || this.entry.name.trim() === "") {
-          await this.$swal({
-            text: "Tên không được trống.",
-            confirmButtonText: "Đồng ý",
-            confirmButtonColor: "purple",
-            icon: "error",
-          });
-          return;
-        }
-        if (!this.entry.description || this.entry.description.trim() === "") {
-          await this.$swal({
-            text: "Thông tin không được trống.",
-            confirmButtonText: "Đồng ý",
-            confirmButtonColor: "purple",
-            icon: "error",
-          });
-          return;
-        }
-        if (isNaN(this.entry.price) || this.entry.price <= 0) {
-          await this.$swal({
-            text: "Giá tiền phải là số và lớn hơn 0.",
-            confirmButtonText: "Đồng ý",
-            confirmButtonColor: "purple",
-            icon: "error",
-          });
-          return;
-        }
-        if (this.entry.status === null) {
-          await this.$swal({
-            text: "Trạng thái không được trống.",
-            confirmButtonText: "Đồng ý",
-            confirmButtonColor: "purple",
-            icon: "error",
-          });
-          return;
-        }
-        if (this.entry.image === null) {
-          await this.$swal({
-            text: "Ảnh không được trống.",
-            confirmButtonText: "Đồng ý",
-            confirmButtonColor: "purple",
-            icon: "error",
-          });
-          return;
-        }  
-        this.entry = {...this.entry,price:Number(this.entry.price), type:'drink'}
+        this.$toast.error("Tên không được trống.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
+      if (!this.entry.description || this.entry.description.trim() === "") {
+        this.$toast.error("Thông tin không được trống.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
+      if (isNaN(this.entry.price) || this.entry.price <= 0) {
+        this.$toast.error("Giá tiền phải là số và lớn hơn 0.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
+      if (this.entry.status === null) {
+        this.$toast.error("Trạng thái không được trống.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
+      if (this.entry.image === null) {
+        this.$toast.error("Ảnh không được trống.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
+        this.entry = {...this.entry,price:Number(this.entry.price), type:'specialty'}
         await this.$swal({
-          title: "Thêm mới đồ uống này?",
+          title: "Thêm mới món đặc sản này?",
           icon: "warning",
           confirmButtonText: "Đồng ý",
           cancelButtonText: "Không đồng ý",
@@ -134,17 +124,16 @@
           showCancelButton: true,
           preConfirm: async () => {
             const response = await axios.post(
-              "http://localhost:3300/drink",
+              "http://localhost:3300/specialty",
               this.entry
             );
             if (response) {
-              this.$swal({
-                title: "Tạo mới thành công",
-                icon: "success",
-                confirmButtonColor: "purple",
-              });
+              this.$toast.success("Tạo mới thành công.", {
+              position: "top-right",
+              timeout: 3000,
+            });
               this.$router.push({
-                name: "admin.food-menu.drink.list",
+                name: "admin.food-menu.specialty.list",
               });
             }
           },
@@ -154,11 +143,10 @@
         await this.$swal({
           title: "Khôi phục dữ liệu ban đầu?",
           confirmButtonColor: "purple",
-          cancelButtonText: "Không đồng ý",
           icon: "warning",
           showCancelButton: true,
+          cancelButtonText: "Không đồng ý",
           confirmButtonText: "Đồng ý",
-  
           preConfirm: async () => {
             this.entry.name = "";
             this.entry.image = null;

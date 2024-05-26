@@ -28,5 +28,34 @@
             }
            
         ]
-    }   
+    },  
+    {
+        "title": "Đơn hàng",
+        "to": "/admin/order",
+        "icon": "bx bx-cart-add",
+        "active": false,
+        "children": [
+            {
+                "title": "Chờ xác nhận",
+                "active": false,
+                "to": "/admin/order/order-waiting"
+            },
+            {
+                "title": "Đã xác nhận",
+                "active": false,
+                "to": "/admin/order/order-confirm"
+            },
+            {
+                "title": "Đang giao",
+                "active": false,
+                "to": "/admin/order/order-in-progress"
+            },
+            {
+                "title": "Đã giao",
+                "active": false,
+                "to": "/admin/order/order-done"
+            }
+           
+        ]
+    }
 ]

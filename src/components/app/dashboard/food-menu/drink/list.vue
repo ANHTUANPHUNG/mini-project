@@ -145,15 +145,15 @@ export default {
       await this.$swal({
         title: "Xoá loại đồ uống này?",
         icon: "warning",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
           let response = await axios.delete(`http://localhost:3300/drink/` + id);
           if (response.status == 200) {
-            this.$swal({
-              title: "Xóa thành công",
-              icon: "success",
-              timer: 1000,
-              showConfirmButton: false,
+            this.$toast.success("Xóa thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.currentPage = 1;
             this.getList();
@@ -171,15 +171,15 @@ export default {
       await this.$swal({
         title: "Cập nhật trạng thái món ăn?",
         icon: "warning",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
           let response = await axios.put(`http://localhost:3300/drink/` + entry.id, data);
           if (response.status == 200) {
-            this.$swal({
-              title: "Cập nhật thành công",
-              icon: "success",
-              timer: 1000,
-              showConfirmButton: false,
+            this.$toast.success("Cập nhật thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.getList();
           }
@@ -231,13 +231,6 @@ export default {
 .bg-false {
   background-color: #d30b1b !important;
   padding: 6px 9px;
-}
-.swal2-icon .swal2-icon-content {
-  font-size: 2.75em !important;
-}
-.swal2-icon.swal2-warning.swal2-icon-show {
-  width: 50px !important;
-  height: 50px !important;
 }
 @media screen and (max-width: 900px) {
   .scroll {

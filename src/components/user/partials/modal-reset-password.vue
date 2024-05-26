@@ -1,6 +1,8 @@
 <template>
   <b-modal hide-footer hide-header v-model="entry">
-    <div class="text-center font-size-20" style="font-weight: 600">Thay đổi mật khẩu</div>
+    <div class="text-center font-size-20" style="font-weight: 600">
+      Thay đổi mật khẩu
+    </div>
     <div class="py-4">
       <password
         :checkReset="true"
@@ -19,7 +21,9 @@
         <b-button @click="entry = false"> Hủy </b-button>
       </div>
       <div>
-        <b-button variant="primary" class="button-save" @click="update">Cập nhật</b-button>
+        <b-button variant="primary" class="button-save" @click="update"
+          >Cập nhật</b-button
+        >
       </div>
     </div>
   </b-modal>
@@ -60,25 +64,26 @@ export default {
       }
     },
     async resetLocalStorage() {
-      const response = await axios.get("http://localhost:3300/users/" +this.user.id);
-        localStorage.setItem('user', JSON.stringify(response.data))
+      const response = await axios.get(
+        "http://localhost:3300/users/" + this.user.id
+      );
+      localStorage.setItem("user", JSON.stringify(response.data));
     },
     async update() {
-      if (!this.resetPassword.password || this.resetPassword.password.trim() === "") {
-        await this.$swal({
-          text: "Mật khẩu không được trống.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+      if (
+        !this.resetPassword.password ||
+        this.resetPassword.password.trim() === ""
+      ) {
+        this.$toast.error("Mật khẩu không được trống.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
       if (this.resetPassword.password != this.resetPassword.newPassword) {
-        await this.$swal({
-          text: "Mật khẩu không trùng khớp",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
+        this.$toast.error("Mật khẩu không trùng khớp.", {
+          position: "top-right",
+          timeout: 3000,
         });
         return;
       }
@@ -91,19 +96,19 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.patch("http://localhost:3300/users/" + this.user.id, {
-            ...this.user,
-            password: this.resetPassword.password,
-          });
+          const response = await axios.patch(
+            "http://localhost:3300/users/" + this.user.id,
+            {
+              password: this.resetPassword.password,
+            }
+          );
           if (response) {
-            this.$swal({
-              title: "Cập nhật thành công",
-              icon: "success",
-              showConfirmButton: false,
-              timer:1000
+            this.$toast.success("Cập nhật thành công.", {
+              position: "top-right",
+              timeout: 3000,
             });
             this.entry = false;
-            this.resetLocalStorage()
+            this.resetLocalStorage();
           }
         },
       });

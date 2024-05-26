@@ -85,12 +85,10 @@ export default {
           e.username == this.entry.username && e.password == this.entry.password
       );
       if (!checkAccount) {
-        await this.$swal({
-          text: "Tài khoản hoặc mật khẩu không đúng.",
-          confirmButtonText: "Đồng ý",
-          confirmButtonColor: "purple",
-          icon: "error",
-        });
+        this.$toast.error("Tài khoản hoặc mật khẩu không đúng.", {
+              position: "top-right",
+              timeout: 3000,
+            });
         return;
       }
       if (checkAccount.role == "admin") {
@@ -102,6 +100,7 @@ export default {
         localStorage.setItem("user", user);
         this.$router.push({ name: "user.home" });
       }
+      
     },
     checkEnter(event) {
       if (event.keyCode === 13) {
