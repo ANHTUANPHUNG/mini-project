@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-between p-3 border-bottom">
         <div
           class="cursor-pointer text-purple"
-          @click="$router.push({ name: 'admin.food-menu.specialty.list' })"
+          @click="$router.push({ name: 'admin.specialty-menu.specialty.list' })"
         >
           <i
             class="bx bx-left-arrow-alt font-size-20 align-text-bottom pr-2"
@@ -17,19 +17,19 @@
       </div>
       <div class="row py-3" v-if="!loading">
         <div class="col-lg-12" style="padding: 0 32px">
-          <food-name v-model="entry" @update="(v) => (entry = v)" />
+          <specialty-name v-model="entry" @update="(v) => (entry = v)" />
         </div>
         <div class="col-lg-12" style="padding: 0 32px">
-          <food-description v-model="entry" @update="(v) => (entry = v)" />
+          <specialty-description v-model="entry" @update="(v) => (entry = v)" />
         </div>
         <div class="col-lg-12" style="padding: 0 32px">
-          <food-price v-model="entry" @update="(v) => (entry = v)" />
+          <specialty-price v-model="entry" @update="(v) => (entry = v)" />
         </div>
         <div class="col-lg-12" style="padding: 0 32px">
-          <food-status v-model="entry" @update="(v) => (entry = v)" />
+          <specialty-status v-model="entry" @update="(v) => (entry = v)" />
         </div>
         <div class="col-lg-6" style="padding: 0 32px">
-          <food-image v-model="entry" @update="(v) => (entry = v)" />
+          <specialty-image v-model="entry" @update="(v) => (entry = v)" />
         </div>
       </div>
       <div v-else class="text-center w-100 d-flex justify-content-center py-5">
@@ -50,6 +50,7 @@ import SpecialtyName from "./partials/specialty-name.vue";
 import SpecialtyPrice from "./partials/specialty-price.vue";
 import SpecialtyStatus from "./partials/specialty-status.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "update",
@@ -71,24 +72,24 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['ListDrink','ListFood','ListSpecialty','GetByIdSpecialty','UpdateSpecialty']),
+
     async getList() {
-      const promise1 = axios.get("http://localhost:3300/specialty");
-      const promise2 = axios.get("http://localhost:3300/food");
-      const promise3 = axios.get("http://localhost:3300/drink");
+      const promise1 = this.ListDrink()
+      const promise2 = this.ListFood()
+      const promise3 = this.ListSpecialty()
       let dataApi = [];
       const response = await Promise.all([promise1, promise2, promise3]);
       if (response) {
-        response.forEach(({ data }) => data.forEach((e) => dataApi.push(e)));
+        response.forEach(( data ) => data.forEach((e) => dataApi.push(e)));
       }
       const newDataPi = dataApi.filter((e) => e.name != this.entry.name);
       this.data = newDataPi;
     },
     async getItemById() {
       this.loading = true;
-      const res = await axios.get(
-        "http://localhost:3300/specialty/" + this.itemId
-      );
-      this.entry = res.data;
+      const res = await this.GetByIdSpecialty(this.itemId) 
+      this.entry = res;
       this.loading = false;
     },
     async update() {
@@ -146,10 +147,7 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.put(
-            "http://localhost:3300/specialty/" + this.itemId,
-            this.entry
-          );
+          const response = await this.UpdateSpecialty({id:this.itemId,entry:this.entry}) 
           if (response) {
             this.$toast.success("Chỉnh sửa thành công.", {
               position: "top-right",

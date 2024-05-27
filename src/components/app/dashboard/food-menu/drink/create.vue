@@ -58,7 +58,7 @@ import DrinkName from "./partials/drink-name.vue";
 import DrinkPrice from "./partials/drink-price.vue";
 import DrinkStatus from "./partials/drink-status.vue";
 import axios from "axios";
-
+import { mapActions } from 'vuex'
 export default {
   name: "create",
   components: {
@@ -79,6 +79,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['ListDrink','ListFood','ListSpecialty','CreateDrink']),
     async create() {
       if(this.data.find(({name}) => name == this.entry.name)){
         this.$toast.error("Tên mặt hàng đã tồn tại.", {
@@ -135,10 +136,7 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.post(
-            "http://localhost:3300/drink",
-            this.entry
-          );
+          const response = await this.CreateDrink(this.entry)
           if (response) {
             this.$toast.success("Tạo mới thành công.", {
               position: "top-right",
@@ -152,12 +150,12 @@ export default {
       });
     },
     async getList() {
-      const promise1 = axios.get("http://localhost:3300/specialty");
-      const promise2 = axios.get("http://localhost:3300/food");
-      const promise3 = axios.get("http://localhost:3300/drink");
+      const promise1 = this.ListDrink()
+      const promise2 = this.ListFood()
+      const promise3 = this.ListSpecialty()
       let dataApi = []
       Promise.all([promise1, promise2, promise3]).then(function (values) {
-        values.forEach(({ data }) => data.forEach((i) => dataApi.push(i)));
+        values.forEach((data) => data.forEach((i) => dataApi.push(i)));
       });
       this.data=dataApi
     },

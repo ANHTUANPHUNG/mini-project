@@ -50,6 +50,7 @@ import DrinkDescription from "./partials/drink-description.vue";
 import DrinkName from "./partials/drink-name.vue";
 import DrinkPrice from "./partials/drink-price.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "update",
@@ -71,23 +72,24 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['ListDrink','ListFood','ListSpecialty','GetByIdDrink','UpdateDrink']),
+
     async getList() {
-      const promise1 = axios.get("http://localhost:3300/specialty");
-      const promise2 = axios.get("http://localhost:3300/food");
-      const promise3 = axios.get("http://localhost:3300/drink");
+      const promise1 = this.ListDrink()
+      const promise2 = this.ListFood()
+      const promise3 = this.ListSpecialty()
       let dataApi = [];
       const response = await Promise.all([promise1, promise2, promise3]);
       if (response) {
-        response.forEach(({ data }) => data.forEach((e) => dataApi.push(e)));
+        response.forEach(( data ) => data.forEach((e) => dataApi.push(e)));
       }
       const newDataPi = dataApi.filter((e) => e.name != this.entry.name);
-      console.log(newDataPi);
       this.data = newDataPi;
     },
     async getItemById() {
       this.loading = true;
-      const res = await axios.get("http://localhost:3300/drink/" + this.itemId);
-      this.entry = res.data;
+      const res = await this.GetByIdDrink(this.itemId) 
+      this.entry = res;
       this.loading = false;
     },
     async update() {
@@ -146,10 +148,7 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.put(
-            "http://localhost:3300/drink/" + this.itemId,
-            this.entry
-          );
+          const response = await this.UpdateDrink({id:this.itemId,entry:this.entry}) 
           if (response) {
             this.$toast.success("Chỉnh sửa thành công.", {
               position: "top-right",

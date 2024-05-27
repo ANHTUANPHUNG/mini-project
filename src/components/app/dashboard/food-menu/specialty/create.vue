@@ -58,7 +58,8 @@
   import SpecialtyPrice from "./partials/specialty-price.vue";
   import SpecialtyStatus from "./partials/specialty-status.vue";
   import axios from "axios";
-  
+  import { mapActions } from 'vuex'
+
   export default {
     name: "create",
     components: {
@@ -79,14 +80,16 @@
       };
     },
     methods: {
-      async getList() {
-      const promise1 = axios.get("http://localhost:3300/specialty");
-      const promise2 = axios.get("http://localhost:3300/food");
-      const promise3 = axios.get("http://localhost:3300/drink");
+      ...mapActions(['ListDrink','ListFood','ListSpecialty','CreateSpecialty']),
+
+    async getList() {
+      const promise1 = this.ListDrink()
+      const promise2 = this.ListFood()
+      const promise3 = this.ListSpecialty()
       let dataApi = [];
       const response = await Promise.all([promise1, promise2, promise3]);
       if (response) {
-        response.forEach(({ data }) => data.forEach((e) => dataApi.push(e)));
+        response.forEach(( data ) => data.forEach((e) => dataApi.push(e)));
       }
       const newDataPi = dataApi.filter((e) => e.name != this.entry.name);
       this.data = newDataPi;
@@ -143,10 +146,7 @@
           confirmButtonColor: "purple",
           showCancelButton: true,
           preConfirm: async () => {
-            const response = await axios.post(
-              "http://localhost:3300/specialty",
-              this.entry
-            );
+            const response = await this.CreateFood(this.entry)
             if (response) {
               this.$toast.success("Tạo mới thành công.", {
               position: "top-right",

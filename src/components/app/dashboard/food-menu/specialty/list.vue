@@ -119,7 +119,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['ListSpecialty']),
+    ...mapActions(['ListSpecialty','DeleteSpecialty']),
 
     async getList() {
       this.loading = true;
