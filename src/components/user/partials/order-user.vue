@@ -14,10 +14,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="text-center" v-for="(entry, index) in entries" :key="index">
+            <tr class="text-center" v-for="(entry, index) in entries" :key="entry.index">
               <th class="align-middle">{{ entry.index || index + 1 }}</th>
               <td style="max-width: 300px;">
-                <div class="row py-2" v-for="i in entry.products" :key="i.product.id">
+                <div class="row py-2" v-for="i in entry.products" :key="i.product.name">
                   <div class="col-6">
                     {{ i.product.name }}
                   </div>
@@ -29,12 +29,12 @@
                   />
                   </div>
                   <div class="col-1">{{ i.quantity }}</div>
-                  <div class="col-3">{{ formatNumberWithDotAndCurrency(i.totalProduct) }}</div>
+                  <div class="col-3">{{ i.totalProduct | formatNumberWithDotAndCurrency }}</div>
                 </div>
               </td>
               <td class="align-middle">{{ entry.totalQuantity }}</td>
               <td class="align-middle">
-                {{ formatNumberWithDotAndCurrency(entry.totalProducts) }}
+                {{ entry.totalProducts | formatNumberWithDotAndCurrency }}
               </td>
               <td class="align-middle">
                 {{ entry?.status }}
@@ -105,11 +105,6 @@ export default {
     },
   },
   methods: {
-    formatNumberWithDotAndCurrency(number) {
-      let numStr = number.toString().replace(/^0+/, "");
-      let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      return formattedNum + " đ";
-    },
     async getList() {
       this.loading = true;
       const user = JSON.parse(localStorage.getItem("user"));

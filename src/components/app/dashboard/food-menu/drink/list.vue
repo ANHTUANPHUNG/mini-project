@@ -32,7 +32,7 @@
             <tr class="text-center" v-for="(entry, index) in entries" :key="index">
               <th class="align-middle">{{ entry.index || index + 1 }}</th>
               <td class="align-middle">{{ entry.name }}</td>
-              <td class="align-middle">{{ formatNumberWithDotAndCurrency(entry.price) }}</td>
+              <td class="align-middle">{{ entry.price| formatNumberWithDotAndCurrency }}</td>
               <td class="align-middle">{{ entry.description }}</td>
               <td class="align-middle">
                 <img style="width: 60px; height: 60px" :src="entry.image?.url" alt="" />
@@ -82,6 +82,7 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "list",
@@ -118,27 +119,24 @@ export default {
     },
   },
   methods: {
-    formatNumberWithDotAndCurrency(number) {
-      let numStr = number.toString().replace(/^0+/, "");
-      let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      return formattedNum + " đ";
-    },
+    ...mapActions(['ListDrink']),
+
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/drink");
-      response.data.reverse()
+      const response = await this.ListDrink();
+      response.reverse()
       let data = [];
       for (let index = 0; index < this.perPage * this.currentPage; index++) {
-        if (response.data[index]) {
-          data.push(response.data[index]);
+        if (response[index]) {
+          data.push(response[index]);
         }
       }
       this.entries = data;
-      this.listData = response.data;
+      this.listData = response;
       this.listData.map((element, index) => {
         element.index = index + 1;
       });
-      this.rows = response.data.length;
+      this.rows = response.length;
       this.loading = false;
     },
     async deleteItem(id) {
@@ -194,8 +192,8 @@ export default {
     },
     async searchInput(value) {
       let arr = [];
-      const response = await axios.get("http://localhost:3300/drink");
-      response.data.forEach((element) => {
+      const response = await this.ListDrink();
+      response.forEach((element) => {
         if (element.name.toLowerCase().includes(value.toLowerCase())) {
           arr.push(element);
         }

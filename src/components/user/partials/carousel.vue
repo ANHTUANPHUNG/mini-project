@@ -9,7 +9,7 @@
         img-width="1024"
         :interval="5000"
       >
-        <b-carousel-slide style="max-height: 400px;" v-for="item in entries" :key="item.id" :img-src="item.image.secure_url">
+        <b-carousel-slide style="max-height: 600px;" v-for="item in entries" :key="item" :img-src="item">
         </b-carousel-slide>
       </b-carousel>
     </div>
@@ -28,7 +28,7 @@ export default {
   methods: {
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/food");
+      const response = await axios.get("http://localhost:3300/img");
       this.entries = response.data;
       this.loading = false;
     },

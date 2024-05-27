@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="px-5 py-5">
-      <span class="page-home" @click="$router.push({ name: 'user.home' })"
-        >Trang chủ</span
-      >
+      <span class="page-home" @click="$router.push({ name: 'user.home' })">Trang chủ</span>
       /
       <span style="font-weight: 600; text-transform: uppercase">Đồ ăn</span>
     </div>
@@ -11,19 +9,7 @@
       <div class="row">
         <div class="col-md-3 menu-disabled">
           <div><menu-item /></div>
-          <!-- <div>
-            <span style="font-weight: 900; text-transform: uppercase"
-              >Sản phẩm bán chạy</span
-            >
-            <div
-              class="mt-3"
-              style="border-radius: 9px; background-color: #cfc6a5"
-            >
-              <div class="border-bottom menu-item">Đặc sản</div>
-              <div class="border-bottom menu-item">Đồ ăn</div>
-              <div class="border-bottom menu-item">Thức uống</div>
-            </div>
-          </div> -->
+          <div><sell-fast /></div>
         </div>
         <div class="col-md-9 col-12">
           <div class="row">
@@ -35,21 +21,57 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+import SellFast from "./sell-fast.vue"
 import MenuItem from "./menu-item.vue";
 import ProductItem from "./product-item.vue";
 export default {
   name: "food-user",
   components: {
     MenuItem,
-    ProductItem,
+    ProductItem,SellFast
   },
   data() {
     return {
       user: null,
+      sortable: [],
     };
   },
+  // methods: {
+  //   async getList() {
+  //     const responseBill = await axios.get("http://localhost:3300/bills");
+  //     let newProducts = [];
+  //     responseBill.data.forEach((element) => {
+  //       if (element.status == "Đã hoàn thành") {
+  //         this.total += element.totalProducts;
+  //         element.products.forEach((e) => (newProducts = [...newProducts, e]));
+  //       }
+  //     });
+  //     let quantity = {};
+  //     newProducts.forEach((e) => {
+  //       if (e.product && !quantity[e.product.name]) {
+  //         quantity[e.product.name] = [Number(e.quantity), e];
+  //       } else if (quantity[e.product.name]) {
+  //         quantity[e.product.name][0] += Number(e.quantity);
+  //       }
+  //     });
+  //     let sortable = [];
+  //     for (var vehicle in quantity) {
+  //       sortable.push([vehicle, quantity[vehicle][0], quantity[vehicle][1]]);
+  //     }
+  //     sortable.sort(function (a, b) {
+  //       return b[1] - a[1];
+  //     });
+  //     this.sortable = sortable.slice(0, 5);
+  //     console.log(this.sortable);
+  //   },
+  // },
+  // created() {
+  //   this.getList();
+  // },
 };
 </script>
+
 <style scoped>
 .page-home {
   cursor: pointer;

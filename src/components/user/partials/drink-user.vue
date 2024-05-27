@@ -11,19 +11,7 @@
       <div class="row">
         <div class="col-md-3 menu-disabled">
           <div><menu-item /></div>
-          <!-- <div>
-            <span style="font-weight: 900; text-transform: uppercase"
-              >Sản phẩm bán chạy</span
-            >
-            <div
-              class="mt-3"
-              style="border-radius: 9px; background-color: #cfc6a5"
-            >
-              <div class="border-bottom menu-item">Đặc sản</div>
-              <div class="border-bottom menu-item">Đồ ăn</div>
-              <div class="border-bottom menu-item">Thức uống</div>
-            </div>
-          </div> -->
+          <div><sell-fast /></div>
         </div>
         <div class="col-md-9 col-12">
           <div class="row">
@@ -35,13 +23,15 @@
   </div>
 </template>
 <script>
+import SellFast from "./sell-fast.vue"
+
 import MenuItem from "./menu-item.vue";
 import ProductItem from "./product-item.vue";
 export default {
   name: "drink-user",
   components: {
     MenuItem,
-    ProductItem,
+    ProductItem,SellFast
   },
   data() {
     return {

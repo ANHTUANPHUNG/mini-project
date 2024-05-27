@@ -44,7 +44,7 @@
                           <span>{{ item.product.name }}</span>
                         </div>
                       </td>
-                      <td class="text-center">{{ item.product.price }}</td>
+                      <td class="text-center">{{ item.product.price | formatNumberWithDotAndCurrency}}</td>
                       <td class="text-center">
                         <b-button-group class="my-2">
                           <b-button
@@ -64,7 +64,7 @@
                         </b-button-group>
                       </td>
                       <td class="text-center">
-                        {{ item.product.price * item.quantity }}
+                        {{ item.product.price * item.quantity | formatNumberWithDotAndCurrency}}
                       </td>
                     </tr>
                   </tbody>
@@ -76,7 +76,7 @@
                     class="text-right border-bottom pb-2"
                   >
                     <span>Tổng: </span>
-                    <span>{{ totalProducts }}</span>
+                    <span>{{ totalProducts |formatNumberWithDotAndCurrency}}</span>
                   </div>
                   <div class="d-flex justify-content-between py-3">
                     <b-button variant="outline-success">

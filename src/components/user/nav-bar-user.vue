@@ -132,7 +132,7 @@
           </div>
           <div class="border-bottom py-2 font-size-16 text-center" style="color: orange">
             Tạm tính:
-            <span class="font-size-20" style="">{{ entries.totalProducts }}</span>
+            <span class="font-size-20" style="">{{ entries.totalProducts |formatNumberWithDotAndCurrency }}</span>
           </div>
           <div>
             <b-button

@@ -2,11 +2,11 @@
   <div class="footer-wrapper">
     <div class="w-100">
       <div class="row w-100">
-        <div class="col-sm-6 col-12" style="display: grid">
-          <span style="font-weight: 800; font-size: 26px; color: #000">Nhà hàng Bà Tuyết</span>
-          <span></span>
+        <div class="col-sm-6 col-12 mb-3" >
+          <div style="font-weight: 800; font-size: 26px; color: #000">Nhà hàng Bà Tuyết</div>
+          <span class="font-size-20 text-white">Đây là địa điểm được rất nhiều người nổi tiếng và khách du lịch ghé thăm.</span>
         </div>
-        <div class="col-sm-6 col-12 text-white" style="display: grid">
+        <div class="col-sm-6 col-12 mb-3 text-white" style="display: grid">
           <span style="font-weight: 800; font-size: 26px; color: #000">Thông tin liên hệ</span>
           <span style="font-size: 20px">Nhà hàng Bà Tuyết</span>
           <span >Địa chỉ: {{ entry?.address }}</span>

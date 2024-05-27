@@ -9,13 +9,16 @@
         <span style="min-width: 150px">Email:</span> <span>{{ user?.email }}</span>
       </div>
       <div class="d-flex">
+        <span style="min-width: 150px">Số điện thoại:</span> <span>{{ user?.phone }}</span>
+      </div>
+      <div class="d-flex">
         <span style="min-width: 150px">Ngày sinh:</span> <span>{{ user?.dob }}</span>
       </div>
       <div class="d-flex">
         <span style="min-width: 150px">Địa chỉ:</span> <span>{{ user?.address }}</span>
       </div>
       <div class="d-flex">
-        <span style="min-width: 150px">Thời gian tạo:</span> <span>{{ user?.username }}</span>
+        <span style="min-width: 150px">Thời gian tạo:</span> <span>{{ user?.created }}</span>
       </div>
     </div>
     <div class="d-flex justify-content-end  pt-3">

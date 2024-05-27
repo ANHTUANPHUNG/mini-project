@@ -19,7 +19,7 @@
             class="w-100 text-center"
             style="line-height: 90px; font-size: 30px; font-weight: 800"
           >
-            {{ formatNumberWithDotAndCurrency(totalFood) }}
+            {{ totalFood | formatNumberWithDotAndCurrency }}
           </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
             class="w-100 text-center"
             style="line-height: 90px; font-size: 30px; font-weight: 800"
           >
-            {{ formatNumberWithDotAndCurrency(totalDrink) }}
+            {{ totalDrink | formatNumberWithDotAndCurrency }}
           </div>
         </div>
       </div>
@@ -41,30 +41,25 @@
             class="w-100 text-center"
             style="line-height: 90px; font-size: 30px; font-weight: 800"
           >
-            {{ formatNumberWithDotAndCurrency(totalSpecialty) }}
+            {{ totalSpecialty | formatNumberWithDotAndCurrency }}
           </div>
         </div>
       </div>
     </div>
     <div class="row mx-3 bg-white border-rounded">
-      <h3 class="pl-3 pt-3">Thống kê người dùng</h3>
+      <h3 class="pl-3 pt-3">Thống kê người dùng theo ngày</h3>
       <div class="col-12">
-        <apexchart
-          height="300"
-          type="bar"
-          :options="options"
-          :series="series"
-        ></apexchart>
+        <apexchart height="300" type="line" :options="optionsUser" :series="seriesUser"></apexchart>
       </div>
     </div>
     <div class="row mx-3 bg-white border-rounded mt-5">
-      <h3 class="pl-3 pt-3">Thống kê tổng doanh thu</h3>
+      <h3 class="pl-3 pt-3">Thống kê doanh thu theo ngày : {{ total | formatNumberWithDotAndCurrency }}</h3>
       <div class="col-12">
         <apexchart
           height="300"
-          type="bar"
-          :options="options"
-          :series="series"
+          type="line"
+          :options="optionsRevenue"
+          :series="seriesRevenue"
         ></apexchart>
       </div>
     </div>
@@ -90,68 +85,131 @@ export default {
       quantityFood: 0,
       totalDrink: 0,
       quantityDrink: 0,
-      options: {
+      total:0,
+      optionsUser: {
         chart: {
-          id: "vuechart-example",
+          type: "line",
+          zoom: {
+            enabled: false,
+          },
+          toolbar: { show: true },
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+        },
+        legend: {
+          show: true,
+          position: "right",
         },
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+          categories: [],
         },
         colors: ["#a709a7"],
       },
-      series: [
+      seriesUser: [
         {
-          name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91],
+          name: "Khách hàng",
+          data: [],
+        },
+      ],
+      optionsRevenue: {
+        chart: {
+          type: "line",
+          zoom: {
+            enabled: false,
+          },
+          toolbar: { show: true },
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+        },
+        legend: {
+          show: true,
+          position: "right",
+        },
+        xaxis: {
+          categories: [],
+        },
+        colors: ["#a709a7"],
+      },
+      seriesRevenue: [
+        {
+          name: "Doanh thu",
+          data: [],
         },
       ],
     };
   },
   methods: {
-    formatNumberWithDotAndCurrency(number) {
-      let numStr = number.toString().replace(/^0+/, "");
-      let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      return formattedNum + " đ";
-    },
     formatDate(date) {
-      const [a, b, c] = date.split("-");
-      return [a, b, c];
+      const [year, month, day] = date.split("-");
+      return [year, month, day];
     },
+    formatDateTime(datetime) {
+      const [date, time] = datetime.split(" ");
+      return date;
+    },
+    
     async getList() {
       this.loading = true;
       const responseUser = await axios.get("http://localhost:3300/users");
       this.listUser = responseUser.data;
       let listDate = [];
       listDate = responseUser.data.map((e) => e.created);
-
-      const dateCount = {};
-      listDate.forEach((date) => {
-        dateCount[date] = (dateCount[date] || 0) + 1;
-      });
-      console.log(dateCount);
+      this.countDate(listDate);
+      this.optionsUser = {
+        ...this.optionsUser,
+        xaxis: { ...this.optionsUser.xaxis, categories: Object.keys(this.countDate(listDate)) },
+      };
+      this.seriesUser[0].data = Object.values(this.countDate(listDate));
 
       const responseBill = await axios.get("http://localhost:3300/bills");
       let newProducts = [];
-      responseBill.data.forEach(({ products }) =>
-        products.forEach((e) => (newProducts = [...newProducts, e]))
+      responseBill.data.forEach((element) => {
+        if (element.status == "Đã hoàn thành") {
+          this.total += element.totalProducts
+          element.products.forEach((e) => (newProducts = [...newProducts, e]));
+        }
+      });
+      this.listDrink = newProducts.filter(({ product }) => product.type == "drink");
+      this.listFood = newProducts.filter(({ product }) => product.type == "food");
+      this.listSpecialty = newProducts.filter(({ product }) => product.type == "specialty");
+      this.listSpecialty.forEach(
+        (e) => ((this.totalSpecialty += e.totalProduct), (this.quantitySpecialty += Number(e.quantity)))
       );
-      this.listDrink = newProducts.filter(
-        ({ product }) => product.type == "drink"
+      this.listFood.forEach(
+        (e) => ((this.totalFood += e.totalProduct), (this.quantityFood += Number(e.quantity)))
       );
-      this.listFood = newProducts.filter(
-        ({ product }) => product.type == "food"
+      this.listDrink.forEach(
+        (e) => ((this.totalDrink += e.totalProduct), (this.quantityDrink += Number(e.quantity)))
       );
-      this.listSpecialty = newProducts.filter(
-        ({ product }) => product.type == "specialty"
-      );
-      console.log(this.listDrink);
-      this.listSpecialty.forEach((e) => console.log(e.totalProduct));
-      this.listSpecialty.forEach((e) => (this.quantityDrink += e.quantity));
-      this.listFood.forEach((e) => (this.totalFood += e.totalProduct));
-      this.listFood.forEach((e) => (this.quantityFood += e.quantity));
-      this.listDrink.forEach((e) => (this.totalDrink += e.totalProduct));
-      this.listDrink.forEach((e) => (this.quantityDrink += e.quantity));
+      const dateCount = {};
+
+      responseBill.data.forEach((e) => {
+        if (e.status == "Đã hoàn thành") {
+          if(this.formatDateTime(e.createdInProgress))
+              dateCount[this.formatDateTime(e.createdInProgress)] = (dateCount[this.formatDateTime(e.createdInProgress)] || 0) + e.totalProducts;
+            
+        }
+      });
+      this.seriesRevenue[0].data = Object.values(dateCount);
+      this.optionsRevenue = {
+        ...this.optionsRevenue,
+        xaxis: { ...this.optionsRevenue.xaxis, categories:Object.keys(dateCount) },
+      };
+
       this.loading = false;
+    },
+    countDate(listDate) {
+      const dateCount = {};
+      listDate.forEach((date) => {
+        if (date) {
+          dateCount[date] = (dateCount[date] || 0) + 1;
+        }
+      });
+      return dateCount;
     },
   },
   created() {

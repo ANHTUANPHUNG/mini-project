@@ -61,7 +61,7 @@
                 </span>
                 <div class="text-center pt-3">
                   <span style="font-weight: 600; z-index: 20" class=" ">{{
-                    formatNumberWithDotAndCurrency(item.price)
+                   item.price|  formatNumberWithDotAndCurrency
                   }}</span>
                 </div>
                 <div style="position: absolute; bottom: 0; right: 10px">
@@ -106,8 +106,8 @@
                   {{ item.name }}
                 </span>
                 <div class="text-center pt-3">
-                  <span class="">{{
-                    formatNumberWithDotAndCurrency(item.price)
+                  <span style="color: #cb102c">{{
+                    item.price | formatNumberWithDotAndCurrency
                   }}</span>
                 </div>
                 <div style="position: absolute; bottom: 0; right: 10px">
@@ -180,11 +180,6 @@ export default {
     handleResize() {
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight;
-    },
-    formatNumberWithDotAndCurrency(number) {
-      let numStr = number.toString().replace(/^0+/, "");
-      let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      return formattedNum + " đ";
     },
     async getList() {
       this.loading = true;

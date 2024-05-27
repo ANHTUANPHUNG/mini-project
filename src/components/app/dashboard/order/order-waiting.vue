@@ -39,13 +39,13 @@
                   </div>
                   <div class="col-2">{{ i.quantity }}</div>
                   <div class="col-3" style="text-wrap: nowrap;">
-                    {{ formatNumberWithDotAndCurrency(i.totalProduct) }}
+                    {{i.totalProduct | formatNumberWithDotAndCurrency }}
                   </div>
                 </div>
               </td>
               <td class="align-middle">{{ entry.totalQuantity }}</td>
               <td class="align-middle" style="text-wrap: nowrap;">
-                {{ formatNumberWithDotAndCurrency(entry.totalProducts) }}
+                {{ entry.totalProducts | formatNumberWithDotAndCurrency }}
               </td>
               <td class="align-middle">
                 <div @click="updateStatus(entry)" class="cursor-pointer">
@@ -124,11 +124,6 @@ export default {
     },
   },
   methods: {
-    formatNumberWithDotAndCurrency(number) {
-      let numStr = number.toString().replace(/^0+/, "");
-      let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      return formattedNum + " đ";
-    },
     formatDate(date) {
       const [datePart, timePart] = date.split(" ");
       const b = datePart.split("-");

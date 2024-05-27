@@ -11,19 +11,8 @@
       <div class="row">
         <div class="col-md-3 menu-disabled">
           <div><menu-item /></div>
-          <div>
-            <span style="font-weight: 900; text-transform: uppercase"
-              >Sản phẩm bán chạy</span
-            >
-            <div
-              class="mt-3"
-              style="border-radius: 9px; background-color: #cfc6a5"
-            >
-              <div class="border-bottom menu-item">Đặc sản</div>
-              <div class="border-bottom menu-item">Đồ ăn</div>
-              <div class="border-bottom menu-item">Thức uống</div>
-            </div>
-          </div>
+          <div><sell-fast /></div>
+
         </div>
         <div class="col-md-9 col-12" v-if="!loading">
           <div
@@ -46,7 +35,7 @@
                 <div style="font-size: 20px" class="mb-2">
                   Giá tiền:
                   <span class="text-danger" style="font-weight: 800">
-                    {{ entry?.product.price }}</span
+                    {{ entry?.product.price |formatNumberWithDotAndCurrency }}</span
                   >
                 </div>
                 <div class="my-2" style="font-size: 20px">
@@ -74,7 +63,7 @@
                   </b-button-group>
                   <div class="my-2" style="font-size: 20px">
                     Tổng tiền:<span>
-                      {{ entry?.product.price * entry?.quantity }}</span
+                      {{ entry?.product.price * entry?.quantity |formatNumberWithDotAndCurrency }}</span
                     >
                   </div>
                 </div>
@@ -108,7 +97,7 @@
                     alt=""
                   />
                   <div style="font-weight: bold">{{ item.name }}</div>
-                  <div style="font-weight: bold">{{ item.price }}</div>
+                  <div style="font-weight: bold">{{ item.price |formatNumberWithDotAndCurrency}}</div>
                 </div>
               </div>
             </div>
@@ -131,6 +120,7 @@
 </template>
 <script>
 import { eventBus } from "@/main";
+import SellFast from "./sell-fast.vue"
 
 import axios from "axios";
 import MenuItem from "./menu-item.vue";
@@ -139,7 +129,7 @@ export default {
   name: "list",
   components: {
     MenuItem,
-    ProductItem,
+    ProductItem,SellFast
   },
   data() {
     return {
