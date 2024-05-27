@@ -85,6 +85,7 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "order-confirm",
@@ -127,10 +128,12 @@ export default {
       const c = time.split(":");
       return new Date(b[0], b[1] - 1, b[2], c[0], c[1], c[2]);
     },
+    ...mapActions(['DeleteBill','ListBill','StatusBill']),
+
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/bills");
-      const lists = response.data.filter(e=> e.status == 'Đã xác nhận').sort(
+      const response = await this.ListBill();
+      const lists = response.filter(e=> e.status == 'Đã xác nhận' && e.delete == 0).sort(
         (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
       );
 
@@ -150,15 +153,13 @@ export default {
     },
     async deleteItem(id) {
       await this.$swal({
-        title: "Huỷ đơn hàng đã xác nhận?",
+        title: "Huỷ đơn hàng ?",
         icon: "warning",
         confirmButtonText: "Đồng ý",
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(
-            `http://localhost:3300/bills/` + id
-          );
+          let response = await this.DeleteBill(id)
           if (response.status == 200) {
             this.$toast.success("Huỷ thành công.", {
               position: "top-right",
@@ -186,10 +187,7 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.patch(
-            `http://localhost:3300/bills/` + entry.id,
-            {status:'Đang giao', createdConfirm:date}
-          );
+          const response = await this.StatusBill({id:entry.id,entry:{status: "Đang giao", createdConfirm: date}}) 
           if (response.status == 200) {
             this.$toast.success("Cập nhật thành công: Đơn hàng bắt đầu giao.", {
               position: "top-right",

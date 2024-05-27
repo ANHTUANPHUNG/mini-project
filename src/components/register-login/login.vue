@@ -61,6 +61,8 @@ import PasswordUser from "./partials/password-user.vue";
 import Register from "./register.vue";
 import ResetPassword from "./reset-password.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
+
 export default {
   name: "login",
   components: {
@@ -78,9 +80,11 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['ListUser']),
+
     async login() {
-      const response = await axios.get("http://localhost:3300/users");
-      const checkAccount = response.data.find(
+      const response = await this.ListUser();
+      const checkAccount = response.find(
         (e) =>
           e.username == this.entry.username && e.password == this.entry.password
       );

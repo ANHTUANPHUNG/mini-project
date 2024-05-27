@@ -57,6 +57,8 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['CreateBill']),
+
     async createBill() {
       if (!this.information.address || this.information.address.trim() === "") {
         this.$toast.warning("Địa chỉ không được trống.", {
@@ -81,6 +83,7 @@ export default {
         "request-description": this.information.description,
         status: "Chờ xác nhận",
         created: date,
+        delete: 0
       };
       await this.$swal({
         title: "Xác nhận đơn hàng?",
@@ -91,10 +94,7 @@ export default {
         showCancelButton: true,
         preConfirm: async () => {
           this.entry = false;
-          const response = await axios.post(
-            "http://localhost:3300/bills",
-            data
-          );
+          const response = await this.CreateBill(data)
           if (response) {
             this.$toast.success("Tạo đơn thành công.", {
               position: "top-right",

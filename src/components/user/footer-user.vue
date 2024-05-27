@@ -20,6 +20,8 @@
 </template>
 <script>
 import axios from "axios";
+import { mapActions } from 'vuex'
+
 export default {
   name: "footer-user",
   data() {
@@ -28,10 +30,11 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['GetByIdUser']),
+
     async getList() {
-      const res = await axios.get("http://localhost:3300/users/a757");
-      this.entry = res.data;
-      console.log(res.data);
+      const res = await this.GetByIdUser('a757');
+      this.entry = res;
     },
   },
   created() {

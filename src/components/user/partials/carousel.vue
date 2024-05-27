@@ -17,6 +17,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
 export default {
   name: "carousel",
   data() {
@@ -26,10 +27,12 @@ export default {
     };
   },
   methods: {
+
+    ...mapActions(['ListImg']),
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/img");
-      this.entries = response.data;
+      const response = await this.ListImg()
+      this.entries = response;
       this.loading = false;
     },
   },

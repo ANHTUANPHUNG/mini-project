@@ -79,6 +79,7 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "order-confirm",
@@ -121,10 +122,12 @@ export default {
       const c = timePart.split(":");
       return new Date(b[0], b[1] - 1, b[2], c[0], c[1], c[2]);
     },
+    ...mapActions(['DeleteBill','ListBill','StatusBill']),
+
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/bills");
-      const lists = response.data.filter(e=> e.status == 'Đã hoàn thành').sort(
+      const response = await this.ListBill();
+      const lists = response.filter(e=> e.status == 'Đã hoàn thành' && e.delete == 0).sort(
         (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
       );
 

@@ -86,6 +86,7 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "order-confirm",
@@ -122,6 +123,8 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['DeleteBill','ListBill','StatusBill']),
+
     formatDate(date) {
       const [datePart, timePart] = date.split(" ");
       const b = datePart.split("-");
@@ -130,9 +133,9 @@ export default {
     },
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/bills");
-      const lists = response.data
-        .filter((e) => e.status == "Đang giao")
+      const response = await this.ListBill();
+      const lists = response
+        .filter((e) => e.status == "Đang giao" && e.delete == 0)
         .sort(
           (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
         );
@@ -153,15 +156,13 @@ export default {
     },
     async deleteItem(id) {
       await this.$swal({
-        title: "Huỷ đơn hàng đang giao?",
+        title: "Huỷ đơn hàng ?",
         icon: "warning",
         confirmButtonText: "Đồng ý",
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(
-            `http://localhost:3300/bills/` + id
-          );
+          let response = await this.DeleteBill(id)
           if (response.status == 200) {
             this.$toast.success("Huỷ thành công.", {
               position: "top-right",
@@ -189,11 +190,12 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
+          
           let response = await axios.patch(
             `http://localhost:3300/bills/` + entry.id,
-            { status: "Đã hoàn thành", createdInProgress: date }
+            {status:'Đã hoàn thành', createdInProgress:date}
           );
-          if (response.status == 200) {
+          if (response) {
             this.$toast.success(
               "Cập nhật thành công: Đơn hàng đã hoàn thành.",
               {

@@ -44,6 +44,8 @@ import OrderAddress from "./partials/order-address.vue";
 import OrderRequest from "./partials/order-request.vue";
 import axios from "axios";
 import OrderPhone from "./partials/order-phone.vue";
+import { mapActions } from "vuex";
+
 export default {
   name: "update",
   components: {
@@ -64,12 +66,12 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['UpdateBill','GetByIdBill']),
+
     async getItemById() {
       this.loading = true;
-      const res = await axios.get(
-        "http://localhost:3300/bills/" + this.$route.params.id
-      );
-      this.entry = res.data;
+      const res = await this.GetByIdBill(this.$route.params.id)
+      this.entry = res;
       this.loading = false;
     },
     async update() {
@@ -95,14 +97,7 @@ export default {
         });
         return;
       }
-      const today = new Date();
-      let date =
-        `${today.getFullYear()}-` +
-        `${today.getMonth() + 1}-` +
-        `${today.getDate()} ` +
-        `${today.getHours()}:` +
-        `${today.getMinutes()}:` +
-        `${today.getSeconds()}`;
+     
       let totalProducts =0
       this.entry.products.forEach(
         (e) => (totalProducts += e.totalProduct)
@@ -112,11 +107,9 @@ export default {
         (e) => (totalQuantity += Number(e.quantity))
       );
       const data = {
-        userId: null,
         status: "Chờ xác nhận",
         totalProducts: totalProducts,
         totalQuantity: totalQuantity,
-        created: date,
         "request-description": this.entry.request,
         address: this.entry.address,
         phone: this.entry.phone,
@@ -131,10 +124,7 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.post(
-            "http://localhost:3300/bills/" + this.$route.params.id,
-            data
-          );
+          const response = await this.UpdateBill({id:this.$route.params.id,entry:data})
           if (response) {
             this.$toast.success("Tạo đơn thành công.", {
               position: "top-right",

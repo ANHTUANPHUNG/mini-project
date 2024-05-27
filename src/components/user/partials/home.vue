@@ -6,7 +6,7 @@
     <div class=" py-5 px-5">
       <div class="row reverse">
         <div class="col-md-3 col-12 ">
-          {{ $store.state.name }}
+          <!-- {{ $store.state.name }} -->
         <div><menu-item /></div>
         <div><sell-fast /></div>
 

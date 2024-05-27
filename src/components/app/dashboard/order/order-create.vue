@@ -44,6 +44,8 @@ import OrderAddress from "./partials/order-address.vue";
 import OrderRequest from "./partials/order-request.vue";
 import axios from "axios";
 import OrderPhone from "./partials/order-phone.vue";
+import { mapActions } from "vuex";
+
 export default {
   name: "create",
   components: {
@@ -68,6 +70,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['CreateBill']),
     async create() {
       const regexPhone = /^(\+84|0)[3|5|7|8|9]{1}\d{8}$/;
       if (!regexPhone.test(this.entry.phone)) {
@@ -108,7 +111,7 @@ export default {
         (e) => (totalQuantity += Number(e.quantity))
       );
       const data = {
-        userId: null,
+        userId: "undefined",
         status: "Chờ xác nhận",
         totalProducts: totalProducts,
         totalQuantity: totalQuantity,
@@ -117,6 +120,7 @@ export default {
         address: this.entry.address,
         phone: this.entry.phone,
         products: this.entry.products,
+        delete:0
       };
       console.log(data);
       await this.$swal({
@@ -127,10 +131,7 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.post(
-            "http://localhost:3300/bills",
-            data
-          );
+          const response = await this.CreateBill(data)
           if (response) {
             this.$toast.success("Tạo đơn thành công.", {
               position: "top-right",

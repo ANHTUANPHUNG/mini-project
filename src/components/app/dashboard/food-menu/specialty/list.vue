@@ -119,7 +119,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['ListSpecialty','DeleteSpecialty']),
+    ...mapActions(['ListSpecialty','DeleteSpecialty','UpdateSpecialty']),
 
     async getList() {
       this.loading = true;
@@ -147,7 +147,7 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(`http://localhost:3300/specialty/` + id);
+          let response = await this.DeleteSpecialty(id);
           if (response.status == 200) {
             this.$toast.success("Xóa thành công.", {
               position: "top-right",
@@ -173,12 +173,14 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.put(`http://localhost:3300/specialty/` + entry.id, data);
-          if (response.status == 200) {
+          const response = await this.UpdateSpecialty({id:entry.id,entry:data}) 
+          if (response) {
             this.$toast.success("Cập nhật thành công.", {
               position: "top-right",
               timeout: 3000,
             });
+            this.currentPage = 1;
+
             this.getList();
           }
         },

@@ -49,6 +49,8 @@ import SexUser from "./partials/sex-user.vue";
 import EmailUser from "./partials/email-user.vue";
 import PhoneUser from "./partials/phone-user.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
+
 export default {
   name: "register",
   props: {
@@ -80,10 +82,12 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['ListUser','CreateUser']),
+
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/users");
-      this.entries = response.data;
+      const response = await this.ListUser();
+      this.entries = response;
       this.loading = false;
     },
     async registerUser() {
@@ -97,9 +101,15 @@ export default {
         });
         return;
       }
-      const regexPhone = /^(\+84|0)[3|5|7|8|9]{1}\d{8}$/
-      if(!regexPhone.test(this.entry.phone)){
-        this.$toast.error("Số điện thoại không hợp lệ hoặc đang trống.", {
+      if (!this.entry.username || this.entry.username.trim() === "") {
+        this.$toast.error("Tên đăng nhập không được trống.", {
+          position: "top-right",
+          timeout: 3000,
+        });
+        return;
+      }
+      if (!this.entry.password || this.entry.password.trim() === "") {
+        this.$toast.error("Mật khẩu không được trống.", {
           position: "top-right",
           timeout: 3000,
         });
@@ -128,20 +138,15 @@ export default {
         });
         return;
       }
-      if (!this.entry.username || this.entry.username.trim() === "") {
-        this.$toast.error("Tên đăng nhập không được trống.", {
+      const regexPhone = /^(\+84|0)[3|5|7|8|9]{1}\d{8}$/
+      if(!regexPhone.test(this.entry.phone)){
+        this.$toast.error("Số điện thoại không hợp lệ hoặc đang trống.", {
           position: "top-right",
           timeout: 3000,
         });
         return;
       }
-      if (!this.entry.password || this.entry.password.trim() === "") {
-        this.$toast.error("Mật khẩu không được trống.", {
-          position: "top-right",
-          timeout: 3000,
-        });
-        return;
-      }
+      
       const dobDate = new Date(this.entry.dob);
       const today = new Date();
       const age = Math.floor((today - dobDate) / (1000 * 60 * 60 * 24 * 365));
@@ -177,10 +182,7 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.post(
-            "http://localhost:3300/users",
-            this.entry
-          );
+          const response = await this.CreateUser(this.entry)
           if (response) {
             this.$toast.success("Tạo thành công.", {
               position: "top-right",

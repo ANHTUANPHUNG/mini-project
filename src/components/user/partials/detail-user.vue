@@ -121,6 +121,7 @@
 <script>
 import { eventBus } from "@/main";
 import SellFast from "./sell-fast.vue"
+import { mapActions } from "vuex";
 
 import axios from "axios";
 import MenuItem from "./menu-item.vue";
@@ -150,12 +151,20 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['ListDrink','ListFood','ListSpecialty','CreateFood']),
     async getList() {
       this.loading = true;
-      const res = await axios.get(
-        "http://localhost:3300/" + this.$route.params.type
-      );
-      const data = res.data.filter((e) => e.status.id == 1);
+      let res;
+      if(this.$route.params.type == 'food'){
+        res = await this.ListFood()
+      }
+      if(this.$route.params.type == 'drink'){
+        res = await this.ListDrink()
+      }
+      if(this.$route.params.type == 'specialty'){
+        res = await this.ListSpecialty()
+      }
+      const data = res.filter((e) => e.status.id == 1);
       const index = data.findIndex(({ id }) => id == this.$route.params.id);
       const productLocal = JSON.parse(localStorage.getItem("products"));
       const newEntries = productLocal?.products.find(

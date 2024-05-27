@@ -128,6 +128,8 @@
 <script>
 import axios from "axios";
 import { eventBus } from "@/main";
+import { mapActions } from "vuex";
+
 export default {
   name: "product-item",
   props: {
@@ -177,14 +179,25 @@ export default {
     window.removeEventListener("resize", this.handleResize);
   },
   methods: {
+    ...mapActions(['ListDrink','ListFood','ListSpecialty','CreateFood']),
+
     handleResize() {
       this.window.width = window.innerWidth;
       this.window.height = window.innerHeight;
     },
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/" + this.api);
-      this.items = response.data.filter(({ status }) => status.id == 1);
+      let response;
+      if(this.api == 'food'){
+        response = await this.ListFood()
+      }
+      if(this.api == 'drink'){
+        response = await this.ListDrink()
+      }
+      if(this.api == 'specialty'){
+        response = await this.ListSpecialty()
+      }
+      this.items = response.filter(({ status }) => status.id == 1);
       this.loading = false;
     },
     next() {

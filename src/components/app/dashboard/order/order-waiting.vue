@@ -55,7 +55,7 @@
                 </div>
               </td>
               <td class="align-middle">
-                <span v-if="entry.userId ==null" @click="editItem(entry.id)" class="cursor-pointer"
+                <span v-if="entry.userId == 'undefined'" @click="editItem(entry.id)" class="cursor-pointer"
                   ><i class="bx bx-edit pr-3 font-size-20 text-purple"></i
                 ></span>
                 <span
@@ -88,6 +88,7 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "list",
@@ -124,6 +125,8 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['DeleteBill','ListBill','StatusBill']),
+
     formatDate(date) {
       const [datePart, timePart] = date.split(" ");
       const b = datePart.split("-");
@@ -138,9 +141,9 @@ export default {
     },
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/bills");
-      const lists = response.data
-        .filter((e) => e.status == "Chờ xác nhận")
+      const response = await this.ListBill();
+      const lists = response
+        .filter((e) => e.status == "Chờ xác nhận" && e.delete == 0)
         .sort(
           (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
         );
@@ -167,9 +170,7 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(
-            `http://localhost:3300/bills/` + id
-          );
+          let response = await this.DeleteBill(id)
           if (response.status == 200) {
             this.$toast.success("Huỷ thành công.", {
               position: "top-right",
@@ -197,11 +198,8 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.patch(
-            `http://localhost:3300/bills/` + entry.id,
-            { status: "Đã xác nhận", createdWaiting: date }
-          );
-          if (response.status == 200) {
+          const response = await this.StatusBill({id:entry.id,entry:{status: "Đã xác nhận", createdWaiting: date}}) 
+          if (response) {
             this.$toast.success("Cập nhật thành công: Đơn hàng đã xác nhận.", {
               position: "top-right",
               timeout: 3000,

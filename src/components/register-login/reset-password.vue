@@ -44,6 +44,8 @@ import PasswordUser from "./partials/password-user.vue";
 import NewPassword from "./partials/new-password.vue";
 import EmailUser from "./partials/email-user.vue";
 import axios from "axios";
+import { mapActions } from "vuex";
+
 export default {
   name: "reset-password",
   props: {
@@ -64,11 +66,14 @@ export default {
       idUser: "",
     };
   },
+
   methods: {
+    ...mapActions(["ListUser", "PasswordUser"]),
+
     async getList() {
       this.loading = true;
-      const response = await axios.get("http://localhost:3300/users");
-      this.entries = response.data;
+      const response = await this.ListUser();
+      this.entries = response;
       this.loading = false;
     },
     async checkEmail() {
@@ -113,12 +118,13 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.patch(
-            "http://localhost:3300/users/" + this.idUser,
-            {
+          const response = await this.PasswordUser({
+            id: this.idUser,
+            entry: {
               password: this.entry.password,
-            }
-          );
+            },
+          });
+
           if (response) {
             this.$toast.success("Cập nhật thành công.", {
               position: "top-right",

@@ -37,38 +37,6 @@ export default {
       sortable: [],
     };
   },
-  // methods: {
-  //   async getList() {
-  //     const responseBill = await axios.get("http://localhost:3300/bills");
-  //     let newProducts = [];
-  //     responseBill.data.forEach((element) => {
-  //       if (element.status == "Đã hoàn thành") {
-  //         this.total += element.totalProducts;
-  //         element.products.forEach((e) => (newProducts = [...newProducts, e]));
-  //       }
-  //     });
-  //     let quantity = {};
-  //     newProducts.forEach((e) => {
-  //       if (e.product && !quantity[e.product.name]) {
-  //         quantity[e.product.name] = [Number(e.quantity), e];
-  //       } else if (quantity[e.product.name]) {
-  //         quantity[e.product.name][0] += Number(e.quantity);
-  //       }
-  //     });
-  //     let sortable = [];
-  //     for (var vehicle in quantity) {
-  //       sortable.push([vehicle, quantity[vehicle][0], quantity[vehicle][1]]);
-  //     }
-  //     sortable.sort(function (a, b) {
-  //       return b[1] - a[1];
-  //     });
-  //     this.sortable = sortable.slice(0, 5);
-  //     console.log(this.sortable);
-  //   },
-  // },
-  // created() {
-  //   this.getList();
-  // },
 };
 </script>
 

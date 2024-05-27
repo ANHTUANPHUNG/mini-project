@@ -9,6 +9,7 @@ const store = new Vuex.Store({
     name: 'a'
   },
   actions: {
+    //food
     async ListFood() {
       let response = await Vue.axios({
         method: 'GET',
@@ -41,11 +42,13 @@ const store = new Vuex.Store({
     },
     async DeleteFood(_,id) {
       let response = await Vue.axios({
-        method: 'POST',
+        method: 'DELETE',
         url: "http://localhost:3300/food/" +id,
       });
-      return response.data;
+      return response;
     },
+        //drink
+
     async ListDrink() {
       let response = await Vue.axios({
         method: 'GET',
@@ -69,7 +72,6 @@ const store = new Vuex.Store({
       return response.data;
     },
     async UpdateDrink(_,{id,entry}) {
-      console.log();
       let response = await Vue.axios({
         method: 'PUT',
         url: "http://localhost:3300/drink/" + id,
@@ -82,8 +84,9 @@ const store = new Vuex.Store({
         method: 'DELETE',
         url: "http://localhost:3300/drink/" +id,
       });
-      return response.data;
+      return response;
     },
+    //speacilty
     async ListSpecialty() {
       let response = await Vue.axios({
         method: 'GET',
@@ -107,7 +110,6 @@ const store = new Vuex.Store({
       return response.data;
     },
     async UpdateSpecialty(_,{id,entry}) {
-      console.log();
       let response = await Vue.axios({
         method: 'PUT',
         url: "http://localhost:3300/specialty/" + id,
@@ -116,11 +118,98 @@ const store = new Vuex.Store({
       return response.data;
     },
     async DeleteSpecialty(_,id) {
-      console.log(id);
       let response = await Vue.axios({
         method: 'DELETE',
         url: "http://localhost:3300/specialty/" + id,
       }); 
+      return response;
+    },
+    //user
+    async ListUser() {
+      let response = await Vue.axios({
+        method: 'GET',
+        url: "http://localhost:3300/users",
+      });
+      return response.data;
+    },
+    async GetByIdUser(_,id) {
+      let response = await Vue.axios({
+        method: 'GET',
+        url: "http://localhost:3300/users/" +id,
+      });
+      return response.data;
+    },
+    async CreateUser(_,entry) {
+      let response = await Vue.axios({
+        method: 'POST',
+        url: "http://localhost:3300/users",
+        data: entry
+      });
+      return response.data;
+    },
+    async PasswordUser(_,{id,entry}) {
+      let response = await Vue.axios({
+        method: 'PATCH',
+        url: "http://localhost:3300/users/" + id,
+        data: entry
+      });
+      return response.data;
+    },
+    //bill
+    async ListBill() {
+      let response = await Vue.axios({
+        method: 'GET',
+        url: "http://localhost:3300/bills",
+      });
+      return response.data;
+    },
+    async GetByIdBill(_,id) {
+      let response = await Vue.axios({
+        method: 'GET',
+        url: "http://localhost:3300/bills/" +id,
+      });
+      return response.data;
+    },
+    async CreateBill(_,entry) {
+      let response = await Vue.axios({
+        method: 'POST',
+        url: "http://localhost:3300/bills",
+        data: entry
+      });
+      return response.data;
+    },
+    async UpdateBill(_,{id,entry}) {
+      let response = await Vue.axios({
+        method: 'PATCH',
+        url: "http://localhost:3300/bills/" + id,
+        data: entry
+      });
+      return response.data;
+    },
+    async StatusBill(_,{id,entry}) {
+      let response = await Vue.axios({
+        method: 'PATCH',
+        url: "http://localhost:3300/bills/" + id,
+        data: entry
+      });
+      return response.data;
+    },
+    async DeleteBill(_,id) {
+      const status = 1
+      let response = await Vue.axios({
+        method: 'PATCH',
+        url: "http://localhost:3300/bills/" + id,
+        data: {delete:status}
+
+      }); 
+      return response;
+    },
+    //img
+    async ListImg() {
+      let response = await Vue.axios({
+        method: 'GET',
+        url: "http://localhost:3300/img",
+      });
       return response.data;
     },
   }

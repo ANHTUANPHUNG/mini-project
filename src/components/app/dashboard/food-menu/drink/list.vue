@@ -119,7 +119,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['ListDrink']),
+    ...mapActions(['ListDrink','DeleteDrink','UpdateDrink']),
 
     async getList() {
       this.loading = true;
@@ -147,7 +147,7 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(`http://localhost:3300/drink/` + id);
+          let response = await this.DeleteDrink(id);
           if (response.status == 200) {
             this.$toast.success("Xóa thành công.", {
               position: "top-right",
@@ -173,8 +173,8 @@ export default {
         cancelButtonText: "Không đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.put(`http://localhost:3300/drink/` + entry.id, data);
-          if (response.status == 200) {
+          const response = await this.UpdateDrink({id:entry.id,entry:data}) 
+          if (response) {
             this.$toast.success("Cập nhật thành công.", {
               position: "top-right",
               timeout: 3000,

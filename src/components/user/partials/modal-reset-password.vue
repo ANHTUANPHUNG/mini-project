@@ -32,6 +32,8 @@
 import axios from "axios";
 import NewPassword from "./new-password.vue";
 import Password from "./password.vue";
+import { mapActions } from "vuex";
+
 export default {
   name: "modal-reset-password",
   props: {
@@ -58,15 +60,15 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['GetByIdUser','PasswordUser']),
+
     checkEnter(event) {
       if (event.keyCode === 13) {
         this.update();
       }
     },
     async resetLocalStorage() {
-      const response = await axios.get(
-        "http://localhost:3300/users/" + this.user.id
-      );
+      const response = await this.GetByIdUser(this.user.id)
       localStorage.setItem("user", JSON.stringify(response.data));
     },
     async update() {
@@ -96,12 +98,12 @@ export default {
         confirmButtonColor: "purple",
         showCancelButton: true,
         preConfirm: async () => {
-          const response = await axios.patch(
-            "http://localhost:3300/users/" + this.user.id,
-            {
+          const response = await this.PasswordUser({
+            id: this.user.id,
+            entry: {
               password: this.resetPassword.password,
-            }
-          );
+            },
+          });
           if (response) {
             this.$toast.success("Cập nhật thành công.", {
               position: "top-right",

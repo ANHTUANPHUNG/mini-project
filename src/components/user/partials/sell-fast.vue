@@ -34,6 +34,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "menu-item",
@@ -45,11 +46,14 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['DeleteBill','ListBill','StatusBill']),
+
     async getList() {
         this.loading =true
-      const responseBill = await axios.get("http://localhost:3300/bills");
+        const responseBill = await this.ListBill();
+
       let newProducts = [];
-      responseBill.data.forEach((element) => {
+      responseBill.forEach((element) => {
         if (element.status == "Đã hoàn thành") {
           this.total += element.totalProducts;
           element.products.forEach((e) => (newProducts = [...newProducts, e]));

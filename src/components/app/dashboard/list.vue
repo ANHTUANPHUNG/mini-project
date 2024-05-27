@@ -68,6 +68,8 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
+
 export default {
   name: "list",
   components: {
@@ -143,6 +145,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['ListUser','ListBill']),
+
     formatDate(date) {
       const [year, month, day] = date.split("-");
       return [year, month, day];
@@ -154,10 +158,10 @@ export default {
     
     async getList() {
       this.loading = true;
-      const responseUser = await axios.get("http://localhost:3300/users");
-      this.listUser = responseUser.data;
+      const responseUser = await this.ListUser()
+      this.listUser = responseUser;
       let listDate = [];
-      listDate = responseUser.data.map((e) => e.created);
+      listDate = responseUser.map((e) => e.created);
       this.countDate(listDate);
       this.optionsUser = {
         ...this.optionsUser,
@@ -165,9 +169,9 @@ export default {
       };
       this.seriesUser[0].data = Object.values(this.countDate(listDate));
 
-      const responseBill = await axios.get("http://localhost:3300/bills");
+      const responseBill = await this.ListBill()
       let newProducts = [];
-      responseBill.data.forEach((element) => {
+      responseBill.forEach((element) => {
         if (element.status == "Đã hoàn thành") {
           this.total += element.totalProducts
           element.products.forEach((e) => (newProducts = [...newProducts, e]));
@@ -187,7 +191,7 @@ export default {
       );
       const dateCount = {};
 
-      responseBill.data.forEach((e) => {
+      responseBill.forEach((e) => {
         if (e.status == "Đã hoàn thành") {
           if(this.formatDateTime(e.createdInProgress))
               dateCount[this.formatDateTime(e.createdInProgress)] = (dateCount[this.formatDateTime(e.createdInProgress)] || 0) + e.totalProducts;
