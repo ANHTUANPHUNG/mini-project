@@ -87,6 +87,7 @@
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
 import { mapActions } from 'vuex'
+import { dateNow ,convertDateTime } from "@/components/core/myFunction";
 
 export default {
   name: "order-confirm",
@@ -124,20 +125,13 @@ export default {
   },
   methods: {
     ...mapActions(['DeleteBill','ListBill','StatusBill']),
-
-    formatDate(date) {
-      const [datePart, timePart] = date.split(" ");
-      const b = datePart.split("-");
-      const c = timePart.split(":");
-      return new Date(b[0], b[1] - 1, b[2], c[0], c[1], c[2]);
-    },
     async getList() {
       this.loading = true;
       const response = await this.ListBill();
       const lists = response
         .filter((e) => e.status == "Đang giao" && e.delete == 0)
         .sort(
-          (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
+          (a, b) => convertDateTime(b.created) - convertDateTime(a.created)
         );
 
       let data = [];
@@ -175,14 +169,7 @@ export default {
       });
     },
     async updateStatus(entry) {
-      const today = new Date();
-      let date =
-        `${today.getFullYear()}-` +
-        `${today.getMonth() + 1}-` +
-        `${today.getDate()} ` +
-        `${today.getHours()}:` +
-        `${today.getMinutes()}:` +
-        `${today.getSeconds()}`;
+      let date = dateNow()
       await this.$swal({
         title: "Cập nhật trạng thái đơn hàng?",
         icon: "warning",

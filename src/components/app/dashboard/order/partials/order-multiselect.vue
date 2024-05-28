@@ -65,7 +65,7 @@
         <div
           style="padding: 0 20px"
           class="d-flex align-items-center py-2 cursor-pointer multiselect-item"
-          v-for="(item, index) in data"
+          v-for="(item) in data"
           :key="item.data"
           @click="handlerMultiselect(item)"
         >
@@ -93,16 +93,11 @@
         </div>
       </div>
     </div>
-    <!-- <div  class="text-center w-100 d-flex justify-content-center py-5">
-          <div style="text-align: -webkit-center">
-            <div class="loader"></div>
-            <span>Đang tải dữ liệu</span>
-          </div>
-        </div> -->
   </div>
 </template>
 <script>
 import axios from "axios";
+import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: "create",
@@ -115,6 +110,9 @@ export default {
       options: [],
       checkMultiselect: false,
     };
+  },
+  computed:{
+    ...mapGetters(['listProduct'])
   },
   watch: {
     "value.products": {
@@ -132,22 +130,18 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['CreateFood','DataAllProduct']),
+
     async getList() {
-      const promise1 = axios.get("http://localhost:3300/specialty");
-      const promise2 = axios.get("http://localhost:3300/food");
-      const promise3 = axios.get("http://localhost:3300/drink");
-      let dataApi = [];
-      const response = await Promise.all([promise1, promise2, promise3]);
-      if (response) {
-        response.forEach(({ data }) => data.forEach((e) => dataApi.push(e)));
-      }
-      const newDataPi = dataApi.filter((e) => e.status.name == "Đang bán");
+      await this.DataAllProduct()
+      const newDataPi = this.listProduct.filter((e) => e.status.name == "Đang bán");
       let data = [];
       newDataPi.forEach((i) => {
         if (i.status.name == "Đang bán") {
           data.push({ product: i, quantity: 1, totalProduct: i.price });
         }
       });
+      data.forEach(e=> console.log(e.product.id))
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < this.value.products.length; j++) {
           if (
@@ -186,8 +180,8 @@ export default {
   },
   async created() {
     this.options = this.value.products;
-    console.log(this.value);
     await this.getList();
+   
   },
 };
 </script>

@@ -78,6 +78,7 @@
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
 import { mapActions } from 'vuex'
+import { dateNow ,convertDateTime } from "@/components/core/myFunction";
 
 export default {
   name: "order-confirm",
@@ -114,19 +115,13 @@ export default {
     },
   },
   methods: {
-    formatDate(date) {
-      const [datePart, timePart] = date.split(" ");
-      const b = datePart.split("-");
-      const c = timePart.split(":");
-      return new Date(b[0], b[1] - 1, b[2], c[0], c[1], c[2]);
-    },
     ...mapActions(['DeleteBill','ListBill','StatusBill']),
 
     async getList() {
       this.loading = true;
       const response = await this.ListBill();
       const lists = response.filter(e=> e.status == 'Đã hoàn thành' && e.delete == 0).sort(
-        (a, b) => this.formatDate(b.created) - this.formatDate(a.created)
+        (a, b) => convertDateTime(b.created) - convertDateTime(a.created)
       );
 
       let data = [];

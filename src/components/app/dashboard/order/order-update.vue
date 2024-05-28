@@ -115,7 +115,6 @@ export default {
         phone: this.entry.phone,
         products: this.entry.products,
       };
-      console.log(data);
       await this.$swal({
         title: "Tạo đơn hàng?",
         icon: "warning",

@@ -50,6 +50,7 @@ import EmailUser from "./partials/email-user.vue";
 import PhoneUser from "./partials/phone-user.vue";
 import axios from "axios";
 import { mapActions } from 'vuex'
+import { dateNow } from "@/components/core/myFunction";
 
 export default {
   name: "register",
@@ -167,12 +168,7 @@ export default {
         });
         return;
       }
-      let date =
-        today.getFullYear() +
-        "-" +
-        (today.getMonth() + 1) +
-        "-" +
-        today.getDate();
+      let date = dateNow()
       this.entry = { ...this.entry, role: "client", created: date };
       await this.$swal({
         title: "Tạo tài khoản?",

@@ -1,18 +1,14 @@
 <template>
-  <div id="app">
-    <div style="width: 100%">
+  <div id="app" style="position: absolute;width: 100%">
+    <div style="">
       <router-view></router-view>
     </div>
   </div>
 </template>
 <script>
-import NavBar from "./nav-bar.vue";
-import SideBar from "./side-bar.vue";
 export default {
   name: "app",
   components: {
-    NavBar,
-    SideBar,
   },
   data() {
     return {

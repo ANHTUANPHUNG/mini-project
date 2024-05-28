@@ -1,5 +1,5 @@
 <template>
-  <div v-if="localUser?.role == 'admin'">
+  <div :class="{ opacity: modal }" v-if="user?.role == 'admin'">
     <nav-bar v-model="menu" @update="(v) => (menu = v)" />
     <div
       class="d-flex w-100 h-100"
@@ -21,8 +21,8 @@
   </div>
 </template>
 <script>
-import NavBar from "../nav-bar.vue";
-import SideBar from "../side-bar.vue";
+import NavBar from "./nav-bar.vue";
+import SideBar from "./side-bar.vue";
 import Error from "./../error.vue"
 import { mapGetters } from 'vuex';
 
@@ -40,11 +40,16 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['localUser'])
+    ...mapGetters(['modal'])
   },
-  // created() {
-  //   const user = localStorage.getItem("user");
-  //   this.user = JSON.parse(user)
-  // },
+  created() {
+    const user = localStorage.getItem("user");
+    this.user = JSON.parse(user)
+  },
 };
 </script>
+<style scoped>
+.opacity {
+  opacity: 0.5;
+}
+</style>

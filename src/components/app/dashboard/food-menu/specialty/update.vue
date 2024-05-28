@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-between p-3 border-bottom">
         <div
           class="cursor-pointer text-purple"
-          @click="$router.push({ name: 'admin.specialty-menu.specialty.list' })"
+          @click="$router.push({ name: 'admin.food-menu.specialty.list' })"
         >
           <i
             class="bx bx-left-arrow-alt font-size-20 align-text-bottom pr-2"
@@ -50,7 +50,7 @@ import SpecialtyName from "./partials/specialty-name.vue";
 import SpecialtyPrice from "./partials/specialty-price.vue";
 import SpecialtyStatus from "./partials/specialty-status.vue";
 import axios from "axios";
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: "update",
@@ -71,19 +71,15 @@ export default {
       data: [],
     };
   },
+  computed:{
+    ...mapGetters(['listProduct'])
+  },
   methods: {
-    ...mapActions(['ListDrink','ListFood','ListSpecialty','GetByIdSpecialty','UpdateSpecialty']),
+    ...mapActions(['DataAllProduct','GetByIdSpecialty','UpdateSpecialty']),
 
     async getList() {
-      const promise1 = this.ListDrink()
-      const promise2 = this.ListFood()
-      const promise3 = this.ListSpecialty()
-      let dataApi = [];
-      const response = await Promise.all([promise1, promise2, promise3]);
-      if (response) {
-        response.forEach(( data ) => data.forEach((e) => dataApi.push(e)));
-      }
-      const newDataPi = dataApi.filter((e) => e.name != this.entry.name);
+      await this.DataAllProduct()
+      const newDataPi = this.listProduct.filter((e) => e.name != this.entry.name);
       this.data = newDataPi;
     },
     async getItemById() {
@@ -168,7 +164,6 @@ export default {
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Đồng ý",
-
         preConfirm: async () => this.getItemById(),
       });
     },

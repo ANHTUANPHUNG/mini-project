@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -5,35 +6,43 @@ Vue.use(Vuex);
 
 
 const store = new Vuex.Store({
+
+ 
   state: {
     // localUser:JSON.parse(localStorage.getItem('user')),
     modal:false,
+    listProduct:[]
   },
   getters: {
     // localUser: state => state.localUser,
-    modal : state =>state.modal
+    modal : state =>state.modal,
+    listProduct : state =>state.listProduct,
   },
   mutations: {
-    // setLocalUser(state,localUser){
-    //   console.log(localUser);
-    //   localStorage.setItem("user", JSON.stringify(localUser))
-    //   state.localUser = localUser
-    // }
+    setListProduct(state, listProduct) {
+      state.listProduct = listProduct;
+    },
     setModal(state,modal){
       state.modal = modal.some((x) => x == true)
-      // console.log(localUser);
-      // localStorage.setItem("user", JSON.stringify(localUser))
-      // state.modal = localUser
     }
   },
   actions: {
-    // updateLocalUser({commit},localUser){
-    //   commit('setLocalUser',localUser)
-    // },
     updateModal({commit},modal){
       commit('setModal',modal)
     },
-
+    async DataAllProduct({ commit }) {
+      const promise1 = axios.get("http://localhost:3300/food")
+      const promise2 = axios.get("http://localhost:3300/drink")
+      const promise3 = axios.get("http://localhost:3300/specialty")
+      let dataApi =[]
+      const response = await Promise.all([
+        promise1,
+        promise2,
+        promise3,
+      ]);
+      response.forEach(( {data} ) => data.forEach((e) => dataApi.push(e)));
+        commit('setListProduct', dataApi);
+    },
 
     //food
     async ListFood() {

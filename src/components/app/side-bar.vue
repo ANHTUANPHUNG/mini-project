@@ -127,7 +127,7 @@
   </div>
 </template>
 <script>
-import menu from "./data/menu.json";
+import menu from './../data/menu.json'
 export default {
   name: "side-bar",
   props: {

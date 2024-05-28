@@ -45,7 +45,7 @@ import OrderRequest from "./partials/order-request.vue";
 import axios from "axios";
 import OrderPhone from "./partials/order-phone.vue";
 import { mapActions } from "vuex";
-
+import { dateNow } from "@/components/core/myFunction";
 export default {
   name: "create",
   components: {
@@ -94,14 +94,7 @@ export default {
         });
         return;
       }
-      const today = new Date();
-      let date =
-        `${today.getFullYear()}-` +
-        `${today.getMonth() + 1}-` +
-        `${today.getDate()} ` +
-        `${today.getHours()}:` +
-        `${today.getMinutes()}:` +
-        `${today.getSeconds()}`;
+      let date = dateNow()
       let totalProducts =0
       this.entry.products.forEach(
         (e) => (totalProducts += e.totalProduct)
@@ -122,7 +115,6 @@ export default {
         products: this.entry.products,
         delete:0
       };
-      console.log(data);
       await this.$swal({
         title: "Tạo đơn hàng?",
         icon: "warning",

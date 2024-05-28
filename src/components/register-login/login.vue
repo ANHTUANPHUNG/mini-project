@@ -107,8 +107,6 @@ export default {
         localStorage.setItem("user", user);
         this.$router.push({ name: "user.home" });
       }
-      // this.setUser(localStorage.getItem('user'))
-      // console.log(this.user);
     },
     checkEnter(event) {
       if (event.keyCode === 13) {

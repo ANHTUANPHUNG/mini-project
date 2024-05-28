@@ -9,37 +9,53 @@
       @click="dropdown = !dropdown"
       style="position: relative"
     >
-      <img src="./../assets/logo.png" class="avatar bg-white" />
+      <img src="./../../assets/logo.png" class="avatar bg-white" />
       <span class="text-white font-size-18 px-2 display-none">Bà Tuyết</span>
 
       <i class="bx bx-chevron-down font-size-20 text-white"></i>
       <div class="pt-1 cursor-pointer dropdown-list" v-if="dropdown">
-        <!-- <div class="pl-2 pb-2 dropdown-item"><i class="bx bx-user"></i> Thông tin</div>
-        <div class="border-bottom pl-2 pb-2 dropdown-item">
+        <div class="pl-2 pb-2 dropdown-item" @click="modalInformation = !modalInformation"><i class="bx bx-user"></i> Thông tin</div>
+        <div class="border-bottom pl-2 pb-2 dropdown-item" @click="modalResetPassword = !modalResetPassword">
           <i class="bx bx-key"></i> Đổi mật khẩu
-        </div> -->
+        </div>
         <div class="pl-2 py-2 dropdown-item" @click="handleLogout"><i class="bx bx-power-off"></i> Thoát</div>
       </div>
+      
     </div>
+    <modal-information
+      @update="(v) => (modalInformation = v)"
+      :value="modalInformation"
+      :user="user"
+    />
+    <modal-reset-password
+      @update="(v) => (modalResetPassword = v)"
+      :value="modalResetPassword"
+      :user="user"
+    />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import ModalInformation from '../user/partials/modal-information.vue';
+import ModalResetPassword from '../user/partials/modal-reset-password.vue';
 
 export default {
   name: "nav-bar",
   props:{
     value: Boolean
   },
+  components: { ModalInformation, ModalResetPassword },
   data() {
     return {
       dropdown: false,
       menu: true,
+      modalInformation: false,
+      modalResetPassword: false,
+      resetPassword: {},
+      user: null,
+
     };
-  },
-  computed:{
-    ...mapGetters(['localUser'])
   },
   watch:{
     menu:{
@@ -53,10 +69,24 @@ export default {
         this.menu = this.value
       },
       deep:true
-    }
+    },
+    modalInformation: {
+      handler() {
+        this.updateModal([this.modalInformation, this.modalResetPassword])
+      },
+      deep: true,
+    },
+    modalResetPassword: {
+      handler() {
+        this.updateModal([this.modalResetPassword, this.modalInformation])
+      },
+      deep: true,
+    },
   },
 
   methods: {
+    ...mapActions(['updateModal']),
+
     handleLogout() {
       localStorage.removeItem('user');
       this.$router.push({name:'register-login'}); 
@@ -64,6 +94,7 @@ export default {
   },
   created(){
     this.menu = this.value
+    this.user = JSON.parse(localStorage.getItem("user"));
   }
 };
 </script>

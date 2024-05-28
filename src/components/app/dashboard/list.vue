@@ -53,7 +53,9 @@
       </div>
     </div>
     <div class="row mx-3 bg-white border-rounded mt-5">
-      <h3 class="pl-3 pt-3">Thống kê doanh thu theo ngày : {{ total | formatNumberWithDotAndCurrency }}</h3>
+      <h3 class="pl-3 pt-3">
+        Thống kê doanh thu theo ngày : {{ total | formatNumberWithDotAndCurrency }}
+      </h3>
       <div class="col-12">
         <apexchart
           height="300"
@@ -68,8 +70,8 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
-import { mapActions,mapGetters } from 'vuex'
-
+import { mapActions, mapGetters } from "vuex";
+import { dateNow, formatDate } from "@/components/core/myFunction";
 export default {
   name: "list",
   components: {
@@ -87,7 +89,7 @@ export default {
       quantityFood: 0,
       totalDrink: 0,
       quantityDrink: 0,
-      total:0,
+      total: 0,
       optionsUser: {
         chart: {
           type: "line",
@@ -126,6 +128,13 @@ export default {
         tooltip: {
           shared: true,
           intersect: false,
+          y: {
+            formatter: function (number) {
+              let numStr = number.toString().replace(/^0+/, "");
+              let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+              return formattedNum + " đ";
+            },
+          },
         },
         legend: {
           show: true,
@@ -144,70 +153,77 @@ export default {
       ],
     };
   },
-      computed:{
-    ...mapGetters(['user'])
+  computed: {
+    ...mapGetters(["user"]),
   },
   methods: {
-    ...mapActions(['ListUser','ListBill']),
+    ...mapActions(["ListUser", "ListBill"]),
 
-    formatDate(date) {
-      const [year, month, day] = date.split("-");
-      return [year, month, day];
-    },
-    formatDateTime(datetime) {
-      const [date, time] = datetime.split(" ");
-      return date;
-    },
-    
     async getList() {
       this.loading = true;
-      const responseUser = await this.ListUser()
+      const responseUser = await this.ListUser();
       this.listUser = responseUser;
       let listDate = [];
-      listDate = responseUser.map((e) => e.created);
-      this.countDate(listDate);
+      listDate = responseUser.map((e) => formatDate(e.created));
       this.optionsUser = {
         ...this.optionsUser,
         xaxis: { ...this.optionsUser.xaxis, categories: Object.keys(this.countDate(listDate)) },
       };
       this.seriesUser[0].data = Object.values(this.countDate(listDate));
 
-      const responseBill = await this.ListBill()
-      let newProducts = [];
-      responseBill.forEach((element) => {
-        if (element.status == "Đã hoàn thành") {
-          this.total += element.totalProducts
-          element.products.forEach((e) => (newProducts = [...newProducts, e]));
-        }
-      });
-      this.listDrink = newProducts.filter(({ product }) => product.type == "drink");
-      this.listFood = newProducts.filter(({ product }) => product.type == "food");
-      this.listSpecialty = newProducts.filter(({ product }) => product.type == "specialty");
-      this.listSpecialty.forEach(
-        (e) => ((this.totalSpecialty += e.totalProduct), (this.quantitySpecialty += Number(e.quantity)))
-      );
-      this.listFood.forEach(
-        (e) => ((this.totalFood += e.totalProduct), (this.quantityFood += Number(e.quantity)))
-      );
-      this.listDrink.forEach(
-        (e) => ((this.totalDrink += e.totalProduct), (this.quantityDrink += Number(e.quantity)))
-      );
-      const dateCount = {};
-
+      const responseBill = await this.ListBill();
+      let listFood = [];
+      let listSpecialty = [];
+      let listDrink = [];
       responseBill.forEach((e) => {
         if (e.status == "Đã hoàn thành") {
-          if(this.formatDateTime(e.createdInProgress))
-              dateCount[this.formatDateTime(e.createdInProgress)] = (dateCount[this.formatDateTime(e.createdInProgress)] || 0) + e.totalProducts;
-            
+          this.total += e.totalProducts;
+          e.products.forEach((i) => {
+            {
+              if (i.product.type == "drink") {
+                listFood.push([i.product, formatDate(e.createdInProgress)]);
+              }
+              if (i.product.type == "specialty") {
+                listSpecialty.push([i.product, formatDate(e.createdInProgress)]);
+              }
+              if (i.product.type == "food") {
+                listDrink.push([i.product, formatDate(e.createdInProgress)]);
+              }
+            }
+          });
         }
       });
-      this.seriesRevenue[0].data = Object.values(dateCount);
-      this.optionsRevenue = {
-        ...this.optionsRevenue,
-        xaxis: { ...this.optionsRevenue.xaxis, categories:Object.keys(dateCount) },
-      };
+      console.log(this.total);
+      console.log(listFood);
+      console.log(listSpecialty,'listSpecialty');
+      console.log(listDrink,'listDrink');
+      // this.listFood = newProducts.filter(({ product }) => product.type == "food");
+      // this.listSpecialty = newProducts.filter(({ product }) => product.type == "specialty");
+      // this.listSpecialty.forEach(
+      //   (e) => ((this.totalSpecialty += e.totalProduct), (this.quantitySpecialty += Number(e.quantity)))
+      // );
+      // this.listFood.forEach(
+      //   (e) => ((this.totalFood += e.totalProduct), (this.quantityFood += Number(e.quantity)))
+      // );
+      // this.listDrink.forEach(
+      //   (e) => ((this.totalDrink += e.totalProduct), (this.quantityDrink += Number(e.quantity)))
+      // );
+      // const dateCount = {};
+      // console.log(responseBill);
+      // responseBill.forEach((e) => {
+      //   if (e.status == "Đã hoàn thành") {
+      //     if(formatDate(e.createdInProgress))
+      //         dateCount[formatDate(e.createdInProgress)] = (dateCount[formatDate(e.createdInProgress)] || 0) + e.totalProducts;
 
-      this.loading = false;
+      //   }
+      // });
+      // this.seriesRevenue[0].data = Object.values(dateCount);
+      // this.optionsRevenue = {
+      //   ...this.optionsRevenue,
+      //   xaxis: { ...this.optionsRevenue.xaxis, categories:Object.keys(dateCount) },
+      // };
+
+      // this.loading = false;
     },
     countDate(listDate) {
       const dateCount = {};

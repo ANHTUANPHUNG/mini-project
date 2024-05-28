@@ -26,7 +26,7 @@ import { eventBus } from "@/main";
 import RequestDescription from "./request-description.vue";
 import AddressUser from "./address-user.vue";
 import { mapActions } from 'vuex'
-
+import { dateNow } from './../../core/myFunction'
 export default {
   name: "modal-payment",
   props: {
@@ -70,15 +70,7 @@ export default {
         return;
       }
       let data = JSON.parse(localStorage.getItem("products"));
-      const today = new Date();
-      let date =
-        `${today.getFullYear()}-` +
-        `${today.getMonth() + 1}-` +
-        `${today.getDate()} ` +
-        `${today.getHours()}:` +
-        `${today.getMinutes()}:` +
-        `${today.getSeconds()}`;
-
+      let date = dateNow()
       data = {
         ...data,
         address: this.information.address,

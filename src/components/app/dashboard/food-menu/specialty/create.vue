@@ -58,7 +58,7 @@
   import SpecialtyPrice from "./partials/specialty-price.vue";
   import SpecialtyStatus from "./partials/specialty-status.vue";
   import axios from "axios";
-  import { mapActions } from 'vuex'
+  import { mapActions,mapGetters } from 'vuex'
 
   export default {
     name: "create",
@@ -75,27 +75,16 @@
       return {
         entry: { name: "", image: null, price: 0, description: "", status: null },
         loading: false,
-        disabledButton: false,      data: [],
-
+        disabledButton: false,   
       };
     },
+    computed:{
+    ...mapGetters(['listProduct'])
+  },
     methods: {
-      ...mapActions(['ListDrink','ListFood','ListSpecialty','CreateSpecialty']),
-
-    async getList() {
-      const promise1 = this.ListDrink()
-      const promise2 = this.ListFood()
-      const promise3 = this.ListSpecialty()
-      let dataApi = [];
-      const response = await Promise.all([promise1, promise2, promise3]);
-      if (response) {
-        response.forEach(( data ) => data.forEach((e) => dataApi.push(e)));
-      }
-      const newDataPi = dataApi.filter((e) => e.name != this.entry.name);
-      this.data = newDataPi;
-    },
+      ...mapActions(['CreateSpecialty','DataAllProduct']),
       async create() {
-        if(this.data.find(({name}) => name == this.entry.name)){
+        if(this.listProduct.find(({name}) => name == this.entry.name)){
         this.$toast.error("Tên mặt hàng đã tồn tại.", {
           position: "top-right",
           timeout: 3000,
@@ -178,8 +167,7 @@
       },
     },
     created(){
-      this.getList();
-
+      this.DataAllProduct()
     }
   };
   </script>

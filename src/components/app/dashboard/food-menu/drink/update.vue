@@ -50,7 +50,7 @@ import DrinkDescription from "./partials/drink-description.vue";
 import DrinkName from "./partials/drink-name.vue";
 import DrinkPrice from "./partials/drink-price.vue";
 import axios from "axios";
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: "update",
@@ -71,19 +71,15 @@ export default {
       data:[]
     };
   },
+  computed:{
+    ...mapGetters(['listProduct'])
+  },
   methods: {
-    ...mapActions(['ListDrink','ListFood','ListSpecialty','GetByIdDrink','UpdateDrink']),
+    ...mapActions(['GetByIdDrink','UpdateDrink','DataAllProduct']),
 
     async getList() {
-      const promise1 = this.ListDrink()
-      const promise2 = this.ListFood()
-      const promise3 = this.ListSpecialty()
-      let dataApi = [];
-      const response = await Promise.all([promise1, promise2, promise3]);
-      if (response) {
-        response.forEach(( data ) => data.forEach((e) => dataApi.push(e)));
-      }
-      const newDataPi = dataApi.filter((e) => e.name != this.entry.name);
+      await this.DataAllProduct()
+      const newDataPi = this.listProduct.filter((e) => e.name != this.entry.name);
       this.data = newDataPi;
     },
     async getItemById() {

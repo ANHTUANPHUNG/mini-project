@@ -1,14 +1,8 @@
 <template>
   <div class="my-4 row w-100 px-3" style="margin-left: 0">
     <div class="bg-white col-12 py-4" style="border-radius: 5px">
-      <b-form-group>
-        <label for="">Tìm kiếm theo tên loại đồ uống</label>
-        <b-input
-          class="col-lg-3 col-sm-6 col-12"
-          placeholder="Nhập tên loại đồ uống"
-          @input="searchInput($event)"
-        ></b-input>
-      </b-form-group>
+      <search-input v-model=data api="drink"></search-input>
+
     </div>
     <div class="bg-white col-12 px-3 my-4" style="border-radius: 5px">
       <div class="w-100 text-right py-3">
@@ -29,7 +23,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="text-center" v-for="(entry, index) in entries" :key="index">
+            <tr class="text-center" v-for="(entry, index) in data.entries" :key="index">
               <th class="align-middle">{{ entry.index || index + 1 }}</th>
               <td class="align-middle">{{ entry.name }}</td>
               <td class="align-middle">{{ entry.price| formatNumberWithDotAndCurrency }}</td>
@@ -63,9 +57,9 @@
         </table>
         <div class="d-flex justify-content-end pr-3 py-3 w-100">
           <b-pagination
-            v-model="currentPage"
-            :total-rows="rows"
-            :per-page="perPage"
+            v-model="data.currentPage"
+            :total-rows="data.rows"
+            :per-page="data.perPage"
             aria-controls="my-table"
           ></b-pagination>
         </div>
@@ -81,39 +75,40 @@
 </template>
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
-import axios from "axios";
+import SearchInput from '@/components/searchInput.vue';
 import { mapActions } from 'vuex'
 
 export default {
   name: "list",
   components: {
-    ButtonCustom,
+    ButtonCustom,SearchInput
   },
   data() {
     return {
-      text: "",
-      entries: [],
       loading: false,
+      data:{
+        entries: [],
       perPage: 5,
       currentPage: 1,
-      listData: 0,
+      listData: [],
       rows: 0,
+      },
     };
   },
   watch: {
-    currentPage: {
+    'data.currentPage': {
       handler() {
         let data = [];
         for (
-          let index = this.perPage * (this.currentPage - 1);
-          index < this.perPage * this.currentPage;
+          let index = this.data.perPage * (this.data.currentPage - 1);
+          index < this.data.perPage * this.data.currentPage;
           index++
         ) {
-          if (this.listData[index]) {
-            data.push(this.listData[index]);
+          if (this.data.listData[index]) {
+            data.push(this.data.listData[index]);
           }
         }
-        this.entries = data;
+        this.data.entries = data;
       },
       deep: true,
     },
@@ -126,17 +121,17 @@ export default {
       const response = await this.ListDrink();
       response.reverse()
       let data = [];
-      for (let index = 0; index < this.perPage * this.currentPage; index++) {
+      for (let index = 0; index < this.data.perPage * this.data.currentPage; index++) {
         if (response[index]) {
           data.push(response[index]);
         }
       }
-      this.entries = data;
-      this.listData = response;
-      this.listData.map((element, index) => {
+      this.data.entries = data;
+      this.data.listData = response;
+      this.data.listData.map((element, index) => {
         element.index = index + 1;
       });
-      this.rows = response.length;
+      this.data.rows = response.length;
       this.loading = false;
     },
     async deleteItem(id) {
@@ -153,7 +148,7 @@ export default {
               position: "top-right",
               timeout: 3000,
             });
-            this.currentPage = 1;
+            this.data.currentPage = 1;
             this.getList();
           }
         },
@@ -179,6 +174,7 @@ export default {
               position: "top-right",
               timeout: 3000,
             });
+            this.data.currentPage = 1;
             this.getList();
           }
         },
@@ -189,31 +185,6 @@ export default {
         name: "admin.food-menu.drink.update",
         params: { id: id },
       });
-    },
-    async searchInput(value) {
-      let arr = [];
-      const response = await this.ListDrink();
-      response.forEach((element) => {
-        if (element.name.toLowerCase().includes(value.toLowerCase())) {
-          arr.push(element);
-        }
-      });
-      this.listData = arr;
-      this.listData.map((element, index) => {
-        element.index = index + 1;
-      });
-      this.rows = this.listData.length;
-      let data = [];
-      for (
-        let index = this.perPage * (this.currentPage - 1);
-        index < this.perPage * this.currentPage;
-        index++
-      ) {
-        if (this.listData[index]) {
-          data.push(this.listData[index]);
-        }
-      }
-      this.entries = data;
     },
   },
   created() {

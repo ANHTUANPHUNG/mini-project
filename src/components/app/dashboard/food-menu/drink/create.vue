@@ -58,7 +58,7 @@ import DrinkName from "./partials/drink-name.vue";
 import DrinkPrice from "./partials/drink-price.vue";
 import DrinkStatus from "./partials/drink-status.vue";
 import axios from "axios";
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: "create",
   components: {
@@ -75,13 +75,15 @@ export default {
       entry: { name: "", image: null, price: 0, description: "", status: null },
       loading: false,
       disabledButton: false,
-      data: [],
     };
   },
+  computed:{
+    ...mapGetters(['listProduct'])
+  },
   methods: {
-    ...mapActions(['ListDrink','ListFood','ListSpecialty','CreateDrink']),
+    ...mapActions(['CreateDrink','DataAllProduct']),
     async create() {
-      if(this.data.find(({name}) => name == this.entry.name)){
+      if(this.listProduct.find(({name}) => name == this.entry.name)){
         this.$toast.error("Tên mặt hàng đã tồn tại.", {
           position: "top-right",
           timeout: 3000,
@@ -149,16 +151,6 @@ export default {
         },
       });
     },
-    async getList() {
-      const promise1 = this.ListDrink()
-      const promise2 = this.ListFood()
-      const promise3 = this.ListSpecialty()
-      let dataApi = []
-      Promise.all([promise1, promise2, promise3]).then(function (values) {
-        values.forEach((data) => data.forEach((i) => dataApi.push(i)));
-      });
-      this.data=dataApi
-    },
     async refresh() {
       await this.$swal({
         title: "Khôi phục dữ liệu ban đầu?",
@@ -177,8 +169,9 @@ export default {
       });
     },
   },
-  created() {
-    this.getList();
+ async created() {
+   await this.DataAllProduct()
+
   },
 };
 </script>
