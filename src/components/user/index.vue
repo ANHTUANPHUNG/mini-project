@@ -20,7 +20,7 @@ import MenuItem from "./partials/menu-item.vue";
 import Carousel from "./partials/carousel.vue";
 import ProductItem from "./partials/product-item.vue";
 import FooterUser from "./footer-user.vue";
-import { eventBus } from "@/main";
+import { mapGetters } from "vuex";
 export default {
   name: "index",
   components: {
@@ -33,8 +33,11 @@ export default {
   data() {
     return {
       user: {},
-      modal: false,
+      // modal: false,
     };
+  },
+  computed:{
+    ...mapGetters(['modal'])
   },
   methods: {},
   created() {
@@ -43,7 +46,6 @@ export default {
     if (this.user?.role == "admin") {
       this.$router.push({ name: "admin.dashboard.home" });
     }
-    eventBus.$on("checkModal", (value) => (this.modal = value.some((x) => x == true)));
   },
 };
 </script>

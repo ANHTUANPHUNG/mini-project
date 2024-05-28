@@ -89,7 +89,7 @@
                       </div>
                     </b-button>
                     <b-button
-                      :disabled="!entries.products?.length"
+                      :disabled="!entries?.products?.length"
                       variant="outline-primary"
                       @click="modalPayment =!modalPayment"
                     >
@@ -120,6 +120,8 @@ import ProductItem from "./product-item.vue";
 import RequestDescription from './request-description.vue';
 import AddressUser from './address-user.vue';
 import ModalPayment from './modal-payment.vue'
+import { mapGetters, mapActions, mapMutations } from "vuex";
+
 export default {
   name: "list",
   components: {
@@ -158,12 +160,13 @@ export default {
     },
     modalPayment: {
       handler() {
-        eventBus.$emit("checkModal", [this.modalPayment ]);
+        this.updateModal([this.modalPayment ])
       },
       deep: true,
     },
   },
   methods: {
+    ...mapActions(['updateModal']),
     deleteItem(value) {
       this.$swal({
         title: "Xoá món hàng này?",

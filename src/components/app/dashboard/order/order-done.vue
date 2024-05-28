@@ -48,8 +48,6 @@
               </td>
               <td class="align-middle">
                 <div
-                  @click="updateStatus(entry)"
-                  class="cursor-pointer"
                 >
                   <b-badge class="bg-success" style="line-height: 35px; padding: 0 7px;">{{ entry.status }}</b-badge>
                 </div>

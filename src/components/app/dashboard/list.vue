@@ -68,7 +68,7 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
-import { mapActions } from 'vuex'
+import { mapActions,mapGetters } from 'vuex'
 
 export default {
   name: "list",
@@ -111,7 +111,7 @@ export default {
       },
       seriesUser: [
         {
-          name: "Khách hàng",
+          name: "Tài khoản",
           data: [],
         },
       ],
@@ -143,6 +143,9 @@ export default {
         },
       ],
     };
+  },
+      computed:{
+    ...mapGetters(['user'])
   },
   methods: {
     ...mapActions(['ListUser','ListBill']),

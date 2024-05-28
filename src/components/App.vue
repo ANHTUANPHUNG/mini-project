@@ -16,13 +16,9 @@ export default {
   },
   data() {
     return {
-      menu: true,
-      user: null,
     };
   },
   created() {
-    const user = localStorage.getItem("user");
-    this.user = user;
   },
 };
 </script>

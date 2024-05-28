@@ -69,6 +69,7 @@
 <script>
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "order-user",
@@ -105,11 +106,14 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['DeleteBill','ListBill','StatusBill']),
+
     async getList() {
       this.loading = true;
       const user = JSON.parse(localStorage.getItem("user"));
-      const response = await axios.get("http://localhost:3300/bills");
-      const list = response.data.filter((e) => e.userId == user.id);
+      const response = await this.ListBill();
+
+      const list = response.filter((e) => e.userId == user.id && e.delete == 0);
       list.reverse();
       let data = [];
       for (let index = 0; index < this.perPage * this.currentPage; index++) {
@@ -133,7 +137,7 @@ export default {
           confirmButtonText: "Đồng ý",
         showCancelButton: true,
         preConfirm: async () => {
-          let response = await axios.delete(`http://localhost:3300/bills/` + id);
+          let response = await this.DeleteBill(id)
           if (response.status == 200) {
             this.$toast.success("Xóa thành công.", {
               position: "top-right",

@@ -25,6 +25,8 @@ import axios from "axios";
 import { eventBus } from "@/main";
 import RequestDescription from "./request-description.vue";
 import AddressUser from "./address-user.vue";
+import { mapActions } from 'vuex'
+
 export default {
   name: "modal-payment",
   props: {

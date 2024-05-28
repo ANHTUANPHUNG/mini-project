@@ -1,5 +1,5 @@
 <template>
-  <div v-if="user?.role == 'admin'">
+  <div v-if="localUser?.role == 'admin'">
     <nav-bar v-model="menu" @update="(v) => (menu = v)" />
     <div
       class="d-flex w-100 h-100"
@@ -24,6 +24,8 @@
 import NavBar from "../nav-bar.vue";
 import SideBar from "../side-bar.vue";
 import Error from "./../error.vue"
+import { mapGetters } from 'vuex';
+
 export default {
   name: "index",
   components: {
@@ -37,9 +39,12 @@ export default {
       user: null,
     };
   },
-  created() {
-    const user = localStorage.getItem("user");
-    this.user = JSON.parse(user)
+  computed:{
+    ...mapGetters(['localUser'])
   },
+  // created() {
+  //   const user = localStorage.getItem("user");
+  //   this.user = JSON.parse(user)
+  // },
 };
 </script>

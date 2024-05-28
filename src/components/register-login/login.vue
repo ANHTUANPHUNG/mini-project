@@ -61,7 +61,7 @@ import PasswordUser from "./partials/password-user.vue";
 import Register from "./register.vue";
 import ResetPassword from "./reset-password.vue";
 import axios from "axios";
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: "login",
@@ -79,9 +79,12 @@ export default {
       loading: false,
     };
   },
+  computed:{
+    ...mapGetters(['user'])
+  },
   methods: {
     ...mapActions(['ListUser']),
-
+    ...mapMutations(['setUser']),
     async login() {
       const response = await this.ListUser();
       const checkAccount = response.find(
@@ -104,7 +107,8 @@ export default {
         localStorage.setItem("user", user);
         this.$router.push({ name: "user.home" });
       }
-      
+      // this.setUser(localStorage.getItem('user'))
+      // console.log(this.user);
     },
     checkEnter(event) {
       if (event.keyCode === 13) {

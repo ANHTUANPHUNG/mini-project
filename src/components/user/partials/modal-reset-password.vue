@@ -69,7 +69,7 @@ export default {
     },
     async resetLocalStorage() {
       const response = await this.GetByIdUser(this.user.id)
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("user", JSON.stringify(response));
     },
     async update() {
       if (
@@ -109,6 +109,8 @@ export default {
               position: "top-right",
               timeout: 3000,
             });
+            this.resetPassword.password =''
+            this.resetPassword.newPassword =''
             this.entry = false;
             this.resetLocalStorage();
           }

@@ -183,6 +183,8 @@
 import { eventBus } from "@/main";
 import ModalInformation from "./partials/modal-information.vue";
 import ModalResetPassword from "./partials/modal-reset-password.vue";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+
 export default {
   name: "nav-bar-user",
   components: { ModalInformation, ModalResetPassword },
@@ -220,13 +222,13 @@ export default {
     },
     modalInformation: {
       handler() {
-        eventBus.$emit("checkModal", [this.modalInformation, this.modalResetPassword]);
+        this.updateModal([this.modalInformation, this.modalResetPassword])
       },
       deep: true,
     },
     modalResetPassword: {
       handler() {
-        eventBus.$emit("checkModal", [this.modalResetPassword, this.modalInformation]);
+        this.updateModal([this.modalResetPassword, this.modalInformation])
       },
       deep: true,
     },
@@ -245,6 +247,7 @@ export default {
     window.removeEventListener("resize", this.handleResize);
   },
   methods: {
+    ...mapActions(['updateModal']),
     checkName(value) {
       if (this.$route.name == value) return;
       this.$router.push({ name: value });

@@ -188,7 +188,7 @@ export default {
         showCancelButton: true,
         preConfirm: async () => {
           const response = await this.StatusBill({id:entry.id,entry:{status: "Đang giao", createdConfirm: date}}) 
-          if (response.status == 200) {
+          if (response) {
             this.$toast.success("Cập nhật thành công: Đơn hàng bắt đầu giao.", {
               position: "top-right",
               timeout: 3000,

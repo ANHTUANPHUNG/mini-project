@@ -29,6 +29,7 @@
   </b-modal>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 export default {
   name: "modal-information",
   props: {
@@ -52,6 +53,7 @@ export default {
       },
     },
   },
+  
   created() {
     this.entry = this.value;
   },

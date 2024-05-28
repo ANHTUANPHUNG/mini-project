@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 
 export default {
   name: "nav-bar",
@@ -36,6 +37,9 @@ export default {
       dropdown: false,
       menu: true,
     };
+  },
+  computed:{
+    ...mapGetters(['localUser'])
   },
   watch:{
     menu:{
@@ -51,6 +55,7 @@ export default {
       deep:true
     }
   },
+
   methods: {
     handleLogout() {
       localStorage.removeItem('user');
@@ -59,10 +64,6 @@ export default {
   },
   created(){
     this.menu = this.value
-    const user = localStorage.getItem("user");
-    if (user) {
-      this.user = JSON.parse(user);
-    }
   }
 };
 </script>
