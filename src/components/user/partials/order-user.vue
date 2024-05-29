@@ -23,7 +23,7 @@
                   </div>
                   <div class="col-2">
                     <img
-                    style="width: 40px; border-radius: 4px"
+                    style="width: 50px; height: 50px; border-radius: 4px"
                     :src="i.product.image.secure_url"
                     alt=""
                   />

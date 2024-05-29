@@ -56,7 +56,7 @@
                           <b-input
                             style="width: 40px"
                             type="number"
-                            :value="item.quantity"
+                            v-model="item.quantity"
                           ></b-input>
                           <b-button @click="item.quantity += 1" variant=""
                             >+</b-button
