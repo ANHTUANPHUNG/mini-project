@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="col-12 mt-3">
-          <span class="pl-3 pt-3" style="font-weight: 600">
+          <span class="pt-3" style="font-weight: 600">
             Thống kê doanh thu từ ngày {{ dateStart |convertDate }} đến ngày {{dateEnd|convertDate}} : {{ total | formatNumberWithDotAndCurrency }}
           </span>
         </div>
@@ -195,12 +195,17 @@ export default {
         revenueDrink = satisfyDrink.map((e) => e[1]);
         revenueFood = satisfyFood.map((e) => e[1]);
         revenueSpecialty = satisfySpecialty.map((e) => e[1]);
-
+        const day = [
+          ...new Set(
+            newSatisfyDay.map((e) =>
+              (e).slice((e).indexOf("-")+1)
+            )
+          ),
+        ];
         this.optionsRevenue = {
           ...this.optionsRevenue,
-          xaxis: { ...this.optionsRevenue.xaxis, categories: newSatisfyDay },
+          xaxis: { ...this.optionsRevenue.xaxis, categories: day },
         };
-        console.log(newSatisfyDay,'---');
       } else if (
         Math.round(differenceMs / ONE_DAY) >= 30 &&
         Math.round(differenceMs / ONE_DAY) < 365

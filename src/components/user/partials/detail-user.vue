@@ -174,7 +174,6 @@ export default {
 
       if (newEntries) {
         this.entry = newEntries;
-        console.log(newEntries);
       } else {
         this.entry = {
           product: data[index],

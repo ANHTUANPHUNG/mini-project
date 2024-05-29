@@ -13,7 +13,7 @@
           </div>
         </div>
         <div class="col-12 mt-3">
-          <span class="pl-3 pt-3" style="font-weight: 600">
+          <span class="pt-3" style="font-weight: 600">
             Thống kê tài khoản được tạo từ ngày {{ dateStart | convertDate }} đến ngày
             {{ dateEnd | convertDate }} : {{ total }}
           </span>
@@ -119,11 +119,18 @@ export default {
       const ONE_DAY = 1000 * 60 * 60 * 24;
       const differenceMs = Math.abs(this.dateStart - this.dateEnd);
       if (Math.round(differenceMs / ONE_DAY) < 30) {
+        const day = [
+          ...new Set(
+            Object.keys(this.countDate(newListDate)).map((e) =>
+              (e).slice((e).indexOf("-")+1)
+            )
+          ),
+        ];
         this.optionsUser = {
           ...this.optionsUser,
           xaxis: {
             ...this.optionsUser.xaxis,
-            categories: Object.keys(this.countDate(newListDate)),
+            categories: day,
           },
         };
         this.seriesUser[0].data = Object.values(this.countDate(newListDate));

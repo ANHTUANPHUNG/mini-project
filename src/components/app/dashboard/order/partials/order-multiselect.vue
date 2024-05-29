@@ -141,7 +141,6 @@ export default {
           data.push({ product: i, quantity: 1, totalProduct: i.price });
         }
       });
-      data.forEach(e=> console.log(e.product.id))
       for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < this.value.products.length; j++) {
           if (
