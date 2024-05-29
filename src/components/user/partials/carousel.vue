@@ -7,7 +7,7 @@
         fade
         indicators
         img-width="1024"
-        :interval="5000"
+        :interval="3000"
       >
         <b-carousel-slide style="max-height: 600px;" v-for="item in entries" :key="item" :img-src="item">
         </b-carousel-slide>
