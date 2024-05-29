@@ -13,8 +13,8 @@
           </div>
         </div>
         <div class="col-12 mt-3">
-          <span class="pt-3" style="font-weight: 600">
-            Thống kê doanh thu từ ngày {{ dateStart |convertDate }} đến ngày {{dateEnd|convertDate}} : {{ total | formatNumberWithDotAndCurrency }}
+          <span class="pt-3" >
+            Thống kê doanh thu từ ngày {{ dateStart |convertDate }} đến ngày {{dateEnd|convertDate}} : <span style="font-weight: 600">{{ total | formatNumberWithDotAndCurrency }}</span> 
           </span>
         </div>
       </div>
@@ -25,6 +25,7 @@
         type="line"
         :options="optionsRevenue"
         :series="seriesRevenue"
+        
       ></apexchart>
     </div>
   </div>

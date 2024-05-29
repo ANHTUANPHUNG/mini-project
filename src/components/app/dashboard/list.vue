@@ -49,7 +49,7 @@
     <div class="row mx-3 bg-white border-rounded">
       <chart-user @total="v => listUser=v" />
     </div>
-    <div class="row mx-3 bg-white border-rounded mt-5 mb-4">
+    <div class="row mx-3 bg-white border-rounded mt-5 mb-4" >
       <chart-revenue
       @total="updateTotals"
       />

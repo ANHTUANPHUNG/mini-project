@@ -13,15 +13,15 @@
           </div>
         </div>
         <div class="col-12 mt-3">
-          <span class="pt-3" style="font-weight: 600">
+          <span class="pt-3" >
             Thống kê tài khoản được tạo từ ngày {{ dateStart | convertDate }} đến ngày
-            {{ dateEnd | convertDate }} : {{ total }}
+            {{ dateEnd | convertDate }} : <span style="font-weight: 600"> {{ total }}</span> tài khoản. 
           </span>
         </div>
       </div>
     </div>
     <div class="col-12">
-      <apexchart height="300" type="line" :options="optionsUser" :series="seriesUser"></apexchart>
+      <apexchart  height="300" type="line" :options="optionsUser" :series="seriesUser"></apexchart>
     </div>
   </div>
 </template>
