@@ -45,7 +45,7 @@ import OrderRequest from "./partials/order-request.vue";
 import axios from "axios";
 import OrderPhone from "./partials/order-phone.vue";
 import { mapActions } from "vuex";
-import { dateNow } from "@/components/core/myFunction";
+import { dateTimeNow } from "@/components/core/myFunction";
 export default {
   name: "create",
   components: {
@@ -94,7 +94,7 @@ export default {
         });
         return;
       }
-      let date = dateNow()
+      let date = dateTimeNow()
       let totalProducts =0
       this.entry.products.forEach(
         (e) => (totalProducts += e.totalProduct)

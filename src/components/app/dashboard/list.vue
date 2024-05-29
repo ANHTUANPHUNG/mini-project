@@ -47,183 +47,100 @@
       </div>
     </div>
     <div class="row mx-3 bg-white border-rounded">
-      <h3 class="pl-3 pt-3">Thống kê người dùng theo ngày</h3>
-      <div class="col-12">
-        <apexchart height="300" type="line" :options="optionsUser" :series="seriesUser"></apexchart>
-      </div>
+      <chart-user @total="v => listUser=v" />
     </div>
     <div class="row mx-3 bg-white border-rounded mt-5">
-      <h3 class="pl-3 pt-3">
-        Thống kê doanh thu theo ngày : {{ total | formatNumberWithDotAndCurrency }}
-      </h3>
-      <div class="col-12">
-        <apexchart
-          height="300"
-          type="line"
-          :options="optionsRevenue"
-          :series="seriesRevenue"
-        ></apexchart>
-      </div>
+      <chart-revenue
+      @total="updateTotals"
+      />
     </div>
   </div>
 </template>
 <script>
+import DatePicker from "vue2-datepicker";
+
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
+import "vue2-datepicker/index.css";
 import { mapActions, mapGetters } from "vuex";
-import { dateNow, formatDate } from "@/components/core/myFunction";
+import { convertDateToString, formatDate } from "@/components/core/myFunction";
+import ChartUser from "./chart-user.vue";
+import ChartRevenue from "./chart-revenue.vue";
 export default {
   name: "list",
   components: {
     ButtonCustom,
+    DatePicker,
+    ChartRevenue,ChartUser
   },
   data() {
     return {
       listUser: null,
-      listFood: null,
-      listDrink: null,
-      listSpecialty: null,
       totalSpecialty: 0,
-      quantitySpecialty: 0,
+      dateStart: new Date(2024, 4, 16),
+      dateEnd: new Date(),
       totalFood: 0,
-      quantityFood: 0,
       totalDrink: 0,
-      quantityDrink: 0,
       total: 0,
-      optionsUser: {
-        chart: {
-          type: "line",
-          zoom: {
-            enabled: false,
-          },
-          toolbar: { show: true },
-        },
-        tooltip: {
-          shared: true,
-          intersect: false,
-        },
-        legend: {
-          show: true,
-          position: "right",
-        },
-        xaxis: {
-          categories: [],
-        },
-        colors: ["#a709a7"],
-      },
-      seriesUser: [
-        {
-          name: "Tài khoản",
-          data: [],
-        },
-      ],
-      optionsRevenue: {
-        chart: {
-          type: "line",
-          zoom: {
-            enabled: false,
-          },
-          toolbar: { show: true },
-        },
-        tooltip: {
-          shared: true,
-          intersect: false,
-          y: {
-            formatter: function (number) {
-              let numStr = number.toString().replace(/^0+/, "");
-              let formattedNum = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-              return formattedNum + " đ";
-            },
-          },
-        },
-        legend: {
-          show: true,
-          position: "right",
-        },
-        xaxis: {
-          categories: [],
-        },
-        colors: ["#a709a7"],
-      },
-      seriesRevenue: [
-        {
-          name: "Doanh thu",
-          data: [],
-        },
-      ],
+      // optionsUser: {
+      //   chart: {
+      //     type: "line",
+      //     zoom: {
+      //       enabled: false,
+      //     },
+      //     toolbar: { show: true },
+      //   },
+      //   tooltip: {
+      //     shared: true,
+      //     intersect: false,
+      //   },
+      //   legend: {
+      //     show: true,
+      //     position: "right",
+      //   },
+      //   xaxis: {
+      //     categories: [],
+      //   },
+      //   colors: ["#a709a7"],
+      // },
+      // seriesUser: [
+      //   {
+      //     name: "Tài khoản",
+      //     data: [],
+      //   },
+      // ],
     };
   },
   computed: {
     ...mapGetters(["user"]),
   },
+  watch: {},
   methods: {
     ...mapActions(["ListUser", "ListBill"]),
+    updateTotals(v) {
+      this.totalDrink = v.totalDrink;
+      this.totalFood = v.totalFood;
+      this.totalSpecialty = v.totalSpecialty;
+    },
+    // async getList() {
+    //   this.loading = true;
+    //   const responseUser = await this.ListUser();
+    //   this.listUser = responseUser;
+    //   let listDate = [];
+    //   listDate = responseUser.map((e) => formatDate(e.created));
+    //   this.optionsUser = {
+    //     ...this.optionsUser,
+    //     xaxis: { ...this.optionsUser.xaxis, categories: Object.keys(this.countDate(listDate)) },
+    //   };
+    //   this.seriesUser[0].data = Object.values(this.countDate(listDate));
 
-    async getList() {
-      this.loading = true;
-      const responseUser = await this.ListUser();
-      this.listUser = responseUser;
-      let listDate = [];
-      listDate = responseUser.map((e) => formatDate(e.created));
-      this.optionsUser = {
-        ...this.optionsUser,
-        xaxis: { ...this.optionsUser.xaxis, categories: Object.keys(this.countDate(listDate)) },
-      };
-      this.seriesUser[0].data = Object.values(this.countDate(listDate));
-
-      const responseBill = await this.ListBill();
-      let listFood = [];
-      let listSpecialty = [];
-      let listDrink = [];
-      responseBill.forEach((e) => {
-        if (e.status == "Đã hoàn thành") {
-          this.total += e.totalProducts;
-          e.products.forEach((i) => {
-            {
-              if (i.product.type == "drink") {
-                listFood.push([i.product, formatDate(e.createdInProgress)]);
-              }
-              if (i.product.type == "specialty") {
-                listSpecialty.push([i.product, formatDate(e.createdInProgress)]);
-              }
-              if (i.product.type == "food") {
-                listDrink.push([i.product, formatDate(e.createdInProgress)]);
-              }
-            }
-          });
-        }
-      });
-      console.log(this.total);
-      console.log(listFood);
-      console.log(listSpecialty,'listSpecialty');
-      console.log(listDrink,'listDrink');
-      // this.listFood = newProducts.filter(({ product }) => product.type == "food");
-      // this.listSpecialty = newProducts.filter(({ product }) => product.type == "specialty");
-      // this.listSpecialty.forEach(
-      //   (e) => ((this.totalSpecialty += e.totalProduct), (this.quantitySpecialty += Number(e.quantity)))
-      // );
-      // this.listFood.forEach(
-      //   (e) => ((this.totalFood += e.totalProduct), (this.quantityFood += Number(e.quantity)))
-      // );
-      // this.listDrink.forEach(
-      //   (e) => ((this.totalDrink += e.totalProduct), (this.quantityDrink += Number(e.quantity)))
-      // );
-      // const dateCount = {};
-      // console.log(responseBill);
-      // responseBill.forEach((e) => {
-      //   if (e.status == "Đã hoàn thành") {
-      //     if(formatDate(e.createdInProgress))
-      //         dateCount[formatDate(e.createdInProgress)] = (dateCount[formatDate(e.createdInProgress)] || 0) + e.totalProducts;
-
-      //   }
-      // });
-      // this.seriesRevenue[0].data = Object.values(dateCount);
-      // this.optionsRevenue = {
-      //   ...this.optionsRevenue,
-      //   xaxis: { ...this.optionsRevenue.xaxis, categories:Object.keys(dateCount) },
-      // };
-
-      // this.loading = false;
+    //   this.loading = false;
+    // },
+    disabledStart: function (date) {
+      return date < new Date(2024, 4, 16) || date > new Date();
+    },
+    disabledEnd: function (date) {
+      return date < this.dateStart || date > new Date() || date < new Date(2024, 4, 16);
     },
     countDate(listDate) {
       const dateCount = {};
@@ -236,7 +153,7 @@ export default {
     },
   },
   created() {
-    this.getList();
+    // this.getList();
   },
 };
 </script>

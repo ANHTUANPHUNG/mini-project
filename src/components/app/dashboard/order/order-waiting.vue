@@ -89,7 +89,7 @@
 import ButtonCustom from "@/components/button-custom.vue";
 import axios from "axios";
 import { mapActions } from 'vuex'
-import { dateNow ,convertDateTime } from "@/components/core/myFunction";
+import { dateTimeNow ,convertDateTime } from "@/components/core/myFunction";
 
 export default {
   name: "list",
@@ -177,7 +177,7 @@ export default {
       });
     },
     async updateStatus(entry) {
-      let date = dateNow()
+      let date = dateTimeNow()
       await this.$swal({
         title: "Cập nhật trạng thái đơn hàng?",
         icon: "warning",

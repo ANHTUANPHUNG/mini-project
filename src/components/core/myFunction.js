@@ -1,4 +1,4 @@
-export function dateNow() {
+export function dateTimeNow() {
     const today = new Date();
       let date =
         `${today.getFullYear()}-` +
@@ -8,6 +8,12 @@ export function dateNow() {
         `${today.getMinutes()}:` +
         `${today.getSeconds()}`;
         return date
+  }
+export function convertDateToString(date) {
+      let day=  `${date.getFullYear()}-` +
+        `${date.getMonth() + 1}-` +
+        `${date.getDate()}` 
+        return day
   }
 export function formatDate(dateTime) {
   const [date, time] = dateTime.split(" ");
